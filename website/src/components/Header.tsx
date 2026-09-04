@@ -80,7 +80,7 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-4 lg:flex xl:gap-6">
           {nav.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (

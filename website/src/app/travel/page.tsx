@@ -1,7 +1,7 @@
 import { TravelBrowser } from "./TravelBrowser";
 
 export const metadata = {
-  title: "Travel N Tour - Visit Ghana",
+  title: "Visit Ghana",
   description:
     "Discover Ghana: Accra, Cape Coast, Kumasi, Volta, beaches, food, nightlife, and custom private tours.",
 };

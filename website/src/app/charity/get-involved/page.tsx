@@ -1,3 +1,4 @@
+import { covers } from "@/assets/covers";
 import { InquiryForm } from "@/components/InquiryForm";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
@@ -41,7 +42,7 @@ export default function GetInvolvedPage() {
         kicker="Give back to Ghana"
         title="Get involved."
         text="Four clear paths: give, show up, partner, or raise with us."
-        image="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1800&q=80"
+        image={covers.impact}
       />
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

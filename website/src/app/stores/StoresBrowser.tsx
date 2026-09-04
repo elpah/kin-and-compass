@@ -1,5 +1,6 @@
 "use client";
 
+import { covers } from "@/assets/covers";
 import { ProductCard } from "@/components/ProductCard";
 import { PageHero } from "@/components/PageHero";
 import { productCategories } from "@kincompass/shared";
@@ -30,7 +31,7 @@ export function StoresBrowser({ products }: { products: Product[] }) {
         kicker="Stores"
         title="Objects with a place of origin."
         text="Fashion, shea, spice, cloth, and paper from ateliers we can name. Built so more African vendors can join."
-        image="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1800&q=80"
+        image={covers.shop}
       />
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="flex flex-col gap-3 rounded-lg bg-white p-4 ring-1 ring-sand md:flex-row md:items-center">
@@ -71,10 +72,7 @@ export function StoresBrowser({ products }: { products: Product[] }) {
           </div>
           <div
             className="min-h-[200px] bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url(https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?auto=format&fit=crop&w=1200&q=80)",
-            }}
+            style={{ backgroundImage: `url(${covers.shop.src})` }}
           />
         </div>
 

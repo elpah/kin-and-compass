@@ -1,3 +1,4 @@
+import { covers } from "@/assets/covers";
 import { DonationForm } from "@/components/DonationForm";
 import { PageHero } from "@/components/PageHero";
 import { charityFocus } from "@/data/charity";
@@ -17,7 +18,7 @@ export default function DonatePage() {
         kicker="Give back to Ghana"
         title="A call for support."
         text="One-time or monthly. The Ghana fund helps us stand up the first work. Named campaigns will follow when they exist."
-        image="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1800&q=80"
+        image={covers.impact}
       />
       <section className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-5">
         <div className="lg:col-span-3">

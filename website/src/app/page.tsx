@@ -1,7 +1,7 @@
+import { covers } from "@/assets/covers";
 import { LessonCard, TourCard } from "@/components/Cards";
 import { ProductCard } from "@/components/ProductCard";
 import { lessons } from "@/data/lessons";
-import { opportunities } from "@/data/opportunities";
 import { listFeaturedProducts } from "@/lib/api";
 import { pillars } from "@/data/site";
 import { tours } from "@/data/tours";
@@ -19,8 +19,8 @@ export default async function Home() {
     <>
       <section className="relative isolate min-h-[100svh] overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=2000&q=80"
-          alt="Golden light over the African landscape"
+          src={covers.homepage}
+          alt=""
           fill
           className="object-cover"
           priority
@@ -30,11 +30,12 @@ export default async function Home() {
         <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-4 pb-16 pt-32 sm:px-6 sm:pb-24">
           <p className="script text-3xl font-medium text-rose sm:text-4xl">Travel And Tour</p>
           <h1 className="display mt-2 max-w-3xl text-5xl font-semibold leading-[0.95] text-white sm:text-7xl">
-            Africa, closer than you think.
+            Come as a traveler, Leave as family.
           </h1>
           <p className="mt-5 max-w-xl text-lg font-medium text-white/90">
-            Kin and Compass is a house for travel, culture, commerce, giving, and
-            opportunity - beginning in Ghana, built for the continent.
+            Move beyond tourism, creating journeys where culture meets commerce,
+            opportunity meets intention, and every traveler leaves a footprint
+            that matters.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -58,7 +59,7 @@ export default async function Home() {
           Five ways in
         </p>
         <h2 className="display mt-2 text-4xl text-burgundy sm:text-5xl">
-          Arrive for one reason. Stay for the rest.
+          ONE COUNTRY. FIVE WAYS TO CONNECT.
         </h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {pillars.map((p) => (
@@ -148,7 +149,7 @@ export default async function Home() {
       <section className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
         <Link href="/invest" className="group relative min-h-[380px] overflow-hidden rounded-lg">
           <Image
-            src={opportunities[0].image}
+            src={covers.invest}
             alt=""
             fill
             className="object-cover transition duration-500 group-hover:scale-105"
@@ -164,7 +165,7 @@ export default async function Home() {
         </Link>
         <Link href="/charity" className="group relative min-h-[380px] overflow-hidden rounded-lg">
           <Image
-            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1400&q=80"
+            src={covers.impact}
             alt=""
             fill
             className="object-cover transition duration-500 group-hover:scale-105"

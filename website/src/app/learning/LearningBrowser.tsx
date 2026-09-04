@@ -1,5 +1,6 @@
 "use client";
 
+import { covers } from "@/assets/covers";
 import { LessonCard } from "@/components/Cards";
 import { PageHero } from "@/components/PageHero";
 import { lessonTopics, lessons } from "@/data/lessons";
@@ -21,7 +22,7 @@ export function LearningBrowser() {
         kicker="Learning"
         title="A classroom without the fluorescent lights."
         text="Articles, videos, guides, and a quiz - browse by topic or country. Sign in to save progress."
-        image="https://images.unsplash.com/photo-1456513080880-7d93d20cc2ed?auto=format&fit=crop&w=1800&q=80"
+        image={covers.learn}
       />
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="flex flex-wrap gap-2">

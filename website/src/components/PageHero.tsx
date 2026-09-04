@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
 export function PageHero({
@@ -13,7 +13,7 @@ export function PageHero({
   kicker?: string;
   title: string;
   text?: string;
-  image: string;
+  image: string | StaticImageData;
   children?: ReactNode;
   compact?: boolean;
 }) {

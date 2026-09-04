@@ -1,3 +1,4 @@
+import { covers } from "@/assets/covers";
 import { InquiryForm } from "@/components/InquiryForm";
 import { PageHero } from "@/components/PageHero";
 import { tourRegions, tourTypes } from "@/data/tours";
@@ -15,7 +16,7 @@ export default function CustomTripPage() {
         kicker="Private tours"
         title="Tell us how you travel."
         text="Dates, budget, group size, and the Ghana you want - heritage, nightlife, family, or quiet beaches."
-        image="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1800&q=80"
+        image={covers.travel}
       />
       <section className="mx-auto max-w-xl px-4 py-14 sm:px-6">
         <InquiryForm

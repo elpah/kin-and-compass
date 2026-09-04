@@ -1,3 +1,4 @@
+import { covers } from "@/assets/covers";
 import { PageHero } from "@/components/PageHero";
 import { fundUse } from "@/data/charity";
 import { brand } from "@/data/site";
@@ -17,7 +18,7 @@ export default function TrustPage() {
         kicker="Give back to Ghana"
         title="Trust, on the table."
         text="Who we are, how gifts will move, and what we will not pretend about registration until the papers are public."
-        image="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=80"
+        image={covers.impact}
       />
       <article className="mx-auto max-w-3xl px-4 py-14 text-[17px] leading-relaxed text-ink/85 sm:px-6">
         <h2 className="display text-3xl text-burgundy">The organisation</h2>

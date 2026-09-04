@@ -1,3 +1,5 @@
+import { covers } from "@/assets/covers";
+
 export const brand = {
   name: "Kin and Compass",
   legal: "Kin and Compass Travel and Tour",
@@ -9,11 +11,13 @@ export const brand = {
 };
 
 export const nav = [
+  { href: "/about", label: "About" },
   { href: "/stores", label: "Stores" },
   { href: "/invest", label: "Invest in Ghana" },
   { href: "/learning", label: "Learning" },
-  { href: "/travel", label: "Travel N Tour" },
+  { href: "/travel", label: "Visit Ghana" },
   { href: "/charity", label: "Charity" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export const investFaqs = [
@@ -98,39 +102,34 @@ export const pillars = [
     kicker: "Visit Ghana",
     title: "Travel",
     text: "Tours, heritage routes, beaches, and nights in Accra - paced by people who live here.",
-    image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
+    image: covers.travel,
   },
   {
     href: "/stores",
     kicker: "Marketplace",
     title: "Shop",
     text: "Cloth, shea, spice, and objects made by Ghanaian ateliers - shipped with their stories.",
-    image:
-      "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?auto=format&fit=crop&w=1400&q=80",
+    image: covers.shop,
   },
   {
     href: "/learning",
     kicker: "Prepare well",
     title: "Learn",
     text: "Language, etiquette, history, and relocation notes so you arrive already listening.",
-    image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=80",
+    image: covers.learn,
   },
   {
     href: "/invest",
     kicker: "Opportunity",
     title: "Invest",
     text: "Agriculture, factories, mineral resources, tourism, real estate, and football in Ghana.",
-    image:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=80",
+    image: covers.invest,
   },
   {
     href: "/charity",
     kicker: "Give back",
     title: "Charity",
     text: "Education, water, health, and community work in Ghana - a desk being built, and a call for support.",
-    image:
-      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1400&q=80",
+    image: covers.impact,
   },
 ];

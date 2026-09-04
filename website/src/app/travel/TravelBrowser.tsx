@@ -2,6 +2,7 @@
 
 import { TourCard } from "@/components/Cards";
 import { FAQ } from "@/components/FAQ";
+import { covers } from "@/assets/covers";
 import { PageHero } from "@/components/PageHero";
 import { travelFaqs } from "@/data/site";
 import { tourRegions, tourTypes, tours } from "@/data/tours";
@@ -20,10 +21,10 @@ export function TravelBrowser() {
   return (
     <>
       <PageHero
-        kicker="Travel N Tour"
+        kicker="Travel"
         title="Visit Ghana."
         text="Beaches, cities, food, heritage, and nights that run on highlife. Request a seat - or write us a custom brief."
-        image="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80"
+        image={covers.travel}
       >
         <Link
           href="/travel/custom"

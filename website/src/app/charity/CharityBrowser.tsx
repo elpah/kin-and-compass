@@ -1,3 +1,4 @@
+import { covers } from "@/assets/covers";
 import { FAQ } from "@/components/FAQ";
 import { PageHero } from "@/components/PageHero";
 import { charityFocus } from "@/data/charity";
@@ -12,7 +13,7 @@ export function CharityBrowser() {
         kicker="Give back to Ghana"
         title="Impact My Life"
         text="We are building a Give Back desk so people can support community work in Ghana. The first projects are not live yet. We need partners, gifts, and people who will walk with us as the work is named."
-        image="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=80"
+        image={covers.impact}
       >
         <div className="flex flex-wrap gap-3">
           <Link
@@ -142,7 +143,7 @@ export function CharityBrowser() {
 
       <section className="relative isolate overflow-hidden py-20">
         <Image
-          src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1800&q=80"
+          src={covers.impact}
           alt=""
           fill
           className="object-cover"

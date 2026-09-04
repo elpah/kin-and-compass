@@ -1,3 +1,4 @@
+import { covers } from "@/assets/covers";
 import { OpportunityCard } from "@/components/Cards";
 import { FAQ } from "@/components/FAQ";
 import { InquiryForm } from "@/components/InquiryForm";
@@ -12,7 +13,7 @@ export function InvestBrowser() {
         kicker="Opportunity"
         title="Invest in Ghana."
         text="Agriculture, factories, mineral resources, tourism, real estate, and football. Briefings to start a careful conversation - not listings."
-        image="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?auto=format&fit=crop&w=1800&q=80"
+        image={covers.invest}
       />
 
       <section className="border-b border-sand bg-white">
