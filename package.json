@@ -1,0 +1,21 @@
+{
+  "name": "kincompass",
+  "private": true,
+  "workspaces": [
+    "website",
+    "admin",
+    "api",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,website,admin -c magenta,cyan,green \"npm run dev -w api\" \"npm run dev -w website\" \"npm run dev -w admin\"",
+    "dev:website": "npm run dev -w website",
+    "dev:admin": "npm run dev -w admin",
+    "dev:api": "npm run dev -w api",
+    "build": "npm run build -w packages/shared && npm run build -w api && npm run build -w website && npm run build -w admin",
+    "seed": "npm run seed -w api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
