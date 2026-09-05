@@ -23,7 +23,6 @@ import tourist6 from "@/assets/images/tours_pulse_section/tourist/tourist6.webp"
 import tourist7 from "@/assets/images/tours_pulse_section/tourist/tourist7.webp";
 import tourist8 from "@/assets/images/tours_pulse_section/tourist/tourist8.webp";
 import tourist9 from "@/assets/images/tours_pulse_section/tourist/tourist9.webp";
-import tourist10 from "@/assets/images/tours_pulse_section/tourist/tourist10.webp";
 import tourist11 from "@/assets/images/tours_pulse_section/tourist/tourist11.webp";
 import touristCover from "@/assets/images/tours_pulse_section/tourist/tourist_cover.webp";
 import festival1 from "@/assets/images/tours_pulse_section/festival/festival1.webp";
@@ -37,17 +36,16 @@ import games1 from "@/assets/images/tours_pulse_section/games/games1.webp";
 import games2 from "@/assets/images/tours_pulse_section/games/games2.webp";
 import gamesCover from "@/assets/images/tours_pulse_section/games/games_cover.webp";
 import learnCover from "@/assets/images/cover_images/learn_cover.webp";
-import learnCeramic1 from "@/assets/images/tours_pulse_section/learning/learn_ceramic1.webp";
-import learnCooking1 from "@/assets/images/tours_pulse_section/learning/learn_cooking_1.webp";
-import learnCooking2 from "@/assets/images/tours_pulse_section/learning/learn_cooking2.webp";
-import learnKente from "@/assets/images/tours_pulse_section/learning/learning_kente.webp";
-import learnKente2 from "@/assets/images/tours_pulse_section/learning/learning_kente2.webp";
-import learnTieDye1 from "@/assets/images/tours_pulse_section/learning/learn_tie_dye1.webp";
-import learnTieDye2 from "@/assets/images/tours_pulse_section/learning/learn_tie_dye2.webp";
-import learnTieDye3 from "@/assets/images/tours_pulse_section/learning/learn_tie_dye3.webp";
-import learnWeave1 from "@/assets/images/tours_pulse_section/learning/learn_weave1.webp";
-import learnWeave2 from "@/assets/images/tours_pulse_section/learning/learn_weave2.webp";
-import learnWeave3 from "@/assets/images/tours_pulse_section/learning/learn_weave3.webp";
+import learnCeramic1 from "@/assets/images/tours_pulse_section/experience/learn_ceramic1.webp";
+import learnCooking1 from "@/assets/images/tours_pulse_section/experience/learn_cooking_1.webp";
+import learnCooking2 from "@/assets/images/tours_pulse_section/experience/learn_cooking2.webp";
+import learnKente from "@/assets/images/tours_pulse_section/experience/learning_kente.webp";
+import learnKente2 from "@/assets/images/tours_pulse_section/experience/learning_kente2.webp";
+import learnTieDye1 from "@/assets/images/tours_pulse_section/experience/learn_tie_dye1.webp";
+import learnTieDye2 from "@/assets/images/tours_pulse_section/experience/learn_tie_dye2.webp";
+import learnTieDye3 from "@/assets/images/tours_pulse_section/experience/learn_tie_dye3.webp";
+import learnWeave from "@/assets/images/tours_pulse_section/experience/learn_weave.webp";
+import learnWeave3 from "@/assets/images/tours_pulse_section/experience/learn_weave3.webp";
 import ancestors1 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors1.webp";
 import ancestors2 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors2.webp";
 import ancestorsCover from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors_cover.webp";
@@ -94,20 +92,18 @@ export const visitCategories: VisitCategory[] = [
       tourist7,
       tourist8,
       tourist9,
-      tourist10,
       tourist11,
     ],
   },
   {
-    id: "learning",
+    id: "experience",
     label: "Experience",
     line: "Kente, weaving, tie-dye, clay, and the kitchen - skills you take home in your hands.",
     images: [
       learnCover,
       learnKente,
       learnKente2,
-      learnWeave1,
-      learnWeave2,
+      learnWeave,
       learnWeave3,
       learnTieDye1,
       learnTieDye2,
@@ -119,7 +115,7 @@ export const visitCategories: VisitCategory[] = [
   },
   {
     id: "ancestors",
-    label: "Connect to your ancestor",
+    label: "Heritage",
     line: "Walk the door of no return with a guide who will not rush you.",
     images: [ancestorsCover, ancestors1, ancestors2],
   },

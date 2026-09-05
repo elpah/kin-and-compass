@@ -62,7 +62,7 @@ export function VisitGallery() {
             sizes="(max-width: 768px) 100vw, 1200px"
             priority={tab === 0 && imageIndex === 0}
             className={`object-cover transition-opacity duration-500 ${
-              current.id === "learning" ? "object-center" : "object-top"
+              current.id === "experience" ? "object-center" : "object-top"
             } ${imageIndex === img ? "opacity-100" : "opacity-0"}`}
           />
         ))}
