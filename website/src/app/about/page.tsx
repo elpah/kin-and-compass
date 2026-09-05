@@ -1,6 +1,6 @@
 import { covers } from "@/assets/covers";
 import { PageHero } from "@/components/PageHero";
-import { brand, pillars } from "@/data/site";
+import { pillars } from "@/data/site";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -80,10 +80,10 @@ export default function AboutPage() {
           <Image src={covers.extra} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
         </div>
         <div>
-          <p className="script text-2xl text-crimson">Where we sit</p>
-          <h2 className="display mt-2 text-3xl text-burgundy">Osu, Accra</h2>
+          <p className="script text-2xl text-crimson">Location</p>
+          <h2 className="display mt-2 text-3xl text-burgundy">Oregom, USA</h2>
           <p className="mt-4 text-[17px] leading-relaxed text-ink/85">
-            The desk is in {brand.address}. Write, call, or WhatsApp. We reply
+            The desk is in Oregom, USA. Write, call, or WhatsApp. We reply
             within two business days. Urgent travel dates move faster on WhatsApp.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -91,7 +91,7 @@ export default function AboutPage() {
               href="/travel"
               className="rounded bg-burgundy px-5 py-3 text-sm font-semibold text-white"
             >
-              Visit Ghana
+              Book now
             </Link>
             <Link
               href="/contact"

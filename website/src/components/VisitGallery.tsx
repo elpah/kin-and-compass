@@ -49,6 +49,8 @@ export function VisitGallery() {
             type="button"
             role="tab"
             aria-selected={i === tab}
+            id={`visit-tab-${category.id}`}
+            aria-controls="visit-gallery-panel"
             onClick={() => selectTab(i)}
             className={`-mb-px border-b-2 pb-3 text-sm font-semibold transition-colors ${
               i === tab
@@ -62,6 +64,9 @@ export function VisitGallery() {
       </div>
 
       <div
+        id="visit-gallery-panel"
+        role="tabpanel"
+        aria-labelledby={`visit-tab-${current.id}`}
         className="relative mt-6 aspect-[4/5] overflow-hidden rounded-lg bg-sand sm:aspect-[16/9]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}

@@ -7,7 +7,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+
+const emptySubscribe = () => () => {};
 
 export function Header() {
   const pathname = usePathname();
@@ -15,12 +17,8 @@ export function Header() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const overHero = pathname === "/";
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -28,10 +26,6 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   const solid = !overHero || scrolled || open;
 
@@ -45,7 +39,7 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-3 shrink-0">
+        <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3 shrink-0">
           <span
             className={cn(
               "relative overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-burgundy/10",
@@ -57,6 +51,7 @@ export function Header() {
               alt={brand.name}
               fill
               className="object-cover object-top scale-110"
+              sizes="48px"
               priority
             />
           </span>
@@ -136,6 +131,7 @@ export function Header() {
               solid ? "text-burgundy" : "text-white",
             )}
             aria-label="Menu"
+            aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
             <MenuIcon open={open} />
@@ -150,6 +146,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setOpen(false)}
                 className="rounded px-3 py-3 text-sm font-semibold text-burgundy hover:bg-sand"
               >
                 {item.label}
@@ -157,12 +154,14 @@ export function Header() {
             ))}
             <Link
               href="/account"
+              onClick={() => setOpen(false)}
               className="rounded px-3 py-3 text-sm font-semibold text-burgundy hover:bg-sand"
             >
               Account
             </Link>
             <Link
               href="/travel/custom"
+              onClick={() => setOpen(false)}
               className="mt-2 rounded bg-burgundy px-4 py-3 text-center text-sm font-semibold text-white"
             >
               Plan a custom trip

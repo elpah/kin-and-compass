@@ -67,19 +67,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    try {
-      const u = localStorage.getItem(USER_KEY);
-      const i = localStorage.getItem(INQ_KEY);
-      const o = localStorage.getItem(ORD_KEY);
-      const d = localStorage.getItem(DON_KEY);
-      if (u) setUser(JSON.parse(u) as User);
-      if (i) setInquiries(JSON.parse(i) as Inquiry[]);
-      if (o) setOrders(JSON.parse(o) as Order[]);
-      if (d) setDonations(JSON.parse(d) as Donation[]);
-    } catch {
-      /* ignore */
-    }
-    setReady(true);
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        const u = localStorage.getItem(USER_KEY);
+        const i = localStorage.getItem(INQ_KEY);
+        const o = localStorage.getItem(ORD_KEY);
+        const d = localStorage.getItem(DON_KEY);
+        if (u) setUser(JSON.parse(u) as User);
+        if (i) setInquiries(JSON.parse(i) as Inquiry[]);
+        if (o) setOrders(JSON.parse(o) as Order[]);
+        if (d) setDonations(JSON.parse(d) as Donation[]);
+      } catch {
+        /* ignore */
+      }
+      setReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {

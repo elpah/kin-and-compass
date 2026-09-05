@@ -1,5 +1,4 @@
 import { formatMoney } from "@/lib/utils";
-import { asset } from "@/lib/media";
 import type { Opportunity, Tour } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
