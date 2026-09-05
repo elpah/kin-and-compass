@@ -118,14 +118,6 @@ export const visitCategories: VisitCategory[] = [
     ],
   },
   {
-    id: "culture",
-    label: "Culture / history / Pan-African",
-    line: "Castles, courts, cloth, and the wider story that Ghana still holds.",
-    images: [
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1800&q=80",
-    ],
-  },
-  {
     id: "ancestors",
     label: "Connect to your ancestor",
     line: "Walk the door of no return with a guide who will not rush you.",
