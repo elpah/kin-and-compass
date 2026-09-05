@@ -1,53 +1,68 @@
 "use client";
 
-import { visitSlides } from "@/data/visitGallery";
+import { visitCategories } from "@/data/visitGallery";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const INTERVAL_MS = 5000;
+const INTERVAL_MS = 3200;
 
 export function VisitGallery() {
-  const [index, setIndex] = useState(0);
-  const current = visitSlides[index];
+  const [tab, setTab] = useState(0);
+  const [img, setImg] = useState(0);
+  const [cycle, setCycle] = useState(0);
+  const current = visitCategories[tab];
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % visitSlides.length);
+      const shots = visitCategories[tab].images;
+      if (img < shots.length - 1) {
+        setImg(img + 1);
+      } else {
+        setTab((t) => (t + 1) % visitCategories.length);
+        setImg(0);
+      }
     }, INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, []);
+  }, [tab, img, cycle]);
+
+  function selectTab(next: number) {
+    setTab(next);
+    setImg(0);
+    setCycle((n) => n + 1);
+  }
 
   return (
     <div className="mt-10">
       <div className="flex flex-wrap gap-x-6 gap-y-1 border-b border-black/10">
-        {visitSlides.map((slide, i) => (
+        {visitCategories.map((category, i) => (
           <button
-            key={slide.id}
+            key={category.id}
             type="button"
-            onClick={() => setIndex(i)}
+            onClick={() => selectTab(i)}
             className={`-mb-px border-b-2 pb-3 text-sm font-semibold transition-colors ${
-              i === index
+              i === tab
                 ? "border-crimson text-crimson"
                 : "border-transparent text-muted hover:text-burgundy"
             }`}
           >
-            {slide.label}
+            {category.label}
           </button>
         ))}
       </div>
 
       <div className="relative mt-6 aspect-[4/5] overflow-hidden rounded-lg bg-sand sm:aspect-[16/9]">
-        {visitSlides.map((slide, i) => (
+        {current.images.map((src, imageIndex) => (
           <Image
-            key={slide.id}
-            src={slide.image}
+            key={`${current.id}-${imageIndex}`}
+            src={src}
             alt=""
             fill
-            priority={i === 0}
-            className={`object-cover transition-opacity duration-700 ${
-              i === index ? "opacity-100" : "opacity-0"
+            sizes="(max-width: 768px) 100vw, 1200px"
+            priority={tab === 0 && imageIndex === 0}
+            className={`object-cover transition-opacity duration-500 ${
+              imageIndex === img ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
