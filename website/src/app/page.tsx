@@ -1,17 +1,16 @@
 import { covers } from "@/assets/covers";
-import { LessonCard, TourCard } from "@/components/Cards";
+import { LessonCard } from "@/components/Cards";
 import { ProductCard } from "@/components/ProductCard";
+import { VisitGallery } from "@/components/VisitGallery";
 import { lessons } from "@/data/lessons";
 import { listFeaturedProducts } from "@/lib/api";
 import { pillars } from "@/data/site";
-import { tours } from "@/data/tours";
 import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const featuredTours = tours.filter((t) => t.featured);
   const featuredProducts = await listFeaturedProducts(4).catch(() => []);
   const featuredLessons = lessons.filter((l) => l.featured).slice(0, 3);
 
@@ -42,7 +41,7 @@ export default async function Home() {
               href="/travel"
               className="inline-flex h-12 items-center rounded bg-crimson px-6 text-sm font-semibold text-white hover:bg-rose"
             >
-              Visit Ghana
+              Book now
             </Link>
             <Link
               href="/stores"
@@ -85,24 +84,18 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-burgundy-deep py-20 text-white">
+      <section className="bg-neutral-200 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="script text-2xl text-rose">Visit Ghana</p>
-              <h2 className="display text-4xl sm:text-5xl">Tours with a pulse</h2>
+              <h2 className="display text-4xl text-burgundy sm:text-5xl">Tours with a pulse</h2>
             </div>
-            <Link href="/travel" className="text-sm font-semibold text-white/80 hover:text-white">
-              All itineraries →
+            <Link href="/travel/custom" className="text-sm font-semibold text-burgundy hover:text-crimson">
+              Plan a trip →
             </Link>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {featuredTours.slice(0, 2).map((tour) => (
-              <div key={tour.slug} className="[&_.text-burgundy]:text-white [&_.text-muted]:text-white/70 [&_.bg-white]:bg-white/5 [&_.ring-sand]:ring-white/10">
-                <TourCard tour={tour} />
-              </div>
-            ))}
-          </div>
+          <VisitGallery />
         </div>
       </section>
 
