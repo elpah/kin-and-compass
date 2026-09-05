@@ -61,7 +61,7 @@ export function VisitGallery() {
             fill
             sizes="(max-width: 768px) 100vw, 1200px"
             priority={tab === 0 && imageIndex === 0}
-            className={`object-cover transition-opacity duration-500 ${
+            className={`object-cover object-top transition-opacity duration-500 ${
               imageIndex === img ? "opacity-100" : "opacity-0"
             }`}
           />

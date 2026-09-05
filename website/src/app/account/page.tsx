@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { lessons } from "@/data/lessons";
 import { formatMoney } from "@/lib/utils";
 import Link from "next/link";
 
@@ -13,7 +12,7 @@ export default function AccountPage() {
       <div className="mx-auto max-w-lg px-4 py-32 text-center">
         <h1 className="display text-4xl text-burgundy">Your account</h1>
         <p className="mt-3 text-muted">
-          Save lessons, track orders, gifts, and inquiries in one place.
+          Track orders, gifts, and inquiries in one place.
         </p>
         <Link
           href="/login"
@@ -24,9 +23,6 @@ export default function AccountPage() {
       </div>
     );
   }
-
-  const saved = lessons.filter((l) => user.savedLessons.includes(l.slug));
-  const done = lessons.filter((l) => user.completedLessons.includes(l.slug));
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6">
@@ -91,33 +87,6 @@ export default function AccountPage() {
             ))}
           </ul>
         )}
-      </section>
-
-      <section className="mt-12 grid gap-8 md:grid-cols-2">
-        <div>
-          <h2 className="display text-3xl text-burgundy">Saved lessons</h2>
-          <ul className="mt-4 space-y-2 text-sm">
-            {saved.length === 0 && <li className="text-muted">None saved yet.</li>}
-            {saved.map((l) => (
-              <li key={l.slug}>
-                <Link href={`/learning/${l.slug}`} className="text-crimson">
-                  {l.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h2 className="display text-3xl text-burgundy">Completed</h2>
-          <ul className="mt-4 space-y-2 text-sm">
-            {done.length === 0 && <li className="text-muted">Start a lesson to track progress.</li>}
-            {done.map((l) => (
-              <li key={l.slug}>
-                <Link href={`/learning/${l.slug}`}>{l.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
       </section>
 
       <section className="mt-12">

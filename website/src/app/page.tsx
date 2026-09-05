@@ -1,8 +1,6 @@
 import { covers } from "@/assets/covers";
-import { LessonCard } from "@/components/Cards";
 import { ProductCard } from "@/components/ProductCard";
 import { VisitGallery } from "@/components/VisitGallery";
-import { lessons } from "@/data/lessons";
 import { listFeaturedProducts } from "@/lib/api";
 import { pillars } from "@/data/site";
 import Image from "next/image";
@@ -12,7 +10,6 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const featuredProducts = await listFeaturedProducts(4).catch(() => []);
-  const featuredLessons = lessons.filter((l) => l.featured).slice(0, 3);
 
   return (
     <>
@@ -55,12 +52,12 @@ export default async function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
-          Five ways in
+          Four ways in
         </p>
         <h2 className="display mt-2 text-4xl text-burgundy sm:text-5xl">
-          ONE COUNTRY. FIVE WAYS TO CONNECT.
+          ONE COUNTRY. FOUR WAYS TO CONNECT.
         </h2>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {pillars.map((p) => (
             <Link
               key={p.href}
@@ -115,27 +112,6 @@ export default async function Home() {
           {featuredProducts.map((p) => (
             <ProductCard key={p.slug} product={p} />
           ))}
-        </div>
-      </section>
-
-      <section className="bg-sand/60 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
-                Learning
-              </p>
-              <h2 className="display mt-2 text-4xl text-burgundy">Arrive already listening</h2>
-            </div>
-            <Link href="/learning" className="text-sm font-semibold text-burgundy">
-              All lessons →
-            </Link>
-          </div>
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {featuredLessons.map((l) => (
-              <LessonCard key={l.slug} lesson={l} />
-            ))}
-          </div>
         </div>
       </section>
 

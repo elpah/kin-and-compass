@@ -33,9 +33,8 @@ import festival6 from "@/assets/images/tours_pulse_section/festival/festival6.we
 import festivalCover from "@/assets/images/tours_pulse_section/festival/festival_cover.webp";
 import games1 from "@/assets/images/tours_pulse_section/games/games1.webp";
 import games2 from "@/assets/images/tours_pulse_section/games/games2.webp";
-import games3 from "@/assets/images/tours_pulse_section/games/games3.webp";
-import games4 from "@/assets/images/tours_pulse_section/games/games4.webp";
 import gamesCover from "@/assets/images/tours_pulse_section/games/games_cover.webp";
+import learnCover from "@/assets/images/cover_images/learn_cover.webp";
 import ancestors1 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors1.webp";
 import ancestors2 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors2.webp";
 import ancestorsCover from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors_cover.webp";
@@ -86,6 +85,17 @@ export const visitCategories: VisitCategory[] = [
     ],
   },
   {
+    id: "learning",
+    label: "Learning",
+    line: "Language, etiquette, and history - so you arrive already listening.",
+    images: [
+      learnCover,
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1800&q=80",
+      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=1800&q=80",
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=80",
+    ],
+  },
+  {
     id: "culture",
     label: "Culture / history / Pan-African",
     line: "Castles, courts, cloth, and the wider story that Ghana still holds.",
@@ -103,7 +113,7 @@ export const visitCategories: VisitCategory[] = [
     id: "games",
     label: "Games",
     line: "Oware in the courtyard, and football that stops a whole street.",
-    images: [gamesCover, games1, games2, games3, games4],
+    images: [gamesCover, games1, games2],
   },
   {
     id: "festivals",

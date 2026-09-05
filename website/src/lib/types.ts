@@ -17,20 +17,6 @@ export type Opportunity = {
   featured?: boolean;
 };
 
-export type Lesson = {
-  slug: string;
-  title: string;
-  type: "Article" | "Video" | "Guide" | "Quiz" | "Course";
-  topic: string;
-  country: string;
-  duration: string;
-  image: string;
-  excerpt: string;
-  content: string[];
-  download?: string;
-  featured?: boolean;
-};
-
 export type Tour = {
   slug: string;
   name: string;

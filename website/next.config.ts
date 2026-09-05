@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "12mb",
     },
   },
+  async redirects() {
+    return [
+      { source: "/learning", destination: "/", permanent: true },
+      { source: "/learning/:path*", destination: "/", permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       {

@@ -1,6 +1,6 @@
 import { formatMoney } from "@/lib/utils";
 import { asset } from "@/lib/media";
-import type { Lesson, Opportunity, Tour } from "@/lib/types";
+import type { Opportunity, Tour } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,31 +25,6 @@ export function TourCard({ tour }: { tour: Tour }) {
         <h3 className="display mt-1 text-2xl text-burgundy">{tour.name}</h3>
         <p className="mt-2 line-clamp-2 text-sm text-muted">{tour.summary}</p>
       </div>
-    </Link>
-  );
-}
-
-export function LessonCard({ lesson }: { lesson: Lesson }) {
-  return (
-    <Link href={`/learning/${lesson.slug}`} className="group block">
-      <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-sand">
-        <Image
-          src={lesson.image}
-          alt={lesson.title}
-          fill
-          className="object-cover transition duration-500 group-hover:scale-105"
-        />
-        <span className="absolute left-3 top-3 rounded bg-cream px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-burgundy">
-          {lesson.type}
-        </span>
-      </div>
-      <p className="mt-3 text-[11px] font-semibold uppercase tracking-wider text-muted">
-        {lesson.topic} · {lesson.country} · {lesson.duration}
-      </p>
-      <h3 className="mt-1 font-semibold text-burgundy group-hover:text-crimson">
-        {lesson.title}
-      </h3>
-      <p className="mt-1 line-clamp-2 text-sm text-muted">{lesson.excerpt}</p>
     </Link>
   );
 }

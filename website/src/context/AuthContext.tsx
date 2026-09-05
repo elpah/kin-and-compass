@@ -12,8 +12,6 @@ import {
 export type User = {
   name: string;
   email: string;
-  savedLessons: string[];
-  completedLessons: string[];
   isAdmin?: boolean;
 };
 
@@ -50,8 +48,6 @@ type AuthContextValue = {
   donations: Donation[];
   login: (email: string, name?: string) => void;
   logout: () => void;
-  toggleSaved: (slug: string) => void;
-  markComplete: (slug: string) => void;
   addInquiry: (kind: string, payload: Record<string, string>) => void;
   addOrder: (order: Omit<Order, "id" | "createdAt" | "status">) => string;
   addDonation: (donation: Omit<Donation, "id" | "createdAt">) => string;
@@ -105,29 +101,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser({
           name: name || email.split("@")[0],
           email,
-          savedLessons: user?.savedLessons ?? [],
-          completedLessons: user?.completedLessons ?? [],
           isAdmin: email.endsWith("@kinandcompass.com"),
         });
       },
       logout: () => setUser(null),
-      toggleSaved: (slug) =>
-        setUser((prev) => {
-          if (!prev) return prev;
-          const has = prev.savedLessons.includes(slug);
-          return {
-            ...prev,
-            savedLessons: has
-              ? prev.savedLessons.filter((s) => s !== slug)
-              : [...prev.savedLessons, slug],
-          };
-        }),
-      markComplete: (slug) =>
-        setUser((prev) => {
-          if (!prev) return prev;
-          if (prev.completedLessons.includes(slug)) return prev;
-          return { ...prev, completedLessons: [...prev.completedLessons, slug] };
-        }),
       addInquiry: (kind, payload) =>
         setInquiries((prev) => [
           {

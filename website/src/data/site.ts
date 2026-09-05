@@ -14,7 +14,6 @@ export const nav = [
   { href: "/about", label: "About" },
   { href: "/stores", label: "Stores" },
   { href: "/invest", label: "Invest in Ghana" },
-  { href: "/learning", label: "Learning" },
   { href: "/travel", label: "Visit Ghana" },
   { href: "/charity", label: "Charity" },
   { href: "/contact", label: "Contact" },
@@ -110,13 +109,6 @@ export const pillars = [
     title: "Shop",
     text: "Cloth, shea, spice, and objects made by Ghanaian ateliers - shipped with their stories.",
     image: covers.shop,
-  },
-  {
-    href: "/learning",
-    kicker: "Prepare well",
-    title: "Learn",
-    text: "Language, etiquette, history, and relocation notes so you arrive already listening.",
-    image: covers.learn,
   },
   {
     href: "/invest",
