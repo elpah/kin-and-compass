@@ -22,7 +22,6 @@ import tourist5 from "@/assets/images/tours_pulse_section/tourist/tourist5.webp"
 import tourist6 from "@/assets/images/tours_pulse_section/tourist/tourist6.webp";
 import tourist7 from "@/assets/images/tours_pulse_section/tourist/tourist7.webp";
 import tourist8 from "@/assets/images/tours_pulse_section/tourist/tourist8.webp";
-import tourist9 from "@/assets/images/tours_pulse_section/tourist/tourist9.webp";
 import tourist11 from "@/assets/images/tours_pulse_section/tourist/tourist11.webp";
 import touristCover from "@/assets/images/tours_pulse_section/tourist/tourist_cover.webp";
 import festival1 from "@/assets/images/tours_pulse_section/festival/festival1.webp";
@@ -35,17 +34,16 @@ import festivalCover from "@/assets/images/tours_pulse_section/festival/festival
 import games1 from "@/assets/images/tours_pulse_section/games/games1.webp";
 import games2 from "@/assets/images/tours_pulse_section/games/games2.webp";
 import gamesCover from "@/assets/images/tours_pulse_section/games/games_cover.webp";
-import learnCover from "@/assets/images/cover_images/learn_cover.webp";
-import learnCeramic1 from "@/assets/images/tours_pulse_section/experience/learn_ceramic1.webp";
-import learnCooking1 from "@/assets/images/tours_pulse_section/experience/learn_cooking_1.webp";
-import learnCooking2 from "@/assets/images/tours_pulse_section/experience/learn_cooking2.webp";
-import learnKente from "@/assets/images/tours_pulse_section/experience/learning_kente.webp";
-import learnKente2 from "@/assets/images/tours_pulse_section/experience/learning_kente2.webp";
-import learnTieDye1 from "@/assets/images/tours_pulse_section/experience/learn_tie_dye1.webp";
-import learnTieDye2 from "@/assets/images/tours_pulse_section/experience/learn_tie_dye2.webp";
-import learnTieDye3 from "@/assets/images/tours_pulse_section/experience/learn_tie_dye3.webp";
-import learnWeave from "@/assets/images/tours_pulse_section/experience/learn_weave.webp";
-import learnWeave3 from "@/assets/images/tours_pulse_section/experience/learn_weave3.webp";
+import experienceCeramic1 from "@/assets/images/tours_pulse_section/experience/experience_ceramic1.webp";
+import experienceCooking1 from "@/assets/images/tours_pulse_section/experience/experience_cooking1.webp";
+import experienceCooking2 from "@/assets/images/tours_pulse_section/experience/experience_cooking2.webp";
+import experienceKente from "@/assets/images/tours_pulse_section/experience/experience_kente.webp";
+import experienceKente2 from "@/assets/images/tours_pulse_section/experience/experience_kente2.webp";
+import experienceTieDye1 from "@/assets/images/tours_pulse_section/experience/experience_tie_dye1.webp";
+import experienceTieDye2 from "@/assets/images/tours_pulse_section/experience/experience_tie_dye2.webp";
+import experienceTieDye3 from "@/assets/images/tours_pulse_section/experience/experience_tie_dye3.webp";
+import experienceWeave from "@/assets/images/tours_pulse_section/experience/experience_weave.webp";
+import experienceWeave3 from "@/assets/images/tours_pulse_section/experience/experience_weave3.webp";
 import ancestors1 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors1.webp";
 import ancestors2 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors2.webp";
 import ancestorsCover from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors_cover.webp";
@@ -91,7 +89,6 @@ export const visitCategories: VisitCategory[] = [
       tourist6,
       tourist7,
       tourist8,
-      tourist9,
       tourist11,
     ],
   },
@@ -100,17 +97,16 @@ export const visitCategories: VisitCategory[] = [
     label: "Experience",
     line: "Kente, weaving, tie-dye, clay, and the kitchen - skills you take home in your hands.",
     images: [
-      learnCover,
-      learnKente,
-      learnKente2,
-      learnWeave,
-      learnWeave3,
-      learnTieDye1,
-      learnTieDye2,
-      learnTieDye3,
-      learnCeramic1,
-      learnCooking1,
-      learnCooking2,
+      experienceKente,
+      experienceKente2,
+      experienceWeave,
+      experienceWeave3,
+      experienceTieDye1,
+      experienceTieDye2,
+      experienceTieDye3,
+      experienceCeramic1,
+      experienceCooking1,
+      experienceCooking2,
     ],
   },
   {

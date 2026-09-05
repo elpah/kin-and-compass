@@ -20,7 +20,7 @@ export function Footer() {
             </div>
           </div>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/70">
-            Travel to Africa, learn about Africa, shop African makers, give back in
+            Travel Ghana, shop African makers, give back in
             Ghana, and explore legitimate opportunity - through one trusted house.
           </p>
           <div className="mt-6 flex items-center gap-3">

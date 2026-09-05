@@ -27,11 +27,11 @@ const script = Great_Vibes({
 
 export const metadata: Metadata = {
   title: {
-    default: "Kin and Compass - Travel, Shop, Learn, Invest, Give",
+    default: "Kin and Compass - Travel, Shop, Invest, Give",
     template: "%s · Kin and Compass",
   },
   description:
-    "A premium Ghana-focused lifestyle platform. Visit Ghana, shop Ghanaian makers, learn culture and language, explore investment briefs, and give back through named community projects.",
+    "A premium Ghana-focused lifestyle platform. Visit Ghana, shop Ghanaian makers, explore investment briefs, and give back through named community projects.",
   keywords: [
     "Ghana travel",
     "Visit Ghana",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kin and Compass",
     description:
-      "Travel, shop, learn, invest, and give back - one house connecting you with Ghana.",
+      "Travel, shop, invest, and give back - one house connecting you with Ghana.",
     type: "website",
   },
 };

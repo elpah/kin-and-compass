@@ -7,7 +7,7 @@ import Link from "next/link";
 export const metadata = {
   title: "About",
   description:
-    "Kin and Compass Travel and Tour - come as a traveler, leave as family. One country, five ways to connect.",
+    "We are a travel and tour company passionate about showcasing the beauty, culture, heritage, and opportunities of Ghana to the world.",
 };
 
 export default function AboutPage() {
@@ -15,32 +15,29 @@ export default function AboutPage() {
     <>
       <PageHero
         kicker="The house"
-        title="Come as a traveler. Leave as family."
-        text="Kin and Compass is a Ghana house for journeys that go past the itinerary: culture, commerce, opportunity, and a footprint that matters."
-        image={covers.homepage}
+        title="More than travel. A deeper connection"
+        text="We are a travel and tour company passionate about showcasing the beauty, culture, heritage, and opportunities of Ghana to the world. Our mission is to create meaningful experiences that connect travelers to our people, our history, and the places that make Ghana unforgettable."
+        image={covers.about}
       />
 
       <section className="mx-auto max-w-3xl px-4 py-14 text-[17px] leading-relaxed text-ink/85 sm:px-6">
-        <p className="script text-2xl text-crimson">Who we are</p>
-        <h2 className="display mt-2 text-4xl text-burgundy">
-          One desk in Accra. Five doors in.
-        </h2>
+        <p className="script text-2xl text-crimson">Our story</p>
+        <h2 className="display mt-2 text-4xl text-burgundy">Kin and Compass</h2>
         <p className="mt-5">
-          {brand.legal} begins in Ghana because that is home: the Atlantic, the
-          markets, the universities, and the lodges waiting for guests who have
-          been briefed with care. We move beyond tourism. Culture meets commerce.
-          Opportunity meets intention.
+          Founded with a passion for sharing the authentic Ghanaian experience, our
+          company was created to connect people from around the world with the
+          culture, history, landscapes, businesses, communities, and opportunities
+          that make Ghana unique.
         </p>
+        <p className="mt-5">We believe travel should be more than sightseeing. It should create connections.</p>
         <p className="mt-5">
-          Someone researching Accra should be able to plan a trip, learn Twi, buy
-          shea from a named atelier, ask about a lodge or a factory, and give to
-          community work - without opening five tabs.
+          Whether you&apos;re visiting Ghana for leisure, heritage, education, business,
+          investment, or simply to experience something new, we help make your
+          journey easier, safer, richer, and more memorable.
         </p>
-        <p className="mt-5">
-          Travel and learning will grow with the continent. Investment briefings
-          and the Give Back desk stay in Ghana until there is real work to show
-          elsewhere.
-        </p>
+        <blockquote className="script mt-8 text-3xl text-crimson">
+          Ghana is not just a destination. It&apos;s a feeling.
+        </blockquote>
       </section>
 
       <section className="border-y border-sand bg-white py-16">
@@ -49,24 +46,25 @@ export default function AboutPage() {
             One country
           </p>
           <h2 className="display mt-2 text-3xl text-burgundy sm:text-4xl">
-            Five ways to connect
+            Four ways to connect
           </h2>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {pillars.map((p) => (
               <Link
                 key={p.href}
                 href={p.href}
-                className="group overflow-hidden rounded-lg bg-cream ring-1 ring-sand hover:ring-crimson"
+                className="group flex h-full flex-col overflow-hidden rounded-lg bg-cream ring-1 ring-sand hover:ring-crimson"
               >
-                <div className="relative aspect-[4/3]">
+                <div className="relative aspect-[4/3] w-full">
                   <Image
                     src={p.image}
-                    alt=""
+                    alt={p.title}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover transition duration-500 group-hover:scale-105"
                   />
                 </div>
-                <div className="p-4">
+                <div className="flex flex-1 flex-col p-4">
                   <p className="script text-lg text-rose">{p.kicker}</p>
                   <h3 className="display text-2xl text-burgundy">{p.title}</h3>
                   <p className="mt-1 text-sm text-muted">{p.text}</p>
@@ -79,7 +77,7 @@ export default function AboutPage() {
 
       <section className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
         <div className="relative min-h-[280px] overflow-hidden rounded-lg">
-          <Image src={covers.extra} alt="" fill className="object-cover" />
+          <Image src={covers.extra} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
         </div>
         <div>
           <p className="script text-2xl text-crimson">Where we sit</p>

@@ -6,7 +6,7 @@ import { brand } from "@/data/site";
 export const metadata = {
   title: "Contact",
   description:
-    "Write to Kin and Compass in Accra - travel, store, learning, invest, or charity.",
+    "Write to Kin and Compass in Accra - travel, store, invest, or charity.",
 };
 
 export default function ContactPage() {

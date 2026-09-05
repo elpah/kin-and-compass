@@ -24,9 +24,9 @@ export default function TermsPage() {
         <section>
           <h2 className="display text-2xl text-burgundy">Services</h2>
           <p className="mt-2">
-            We publish travel itineraries, a store, learning material, educational
-            investment briefs, and charity projects in Ghana. Tour prices, product
-            stock, and fundraising totals can change. Bookings, orders, and gifts
+            We publish travel itineraries, a store, educational investment briefs,
+            and charity projects in Ghana. Tour prices, product stock, and
+            fundraising totals can change. Bookings, orders, and gifts
             are confirmed only when we say so in writing.
           </p>
         </section>

@@ -42,11 +42,11 @@ export function CharityBrowser() {
               Impact My Life will connect individuals, organisations, businesses, and
               supporters with community work in Ghana - education, health, water,
               skills, and care for families. The aim is a transparent, trusted space
-              where you can learn what is needed, give, and later see what your gift
+              where you can find what is needed, give, and later see what your gift
               helped start.
             </p>
             <p className="mt-4 text-[17px] leading-relaxed text-ink/80">
-              Kin and Compass already welcomes people to visit, learn, shop, and
+              Kin and Compass already welcomes people to visit, shop, and
               look at opportunity. This room is for giving back. We will not invent
               completed projects. When the first programmes are named, they will
               appear here with a place, a purpose, and a way to help.
@@ -153,7 +153,7 @@ export function CharityBrowser() {
           <p className="script text-3xl text-rose">The house</p>
           <h2 className="display mt-2 text-4xl sm:text-5xl">Help us begin well.</h2>
           <p className="mt-4 text-white/80">
-            Visit, learn, shop, invest - and, when you can, give back. Read how
+            Visit, shop, invest - and, when you can, give back. Read how
             gifts will be used, then support the fund or write to the desk.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
