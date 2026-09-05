@@ -79,7 +79,6 @@ export default function ContactPage() {
                   options: [
                     "Travel",
                     "Store",
-                    "Learning",
                     "Invest",
                     "Charity",
                     "Press",
