@@ -38,7 +38,7 @@ export function VisitGallery() {
         ))}
       </div>
 
-      <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-lg bg-sand">
+      <div className="relative mt-6 aspect-[4/5] overflow-hidden rounded-lg bg-sand sm:aspect-[16/9]">
         {visitSlides.map((slide, i) => (
           <Image
             key={slide.id}
