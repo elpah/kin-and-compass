@@ -61,9 +61,9 @@ export function VisitGallery() {
             fill
             sizes="(max-width: 768px) 100vw, 1200px"
             priority={tab === 0 && imageIndex === 0}
-            className={`object-cover object-top transition-opacity duration-500 ${
-              imageIndex === img ? "opacity-100" : "opacity-0"
-            }`}
+            className={`object-cover transition-opacity duration-500 ${
+              current.id === "learning" ? "object-center" : "object-top"
+            } ${imageIndex === img ? "opacity-100" : "opacity-0"}`}
           />
         ))}
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent pt-28">

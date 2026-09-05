@@ -3,6 +3,7 @@ import namingCover from "@/assets/images/tours_pulse_section/naming/naming_cover
 import food1 from "@/assets/images/tours_pulse_section/foods/food1.webp";
 import food2 from "@/assets/images/tours_pulse_section/foods/food2.webp";
 import food3 from "@/assets/images/tours_pulse_section/foods/food3.webp";
+import food4 from "@/assets/images/tours_pulse_section/foods/food4.webp";
 import foodCover from "@/assets/images/tours_pulse_section/foods/food_cover.webp";
 import night1 from "@/assets/images/tours_pulse_section/night/night1.webp";
 import night2 from "@/assets/images/tours_pulse_section/night/night2.webp";
@@ -23,6 +24,7 @@ import tourist7 from "@/assets/images/tours_pulse_section/tourist/tourist7.webp"
 import tourist8 from "@/assets/images/tours_pulse_section/tourist/tourist8.webp";
 import tourist9 from "@/assets/images/tours_pulse_section/tourist/tourist9.webp";
 import tourist10 from "@/assets/images/tours_pulse_section/tourist/tourist10.webp";
+import tourist11 from "@/assets/images/tours_pulse_section/tourist/tourist11.webp";
 import touristCover from "@/assets/images/tours_pulse_section/tourist/tourist_cover.webp";
 import festival1 from "@/assets/images/tours_pulse_section/festival/festival1.webp";
 import festival2 from "@/assets/images/tours_pulse_section/festival/festival2.webp";
@@ -35,6 +37,17 @@ import games1 from "@/assets/images/tours_pulse_section/games/games1.webp";
 import games2 from "@/assets/images/tours_pulse_section/games/games2.webp";
 import gamesCover from "@/assets/images/tours_pulse_section/games/games_cover.webp";
 import learnCover from "@/assets/images/cover_images/learn_cover.webp";
+import learnCeramic1 from "@/assets/images/tours_pulse_section/learning/learn_ceramic1.webp";
+import learnCooking1 from "@/assets/images/tours_pulse_section/learning/learn_cooking_1.webp";
+import learnCooking2 from "@/assets/images/tours_pulse_section/learning/learn_cooking2.webp";
+import learnKente from "@/assets/images/tours_pulse_section/learning/learning_kente.webp";
+import learnKente2 from "@/assets/images/tours_pulse_section/learning/learning_kente2.webp";
+import learnTieDye1 from "@/assets/images/tours_pulse_section/learning/learn_tie_dye1.webp";
+import learnTieDye2 from "@/assets/images/tours_pulse_section/learning/learn_tie_dye2.webp";
+import learnTieDye3 from "@/assets/images/tours_pulse_section/learning/learn_tie_dye3.webp";
+import learnWeave1 from "@/assets/images/tours_pulse_section/learning/learn_weave1.webp";
+import learnWeave2 from "@/assets/images/tours_pulse_section/learning/learn_weave2.webp";
+import learnWeave3 from "@/assets/images/tours_pulse_section/learning/learn_weave3.webp";
 import ancestors1 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors1.webp";
 import ancestors2 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors2.webp";
 import ancestorsCover from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors_cover.webp";
@@ -58,7 +71,7 @@ export const visitCategories: VisitCategory[] = [
     id: "food",
     label: "Food",
     line: "Jollof, banku, waakye, and the night markets that feed Accra.",
-    images: [foodCover, food1, food2, food3],
+    images: [foodCover, food1, food2, food3, food4],
   },
   {
     id: "nightlife",
@@ -82,17 +95,26 @@ export const visitCategories: VisitCategory[] = [
       tourist8,
       tourist9,
       tourist10,
+      tourist11,
     ],
   },
   {
     id: "learning",
-    label: "Learning",
-    line: "Language, etiquette, and history - so you arrive already listening.",
+    label: "Experience",
+    line: "Kente, weaving, tie-dye, clay, and the kitchen - skills you take home in your hands.",
     images: [
       learnCover,
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1800&q=80",
-      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=1800&q=80",
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=80",
+      learnKente,
+      learnKente2,
+      learnWeave1,
+      learnWeave2,
+      learnWeave3,
+      learnTieDye1,
+      learnTieDye2,
+      learnTieDye3,
+      learnCeramic1,
+      learnCooking1,
+      learnCooking2,
     ],
   },
   {
