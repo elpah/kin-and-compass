@@ -164,7 +164,7 @@ export function Header() {
               onClick={() => setOpen(false)}
               className="mt-2 rounded bg-burgundy px-4 py-3 text-center text-sm font-semibold text-white"
             >
-              Plan a custom trip
+              Design Custom Trip
             </Link>
           </nav>
         </div>

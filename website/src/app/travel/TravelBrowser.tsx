@@ -30,7 +30,7 @@ export function TravelBrowser() {
           href="/travel/custom"
           className="inline-flex h-12 items-center rounded bg-crimson px-6 text-sm font-semibold text-white"
         >
-          Design a custom trip
+          Design Custom Trip
         </Link>
       </PageHero>
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">

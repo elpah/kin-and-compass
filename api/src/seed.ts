@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { customExperiences } from "./data/experiences.js";
 import { products } from "./data/products.js";
 import { env, requireEnv } from "./env.js";
+import { CustomExperienceModel } from "./models/CustomExperience.js";
 import { Product } from "./models/Product.js";
 import { User } from "./models/User.js";
 
@@ -25,7 +27,12 @@ async function seed() {
   for (const product of products) {
     await Product.findOneAndUpdate({ slug: product.slug }, product, { upsert: true });
   }
-  console.log(`Seeded admin ${env.adminEmail} and ${products.length} products.`);
+  for (const experience of customExperiences) {
+    await CustomExperienceModel.findOneAndUpdate({ slug: experience.slug }, experience, { upsert: true });
+  }
+  console.log(
+    `Seeded admin ${env.adminEmail}, ${products.length} products, and ${customExperiences.length} custom trips.`,
+  );
   await mongoose.disconnect();
 }
 

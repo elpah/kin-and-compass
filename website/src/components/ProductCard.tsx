@@ -10,7 +10,7 @@ import Link from "next/link";
 export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group overflow-hidden rounded-lg bg-white ring-1 ring-sand transition hover:ring-crimson/40">
-      <Link href={`/stores/${product.slug}`} className="block">
+      <Link href={`/store/${product.slug}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-sand">
           <Image
             src={asset(product.image)}
@@ -21,7 +21,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </Link>
       <div className="flex items-end justify-between gap-2 p-3">
-        <Link href={`/stores/${product.slug}`} className="min-w-0">
+        <Link href={`/store/${product.slug}`} className="min-w-0">
           <h3 className="display truncate text-lg leading-tight text-burgundy">{product.name}</h3>
           <p className="mt-0.5 truncate text-xs text-muted">{product.vendor}</p>
           <p className="mt-1.5 text-sm font-semibold text-ink">

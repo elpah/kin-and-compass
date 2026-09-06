@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: "/learning", destination: "/", permanent: true },
-      { source: "/learning/:path*", destination: "/", permanent: true },
+      { source: "/stores", destination: "/store", permanent: true },
+      { source: "/stores/:path*", destination: "/store/:path*", permanent: true },
     ];
   },
   images: {

@@ -1,4 +1,4 @@
-import { mediaUrl, type AdminUser, type Product } from "@kincompass/shared";
+import { mediaUrl, type AdminUser, type CustomExperience, type PackagedTour, type Product } from "@kincompass/shared";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -52,4 +52,44 @@ export function logout() {
 
 export function me() {
   return request<{ user: AdminUser }>("/admin/me");
+}
+
+export function listExperiences() {
+  return request<{ experiences: CustomExperience[] }>("/experiences");
+}
+
+export function getExperience(slug: string) {
+  return request<{ experience: CustomExperience }>(`/experiences/${slug}`);
+}
+
+export function createExperience(form: FormData) {
+  return request<{ experience: CustomExperience }>("/experiences", { method: "POST", body: form });
+}
+
+export function updateExperience(slug: string, form: FormData) {
+  return request<{ experience: CustomExperience }>(`/experiences/${slug}`, { method: "PUT", body: form });
+}
+
+export function deleteExperience(slug: string) {
+  return request<{ ok: boolean }>(`/experiences/${slug}`, { method: "DELETE" });
+}
+
+export function listTours() {
+  return request<{ tours: PackagedTour[] }>("/tours");
+}
+
+export function getTour(slug: string) {
+  return request<{ tour: PackagedTour }>(`/tours/${slug}`);
+}
+
+export function createTour(form: FormData) {
+  return request<{ tour: PackagedTour }>("/tours", { method: "POST", body: form });
+}
+
+export function updateTour(slug: string, form: FormData) {
+  return request<{ tour: PackagedTour }>(`/tours/${slug}`, { method: "PUT", body: form });
+}
+
+export function deleteTour(slug: string) {
+  return request<{ ok: boolean }>(`/tours/${slug}`, { method: "DELETE" });
 }

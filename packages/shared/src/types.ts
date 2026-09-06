@@ -39,3 +39,24 @@ export type AdminUser = {
   name: string;
   email: string;
 };
+
+export type CustomExperience = {
+  slug: string;
+  name: string;
+  price: number;
+  duration: string;
+  description: string;
+  image: string;
+  active: boolean;
+};
+
+export type PackagedTour = {
+  slug: string;
+  name: string;
+  description: string;
+  duration: string;
+  price: number;
+  image: string;
+  experienceSlugs: string[];
+  active: boolean;
+};

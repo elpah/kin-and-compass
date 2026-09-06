@@ -1,4 +1,5 @@
-import type { Product } from "@kincompass/shared";
+import type { CustomExperience, Product } from "@kincompass/shared";
+import { customExperiences as localExperiences } from "@/data/experiences";
 import { products as localProducts } from "@/data/products";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -62,4 +63,17 @@ export async function getProductBySlug(slug: string) {
 
 export function apiUrl() {
   return API_URL;
+}
+
+export async function listActiveExperiences() {
+  if (useApi) {
+    try {
+      const data = await getJson<{ experiences: CustomExperience[] }>("/experiences?active=true");
+      const live = (data.experiences ?? []).filter((item) => item.active);
+      if (live.length) return live;
+    } catch {
+      /* API or MongoDB not running - use placeholders */
+    }
+  }
+  return localExperiences.filter((item) => item.active);
 }

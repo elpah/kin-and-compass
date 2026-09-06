@@ -13,7 +13,7 @@ export const brand = {
 
 export const nav = [
   { href: "/about", label: "About" },
-  { href: "/stores", label: "Stores" },
+  { href: "/store", label: "Store" },
   { href: "/invest", label: "Invest in Ghana" },
   { href: "/travel", label: "Visit Ghana" },
   { href: "/charity", label: "Charity" },
@@ -105,7 +105,7 @@ export const pillars = [
     image: covers.travel,
   },
   {
-    href: "/stores",
+    href: "/store",
     kicker: "Marketplace",
     title: "Shop",
     text: "Cloth, shea, spice, and objects made by Ghanaian ateliers - shipped with their stories.",

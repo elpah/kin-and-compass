@@ -83,18 +83,19 @@ productRouter.put("/:slug", requireAdmin, files, async (req, res) => {
     }
     const fields = parseProductFields(req.body ?? {});
     const uploaded = req.files as Record<string, Express.Multer.File[]> | undefined;
-    let image = current.image as string;
-    const nextImage = fileUrl(uploaded?.image?.[0]);
-    if (nextImage) image = nextImage;
-
     const keepGallery = String(req.body.keepGallery ?? "")
       .split(",")
       .map((item: string) => item.trim())
       .filter(Boolean);
-    const gallery = keepGallery.length ? keepGallery : [image];
-    if (!gallery.includes(image)) gallery.unshift(image);
-    for (const file of uploaded?.gallery ?? []) {
-      gallery.push(fileUrl(file));
+    const extra = (uploaded?.gallery ?? []).map((file) => fileUrl(file));
+    const nextImage = fileUrl(uploaded?.image?.[0]);
+    const image = nextImage || keepGallery[0] || (current.image as string);
+    const gallery = [...(nextImage ? [nextImage, ...keepGallery] : keepGallery), ...extra].filter(
+      (item, index, list) => item && list.indexOf(item) === index,
+    );
+    if (!image || !gallery.length) {
+      res.status(400).json({ error: "A product image is required" });
+      return;
     }
 
     current.set({ ...fields, slug: current.slug, image, gallery });

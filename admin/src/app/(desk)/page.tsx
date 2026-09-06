@@ -24,7 +24,7 @@ export default function AdminHomePage() {
               {item.href === "/store"
                 ? "Products, stock, and the public catalogue."
                 : item.href === "/visit-ghana"
-                  ? "Tours and itineraries for Ghana."
+                  ? "Tours and custom trip experiences for Ghana."
                   : "House details and how this desk signs in."}
             </p>
           </Link>

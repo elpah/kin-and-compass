@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function NewProductPage() {
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <p className="text-sm text-muted">
         <Link href="/store" className="hover:text-burgundy">
           Store

@@ -7,7 +7,7 @@ import { productCategories } from "@kincompass/shared";
 import type { Product } from "@/lib/types";
 import { useState } from "react";
 
-export function StoresBrowser({ products }: { products: Product[] }) {
+export function StoreBrowser({ products }: { products: Product[] }) {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("All");
 
@@ -21,9 +21,9 @@ export function StoresBrowser({ products }: { products: Product[] }) {
   return (
     <>
       <PageHero
-        kicker="Stores"
+        kicker="Store"
         title="Objects with a place of origin."
-        text="Fashion, shea, spice, cloth, and paper from ateliers we can name. Built so more African vendors can join."
+        text="Fashion, shea, spice, cloth, and paper from ateliers we can name. Chosen for this house, not a warehouse."
         image={covers.shop}
       />
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">

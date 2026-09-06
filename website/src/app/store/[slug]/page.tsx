@@ -28,8 +28,8 @@ export default async function ProductPage({
   return (
     <article className="mx-auto max-w-7xl px-4 pb-20 pt-28 sm:px-6">
       <p className="text-sm text-muted">
-        <Link href="/stores" className="hover:text-burgundy">
-          Stores
+        <Link href="/store" className="hover:text-burgundy">
+          Store
         </Link>{" "}
         / {product.category}
       </p>

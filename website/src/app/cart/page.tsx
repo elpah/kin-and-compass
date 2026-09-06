@@ -11,12 +11,12 @@ export default function CartPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6">
-      <p className="script text-2xl text-crimson">Stores</p>
+      <p className="script text-2xl text-crimson">Store</p>
       <h1 className="display text-4xl text-burgundy">Your bag</h1>
       {items.length === 0 ? (
         <p className="mt-8 text-muted">
           Empty for now.{" "}
-          <Link href="/stores" className="font-semibold text-crimson">
+          <Link href="/store" className="font-semibold text-crimson">
             Visit the store
           </Link>
           .
@@ -33,7 +33,7 @@ export default function CartPage() {
                   <Image src={asset(item.image)} alt="" fill className="object-cover" />
                 </div>
                 <div className="flex-1">
-                  <Link href={`/stores/${item.slug}`} className="font-semibold text-burgundy">
+                  <Link href={`/store/${item.slug}`} className="font-semibold text-burgundy">
                     {item.name}
                   </Link>
                   <p className="text-sm text-muted">{formatMoney(item.price)}</p>

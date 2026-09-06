@@ -1,26 +1,105 @@
 "use client";
 
-import { createProduct, updateProduct } from "@/lib/api";
-import { asset } from "@/lib/api";
-import { productCategories, type Product } from "@kincompass/shared";
+import { asset, createProduct, updateProduct } from "@/lib/api";
+import { productCategories, type Product, type ProductCategory } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+
+type ImageSlot =
+  | { id: string; kind: "existing"; src: string }
+  | { id: string; kind: "file"; file: File; preview: string };
+
+function slotSrc(slot: ImageSlot) {
+  return slot.kind === "existing" ? asset(slot.src) : slot.preview;
+}
+
+function money(value: string) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "$0";
+  return `$${n.toFixed(2)}`;
+}
 
 export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
+  const fileInputId = useId();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [step, setStep] = useState<"edit" | "preview">("edit");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const [galleryKeep, setGalleryKeep] = useState(product?.gallery ?? []);
+  const [name, setName] = useState(product?.name ?? "");
+  const [price, setPrice] = useState(product ? String(product.price) : "");
+  const [compareAt, setCompareAt] = useState(product?.compareAt ? String(product.compareAt) : "");
+  const [category, setCategory] = useState(product?.category ?? "");
+  const [stock, setStock] = useState(String(product?.stock ?? 0));
+  const [vendor, setVendor] = useState(product?.vendor ?? "");
+  const [country, setCountry] = useState(product?.country ?? "Ghana");
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [featured, setFeatured] = useState(Boolean(product?.featured));
   const [details, setDetails] = useState<string[]>(
     product?.details?.length ? product.details : [""],
   );
+  const [images, setImages] = useState<ImageSlot[]>(() => {
+    const urls = product?.gallery?.length ? product.gallery : product?.image ? [product.image] : [];
+    return urls.map((src, index) => ({ id: `keep-${index}-${src}`, kind: "existing" as const, src }));
+  });
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    return () => {
+      images.forEach((slot) => {
+        if (slot.kind === "file") URL.revokeObjectURL(slot.preview);
+      });
+    };
+    // Only on unmount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function addFiles(list: FileList | null) {
+    if (!list?.length) return;
+    const next: ImageSlot[] = [];
+    for (const file of Array.from(list)) {
+      if (!file.type.startsWith("image/")) continue;
+      next.push({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random()}`,
+        kind: "file",
+        file,
+        preview: URL.createObjectURL(file),
+      });
+    }
+    setImages((prev) => [...prev, ...next].slice(0, 12));
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
+  function removeImage(id: string) {
+    setImages((prev) => {
+      const slot = prev.find((item) => item.id === id);
+      if (slot?.kind === "file") URL.revokeObjectURL(slot.preview);
+      return prev.filter((item) => item.id !== id);
+    });
+  }
+
+  function onReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    if (!images.length) {
+      setError("Add at least one photo. The first one is the cover.");
+      return;
+    }
+    setStep("preview");
+  }
+
+  async function publish() {
+    setError("");
     setPending(true);
-    const form = new FormData(event.currentTarget);
-    form.set("keepGallery", galleryKeep.join(","));
+    const form = new FormData();
+    form.set("name", name.trim());
+    form.set("price", price);
+    form.set("compareAt", compareAt);
+    form.set("category", category);
+    form.set("stock", stock);
+    form.set("vendor", vendor.trim());
+    form.set("country", country.trim());
+    form.set("description", description.trim());
+    if (featured) form.set("featured", "on");
     form.set(
       "details",
       details
@@ -28,59 +107,144 @@ export function ProductForm({ product }: { product?: Product }) {
         .filter(Boolean)
         .join("\n"),
     );
+    const keep = images.filter((slot) => slot.kind === "existing").map((slot) => slot.src);
+    form.set("keepGallery", keep.join(","));
+    const files = images.filter((slot) => slot.kind === "file");
+    const cover = images[0];
+    if (cover?.kind === "file") {
+      form.append("image", cover.file);
+      files.slice(1).forEach((slot) => form.append("gallery", slot.file));
+    } else {
+      files.forEach((slot) => form.append("gallery", slot.file));
+    }
     try {
       if (product) await updateProduct(product.slug, form);
       else await createProduct(form);
       router.push("/store");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
+      setStep("edit");
     } finally {
       setPending(false);
     }
   }
 
+  const cleanDetails = details.map((line) => line.trim()).filter(Boolean);
+
+  if (step === "preview") {
+    return (
+      <div>
+        <p className="script text-2xl text-crimson">Check it</p>
+        <h2 className="display text-3xl text-burgundy">Preview</h2>
+        <p className="mt-1 text-sm text-muted">This is how it will look on the store. Nothing is saved yet.</p>
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-2">
+          <div className="grid grid-cols-2 gap-2">
+            {images.map((slot, index) => (
+              <div
+                key={slot.id}
+                className={`relative overflow-hidden rounded-lg bg-sand ${index === 0 ? "col-span-2 aspect-[4/5]" : "aspect-[4/5]"}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={slotSrc(slot)} alt="" className="h-full w-full object-cover" />
+                {index === 0 && (
+                  <span className="absolute left-2 top-2 rounded bg-burgundy px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                    Cover
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-crimson">
+              {vendor} · {country}
+            </p>
+            <h3 className="display mt-2 text-4xl text-burgundy">{name}</h3>
+            <p className="mt-3 text-xl font-semibold">
+              {money(price)}
+              {compareAt && Number(compareAt) > 0 && (
+                <span className="ml-2 text-base font-normal text-muted line-through">{money(compareAt)}</span>
+              )}
+            </p>
+            <p className="mt-2 text-sm text-muted">
+              {category} · {stock} in stock{featured ? " · Featured" : ""}
+            </p>
+            <p className="mt-6 leading-relaxed text-ink/80">{description}</p>
+            {cleanDetails.length > 0 && (
+              <ul className="mt-6 list-disc space-y-1 pl-5 text-sm text-muted">
+                {cleanDetails.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {error && <p className="mt-6 text-sm text-crimson">{error}</p>}
+        <div className="mt-8 flex flex-wrap gap-3">
+          <button
+            type="button"
+            className="h-12 rounded-lg px-6 text-sm font-semibold text-burgundy ring-1 ring-sand"
+            onClick={() => setStep("edit")}
+            disabled={pending}
+          >
+            Back to edit
+          </button>
+          <button
+            type="button"
+            className="h-12 rounded-lg bg-burgundy px-6 text-sm font-semibold text-white disabled:opacity-60"
+            onClick={publish}
+            disabled={pending}
+          >
+            {pending ? "Saving..." : product ? "Publish changes" : "Publish to store"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
-      <Field label="Name" name="name" defaultValue={product?.name} required />
+    <form onSubmit={onReview} className="grid gap-4">
+      <Field label="Name" value={name} onChange={setName} required />
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Price (USD)" name="price" type="number" step="0.01" defaultValue={product?.price} required />
-        <Field label="Compare-at price" name="compareAt" type="number" step="0.01" defaultValue={product?.compareAt} />
+        <Field label="Price (USD)" type="number" step="0.01" value={price} onChange={setPrice} required />
+        <Field label="Compare-at price" type="number" step="0.01" value={compareAt} onChange={setCompareAt} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm">
           <span className="font-medium text-burgundy">Category</span>
           <select
-            name="category"
             required
-            defaultValue={product?.category}
+            value={category}
+            onChange={(event) => setCategory(event.target.value as ProductCategory | "")}
             className="mt-1 h-12 w-full rounded-lg border border-sand bg-white px-3"
           >
             <option value="">Select</option>
-            {productCategories.map((category) => (
-              <option key={category}>{category}</option>
+            {productCategories.map((item) => (
+              <option key={item}>{item}</option>
             ))}
           </select>
         </label>
-        <Field label="Stock" name="stock" type="number" defaultValue={product?.stock ?? 0} required />
+        <Field label="Stock" type="number" value={stock} onChange={setStock} required />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Vendor" name="vendor" defaultValue={product?.vendor} required />
-        <Field label="Country" name="country" defaultValue={product?.country ?? "Ghana"} required />
+        <Field label="Vendor" value={vendor} onChange={setVendor} required />
+        <Field label="Country" value={country} onChange={setCountry} required />
       </div>
       <label className="block text-sm">
         <span className="font-medium text-burgundy">Description</span>
         <textarea
-          name="description"
           required
           rows={5}
-          defaultValue={product?.description}
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
           className="mt-1 w-full rounded-lg border border-sand px-3 py-2"
         />
       </label>
       <div>
         <p className="text-sm font-medium text-burgundy">Details</p>
         <p className="mt-1 text-xs text-muted">
-          Short facts under the description on the product page, as a bullet list. Material, size, care, what is in the box.
+          One fact per row. Type it, then press Enter or Add detail for the next bullet.
         </p>
         <div className="mt-2 grid gap-2">
           {details.map((line, index) => (
@@ -92,6 +256,23 @@ export function ProductForm({ product }: { product?: Product }) {
                   next[index] = event.target.value;
                   setDetails(next);
                 }}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter") return;
+                  event.preventDefault();
+                  if (!line.trim()) return;
+                  if (index < details.length - 1) {
+                    const form = event.currentTarget.form;
+                    const inputs = form?.querySelectorAll<HTMLInputElement>("[data-detail-row]");
+                    inputs?.[index + 1]?.focus();
+                    return;
+                  }
+                  const form = event.currentTarget.form;
+                  setDetails([...details, ""]);
+                  window.setTimeout(() => {
+                    form?.querySelectorAll<HTMLInputElement>("[data-detail-row]")?.[details.length]?.focus();
+                  }, 0);
+                }}
+                data-detail-row
                 placeholder={index === 0 ? "e.g. Handwoven cotton-silk blend" : "Add another fact"}
                 className="h-12 flex-1 rounded-lg border border-sand px-3 text-sm outline-none focus:ring-2 focus:ring-crimson/30"
               />
@@ -111,67 +292,66 @@ export function ProductForm({ product }: { product?: Product }) {
             </div>
           ))}
         </div>
-        <button
-          type="button"
-          className="mt-2 text-sm font-semibold text-burgundy"
-          onClick={() => setDetails([...details, ""])}
-        >
+        <button type="button" className="mt-2 text-sm font-semibold text-burgundy" onClick={() => setDetails([...details, ""])}>
           Add detail
         </button>
       </div>
       <label className="flex items-center gap-2 text-sm font-medium text-burgundy">
-        <input type="checkbox" name="featured" defaultChecked={product?.featured} />
+        <input type="checkbox" checked={featured} onChange={(event) => setFeatured(event.target.checked)} />
         Featured on the homepage
       </label>
-      <label className="block text-sm">
-        <span className="font-medium text-burgundy">
-          {product ? "Replace main image" : "Main image"}
-        </span>
+
+      <div>
+        <p className="text-sm font-medium text-burgundy">Photos</p>
+        <p className="mt-1 text-xs text-muted">
+          The first photo is the cover. Add more in the empty box. You will see them on the next screen before they go live.
+        </p>
         <input
-          name="image"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          required={!product}
-          className="mt-1 block w-full text-sm"
-        />
-      </label>
-      {product && (
-        <div>
-          <p className="text-sm font-medium text-burgundy">Current gallery</p>
-          <div className="mt-2 flex flex-wrap gap-3">
-            {galleryKeep.map((src) => (
-              <button
-                key={src}
-                type="button"
-                onClick={() => setGalleryKeep((prev) => prev.filter((item) => item !== src))}
-                className="relative overflow-hidden rounded-lg ring-1 ring-sand"
-                title="Remove from gallery"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={asset(src)} alt="" className="h-20 w-16 object-cover" />
-              </button>
-            ))}
-          </div>
-          <p className="mt-1 text-xs text-muted">Click a thumbnail to remove it.</p>
-        </div>
-      )}
-      <label className="block text-sm">
-        <span className="font-medium text-burgundy">Add gallery images</span>
-        <input
-          name="gallery"
+          id={fileInputId}
+          ref={fileRef}
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
-          className="mt-1 block w-full text-sm"
+          className="sr-only"
+          onChange={(event) => addFiles(event.target.files)}
         />
-      </label>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {images.map((slot, index) => (
+            <div
+              key={slot.id}
+              className={`relative overflow-hidden rounded-lg bg-sand ring-1 ring-sand ${index === 0 ? "col-span-2 aspect-[4/5]" : "aspect-[4/5]"}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={slotSrc(slot)} alt="" className="h-full w-full object-cover" />
+              {index === 0 && (
+                <span className="absolute left-2 top-2 rounded bg-burgundy px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                  Cover
+                </span>
+              )}
+              <button
+                type="button"
+                className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold text-crimson"
+                onClick={() => removeImage(slot.id)}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          {images.length < 12 && (
+            <label
+              htmlFor={fileInputId}
+              className="flex aspect-[4/5] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-sand bg-cream text-center text-sm font-semibold text-burgundy hover:border-crimson hover:bg-white"
+            >
+              <span className="text-2xl leading-none">+</span>
+              Add photos
+            </label>
+          )}
+        </div>
+      </div>
+
       {error && <p className="text-sm text-crimson">{error}</p>}
-      <button
-        type="submit"
-        disabled={pending}
-        className="h-12 rounded-lg bg-burgundy text-sm font-semibold text-white disabled:opacity-60"
-      >
-        {pending ? "Saving..." : product ? "Save changes" : "Add to store"}
+      <button type="submit" className="h-12 rounded-lg bg-burgundy text-sm font-semibold text-white">
+        Preview
       </button>
     </form>
   );
@@ -179,16 +359,16 @@ export function ProductForm({ product }: { product?: Product }) {
 
 function Field({
   label,
-  name,
   type = "text",
-  defaultValue,
+  value,
+  onChange,
   required,
   step,
 }: {
   label: string;
-  name: string;
   type?: string;
-  defaultValue?: string | number;
+  value: string;
+  onChange: (value: string) => void;
   required?: boolean;
   step?: string;
 }) {
@@ -196,11 +376,11 @@ function Field({
     <label className="block text-sm">
       <span className="font-medium text-burgundy">{label}</span>
       <input
-        name={name}
         type={type}
         step={step}
         required={required}
-        defaultValue={defaultValue ?? ""}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
       />
     </label>

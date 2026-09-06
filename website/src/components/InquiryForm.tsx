@@ -16,10 +16,12 @@ export function InquiryForm({
   kind,
   fields,
   submitLabel = "Send inquiry",
+  extraPayload,
 }: {
   kind: string;
   fields: Field[];
   submitLabel?: string;
+  extraPayload?: Record<string, string>;
 }) {
   const { addInquiry } = useAuth();
   const [done, setDone] = useState(false);
@@ -45,6 +47,7 @@ export function InquiryForm({
         fields.forEach((f) => {
           payload[f.name] = String(data.get(f.name) ?? "");
         });
+        if (extraPayload) Object.assign(payload, extraPayload);
         addInquiry(kind, payload);
         setDone(true);
       }}

@@ -41,7 +41,7 @@ export default async function Home() {
               Book now
             </Link>
             <Link
-              href="/stores"
+              href="/store"
               className="inline-flex h-12 items-center rounded bg-white/10 px-6 text-sm font-semibold text-white ring-1 ring-white/30 hover:bg-white/20"
             >
               Shop the store
@@ -100,11 +100,11 @@ export default async function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
-              Stores
+              Store
             </p>
             <h2 className="display mt-2 text-4xl text-burgundy">From ateliers, not warehouses</h2>
           </div>
-          <Link href="/stores" className="text-sm font-semibold text-burgundy hover:text-crimson">
+          <Link href="/store" className="text-sm font-semibold text-burgundy hover:text-crimson">
             Shop all →
           </Link>
         </div>

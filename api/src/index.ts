@@ -4,6 +4,8 @@ import express from "express";
 import { dbConnect } from "./db.js";
 import { env, requireEnv } from "./env.js";
 import { adminRouter } from "./routes/admin.js";
+import { tourRouter } from "./routes/tours.js";
+import { experienceRouter } from "./routes/experiences.js";
 import { productRouter } from "./routes/products.js";
 import { uploadDir } from "./uploads.js";
 
@@ -21,6 +23,8 @@ app.use(express.json());
 app.use("/uploads", express.static(uploadDir));
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/products", productRouter);
+app.use("/experiences", experienceRouter);
+app.use("/tours", tourRouter);
 app.use("/admin", adminRouter);
 
 async function start() {
