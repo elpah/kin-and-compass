@@ -39,6 +39,13 @@ export default function ContactPage() {
             >
               {brand.email}
             </a>
+            <a
+              href={`mailto:${brand.bookingEmail}`}
+              className="mt-1 block text-lg text-burgundy hover:text-crimson"
+            >
+              {brand.bookingEmail}
+            </a>
+            <p className="mt-2 text-sm text-muted">General inquiries, then bookings.</p>
           </div>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted">

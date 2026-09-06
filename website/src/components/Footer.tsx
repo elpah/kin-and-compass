@@ -88,6 +88,11 @@ export function Footer() {
             </a>
           </p>
           <p className="mt-1 text-sm">
+            <a href={`mailto:${brand.bookingEmail}`} className="hover:text-rose">
+              {brand.bookingEmail}
+            </a>
+          </p>
+          <p className="mt-1 text-sm">
             <a href={`tel:${brand.phone.replace(/\s/g, "")}`} className="hover:text-rose">
               {brand.phone}
             </a>

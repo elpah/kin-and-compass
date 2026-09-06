@@ -6,13 +6,13 @@ import { logout, me } from "@/lib/api";
 import type { AdminUser } from "@kincompass/shared";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 
 export function AdminShell({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<AdminUser | null>(null);
+  const [user, setUser] = useState<AdminUser>({ name: "Preview", email: "admin@kinandcompass.com" });
+  const [signedIn, setSignedIn] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -20,26 +20,18 @@ export function AdminShell({ children }: { children: ReactNode }) {
     queueMicrotask(() => {
       me()
         .then((data) => {
-          if (!cancelled) setUser(data.user);
+          if (cancelled) return;
+          setUser(data.user);
+          setSignedIn(true);
         })
         .catch(() => {
-          if (!cancelled) {
-            setUser({ name: "Preview", email: "admin@kinandcompass.com" });
-          }
+          /* Desk is open without a session while the UI is still being designed. */
         });
     });
     return () => {
       cancelled = true;
     };
-  }, [router]);
-
-  if (!user) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-cream">
-        <p className="text-sm text-muted">Loading...</p>
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div className="min-h-dvh bg-cream">
@@ -101,16 +93,19 @@ export function AdminShell({ children }: { children: ReactNode }) {
             {adminSettings.label}
           </Link>
           <p className="mt-3 px-3 text-xs text-white/45">{user.name}</p>
-          <button
-            type="button"
-            className="mt-1 px-3 text-left text-sm font-semibold text-rose hover:text-white"
-            onClick={async () => {
-              await logout();
-              router.push("/login");
-            }}
-          >
-            Sign out
-          </button>
+          {signedIn && (
+            <button
+              type="button"
+              className="mt-1 px-3 text-left text-sm font-semibold text-rose hover:text-white"
+              onClick={async () => {
+                await logout();
+                setSignedIn(false);
+                setUser({ name: "Preview", email: "admin@kinandcompass.com" });
+              }}
+            >
+              Sign out
+            </button>
+          )}
         </div>
       </aside>
 

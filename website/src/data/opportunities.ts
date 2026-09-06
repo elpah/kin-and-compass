@@ -1,4 +1,5 @@
 import type { Opportunity } from "@/lib/types";
+import { brand } from "@/data/site";
 
 export const industries = [
   "Agriculture",
@@ -35,7 +36,7 @@ export const opportunities: Opportunity[] = [
     ],
     contact: {
       name: "Invest Desk",
-      email: "invest@kinandcompass.com",
+      email: brand.email,
       phone: "+233 20 555 0140",
     },
     featured: true,
@@ -64,7 +65,7 @@ export const opportunities: Opportunity[] = [
     ],
     contact: {
       name: "Invest Desk",
-      email: "invest@kinandcompass.com",
+      email: brand.email,
       phone: "+233 20 555 0140",
     },
     featured: true,
@@ -93,7 +94,7 @@ export const opportunities: Opportunity[] = [
     ],
     contact: {
       name: "Invest Desk",
-      email: "invest@kinandcompass.com",
+      email: brand.email,
       phone: "+233 20 555 0140",
     },
     featured: true,
@@ -121,7 +122,7 @@ export const opportunities: Opportunity[] = [
     ],
     contact: {
       name: "Invest Desk",
-      email: "invest@kinandcompass.com",
+      email: brand.email,
       phone: "+233 20 555 0140",
     },
     featured: true,
@@ -149,7 +150,7 @@ export const opportunities: Opportunity[] = [
     ],
     contact: {
       name: "Invest Desk",
-      email: "invest@kinandcompass.com",
+      email: brand.email,
       phone: "+233 20 555 0140",
     },
     featured: true,
@@ -177,7 +178,7 @@ export const opportunities: Opportunity[] = [
     ],
     contact: {
       name: "Invest Desk",
-      email: "invest@kinandcompass.com",
+      email: brand.email,
       phone: "+233 20 555 0140",
     },
     featured: true,

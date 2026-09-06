@@ -62,7 +62,11 @@ export default async function OpportunityPage({
           <div className="rounded-lg bg-white p-6 ring-1 ring-sand lg:sticky lg:top-28">
             <p className="script text-2xl text-rose">The desk</p>
             <p className="mt-1 font-semibold text-burgundy">{item.contact.name}</p>
-            <p className="mt-1 text-sm text-muted">{item.contact.email}</p>
+            <p className="mt-1 text-sm text-muted">
+              <a href={`mailto:${item.contact.email}`} className="hover:text-crimson">
+                {item.contact.email}
+              </a>
+            </p>
             <p className="text-sm text-muted">{item.contact.phone}</p>
             <div className="mt-6">
               <InquiryForm

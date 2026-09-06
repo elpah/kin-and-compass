@@ -1,4 +1,5 @@
 import { InquiryForm } from "@/components/InquiryForm";
+import { brand } from "@/data/site";
 import { formatMoney } from "@/lib/utils";
 import { getTour, tours } from "@/data/tours";
 import Image from "next/image";
@@ -87,6 +88,11 @@ export default async function TourPage({
           <p className="text-sm text-muted">{tour.duration}</p>
           <p className="display text-4xl text-burgundy">from {formatMoney(tour.priceFrom)}</p>
           <p className="mt-1 text-xs text-muted">Per person · deposits coming soon</p>
+          <p className="mt-3 text-sm">
+            <a href={`mailto:${brand.bookingEmail}`} className="font-semibold text-burgundy hover:text-crimson">
+              {brand.bookingEmail}
+            </a>
+          </p>
           <div className="mt-6">
             <InquiryForm
               kind={`tour:${tour.slug}`}

@@ -16,7 +16,8 @@ export default function SettingsPage() {
             <Field label="House name" defaultValue="Kin and Compass" />
             <Field label="Tagline" defaultValue="Travel And Tour" />
             <Field label="Address" defaultValue="Oregon, USA" />
-            <Field label="Email" type="email" defaultValue="hello@kinandcompass.com" />
+            <Field label="Email" type="email" defaultValue="info@kinandcompasstravels.com" />
+            <Field label="Booking email" type="email" defaultValue="booking@kingandcompasstravels.com" />
             <Field label="Phone" defaultValue="+233 20 555 0100" />
           </div>
         </section>
@@ -24,7 +25,7 @@ export default function SettingsPage() {
         <section className="rounded-lg bg-white p-6 ring-1 ring-sand sm:p-8">
           <h2 className="display text-2xl text-burgundy">Sign-in</h2>
           <div className="mt-5 grid gap-4">
-            <Field label="Admin email" type="email" defaultValue="hello@kinandcompass.com" />
+            <Field label="Admin email" type="email" defaultValue="info@kinandcompasstravels.com" />
             <Field label="New password" type="password" />
           </div>
         </section>

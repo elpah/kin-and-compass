@@ -1,6 +1,7 @@
 import { covers } from "@/assets/covers";
 import { InquiryForm } from "@/components/InquiryForm";
 import { PageHero } from "@/components/PageHero";
+import { brand } from "@/data/site";
 import { tourRegions, tourTypes } from "@/data/tours";
 
 export const metadata = {
@@ -19,6 +20,12 @@ export default function CustomTripPage() {
         image={covers.travel}
       />
       <section className="mx-auto max-w-xl px-4 py-14 sm:px-6">
+        <p className="mb-6 text-sm text-muted">
+          Bookings:{" "}
+          <a href={`mailto:${brand.bookingEmail}`} className="font-semibold text-burgundy hover:text-crimson">
+            {brand.bookingEmail}
+          </a>
+        </p>
         <InquiryForm
           kind="custom-trip"
           submitLabel="Request my itinerary"
