@@ -110,8 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email,
           isAdmin:
             email.endsWith("@kinandcompass.com") ||
-            email.endsWith("@kinandcompasstravels.com") ||
-            email.endsWith("@kingandcompasstravels.com"),
+            email.endsWith("@kinandcompasstravels.com"),
         });
       },
       logout: () => setUser(null),

@@ -7,7 +7,7 @@ export const brand = {
   phone: "+233 20 555 0100",
   whatsapp: "233205550100",
   email: "info@kinandcompasstravels.com",
-  bookingEmail: "booking@kingandcompasstravels.com",
+  bookingEmail: "booking@kinandcompasstravels.com",
   address: "Oregon, USA",
 };
 

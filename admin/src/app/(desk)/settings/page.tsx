@@ -17,7 +17,7 @@ export default function SettingsPage() {
             <Field label="Tagline" defaultValue="Travel And Tour" />
             <Field label="Address" defaultValue="Oregon, USA" />
             <Field label="Email" type="email" defaultValue="info@kinandcompasstravels.com" />
-            <Field label="Booking email" type="email" defaultValue="booking@kingandcompasstravels.com" />
+            <Field label="Booking email" type="email" defaultValue="booking@kinandcompasstravels.com" />
             <Field label="Phone" defaultValue="+233 20 555 0100" />
           </div>
         </section>
