@@ -142,7 +142,7 @@ export function DonationForm({
 
       <p className="text-xs text-muted">
         Card processing is being enabled. This records your intent and a receipt number so the
-        Accra desk can confirm the gift.
+        Oregon desk can confirm the gift.
       </p>
 
       <button

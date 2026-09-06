@@ -6,7 +6,7 @@ import { brand } from "@/data/site";
 export const metadata = {
   title: "Contact",
   description:
-    "Write to Kin and Compass in Accra - travel, store, invest, or charity.",
+    "Write to Kin and Compass in Oregon, USA - travel, store, invest, or charity.",
 };
 
 export default function ContactPage() {
@@ -15,7 +15,7 @@ export default function ContactPage() {
       <PageHero
         kicker="Contact"
         title="Write to the house."
-        text="Travel plans, store orders, a gift, a briefing, or a vendor who wants to join - one form, a real reply from Accra."
+        text="Travel plans, store orders, a gift, a briefing, or a vendor who wants to join - one form, a real reply from Oregon, USA."
         image={covers.travel}
       />
       <section className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-5">
@@ -64,7 +64,7 @@ export default function ContactPage() {
         </aside>
         <div className="rounded-lg bg-white p-6 ring-1 ring-sand sm:p-8 lg:col-span-3">
           <h2 className="display text-3xl text-burgundy">Send a message</h2>
-          <p className="mt-2 text-sm text-muted">All fields go to the Accra desk.</p>
+          <p className="mt-2 text-sm text-muted">All fields go to the Oregon desk.</p>
           <div className="mt-6">
             <InquiryForm
               kind="contact"

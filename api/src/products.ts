@@ -17,7 +17,6 @@ export function serializeProduct(doc: Record<string, unknown>): ProductType {
     details: row.details ?? [],
     stock: row.stock,
     featured: row.featured,
-    collection: row.collection || undefined,
     rating: row.rating ?? 0,
     reviewCount: row.reviewCount ?? 0,
     reviews: row.reviews ?? [],

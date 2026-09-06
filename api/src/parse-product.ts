@@ -14,7 +14,6 @@ export function parseProductFields(body: Record<string, unknown>) {
     .filter(Boolean);
   const stock = Number(body.stock ?? 0);
   const featured = body.featured === "on" || body.featured === "true" || body.featured === true;
-  const collection = String(body.collection ?? "").trim();
   const slugInput = String(body.slug ?? "").trim();
 
   if (!name) throw new Error("Name is required");
@@ -35,6 +34,5 @@ export function parseProductFields(body: Record<string, unknown>) {
     details,
     stock: Number.isFinite(stock) ? stock : 0,
     featured,
-    collection,
   };
 }

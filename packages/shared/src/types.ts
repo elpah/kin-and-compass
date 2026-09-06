@@ -30,7 +30,6 @@ export type Product = {
   details: string[];
   stock: number;
   featured?: boolean;
-  collection?: string;
   rating: number;
   reviewCount: number;
   reviews: Review[];

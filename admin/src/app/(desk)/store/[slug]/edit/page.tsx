@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductForm } from "@/components/ProductForm";
-import { getProduct, me } from "@/lib/api";
+import { getProduct } from "@/lib/api";
 import type { Product } from "@kincompass/shared";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -13,26 +13,25 @@ export default function EditProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    me()
-      .then(() => getProduct(params.slug))
+    getProduct(params.slug)
       .then((data) => setProduct(data.product))
-      .catch(() => router.replace("/login"));
+      .catch(() => router.replace("/store"));
   }, [params.slug, router]);
 
   if (!product) {
-    return <p className="px-6 py-20 text-sm text-muted">Loading...</p>;
+    return <p className="text-sm text-muted">Loading...</p>;
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-2xl">
       <p className="text-sm text-muted">
-        <Link href="/" className="hover:text-burgundy">
-          Admin
+        <Link href="/store" className="hover:text-burgundy">
+          Store
         </Link>{" "}
         / Edit
       </p>
       <h1 className="display mt-2 text-4xl text-burgundy">{product.name}</h1>
-      <div className="mt-8 rounded-3xl bg-white p-6 ring-1 ring-sand sm:p-8">
+      <div className="mt-8 rounded-lg bg-white p-6 ring-1 ring-sand sm:p-8">
         <ProductForm product={product} />
       </div>
     </div>

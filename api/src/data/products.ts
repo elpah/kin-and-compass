@@ -38,7 +38,6 @@ export const products: Product[] = [
     ],
     stock: 14,
     featured: true,
-    collection: "Heritage Edit",
     rating: 4.9,
     reviewCount: 38,
     reviews: [
@@ -74,7 +73,6 @@ export const products: Product[] = [
     details: ["18k gold plate over brass", "45 cm chain included", "Gift box with meaning card"],
     stock: 22,
     featured: true,
-    collection: "Heritage Edit",
     rating: 4.8,
     reviewCount: 51,
     reviews: [
@@ -104,7 +102,6 @@ export const products: Product[] = [
     details: ["200g shea butter", "150g black soap", "Citrus facial oil 30ml", "Plastic-free packaging"],
     stock: 40,
     featured: true,
-    collection: "Wellness",
     rating: 4.7,
     reviewCount: 89,
     reviews: [
@@ -132,7 +129,6 @@ export const products: Product[] = [
       "Heavy canvas tote with an original line drawing of Independence Arch. Built for markets, campuses, and carry-on days.",
     details: ["Organic cotton canvas", "Interior pocket", "Printed in Accra"],
     stock: 31,
-    collection: "City Series",
     rating: 4.6,
     reviewCount: 24,
     reviews: [
@@ -162,7 +158,6 @@ export const products: Product[] = [
     details: ["A2 giclée on archival paper", "Unframed", "Certificate of authenticity"],
     stock: 11,
     featured: true,
-    collection: "City Series",
     rating: 5,
     reviewCount: 12,
     reviews: [
@@ -217,7 +212,6 @@ export const products: Product[] = [
       "Elephant-grass basket woven in Bolgatanga. Use it for markets, laundry, or as sculpture on a bench.",
     details: ["Natural elephant grass", "Leather handles", "Each weave is unique"],
     stock: 18,
-    collection: "Homecoming",
     rating: 4.9,
     reviewCount: 33,
     reviews: [
@@ -273,7 +267,6 @@ export const products: Product[] = [
     details: ["Shito 200g", "Suya spice 80g", "Hibiscus 60g", "Recipe card included"],
     stock: 25,
     featured: true,
-    collection: "Pantry",
     rating: 4.9,
     reviewCount: 67,
     reviews: [
@@ -301,7 +294,6 @@ export const products: Product[] = [
       "Cloth-bound journal with maps of Accra, Cape Coast, and Kumasi, plus blank pages for itineraries, language notes, and the names of people you meet.",
     details: ["192 pages", "Lay-flat binding", "Elastic closure"],
     stock: 45,
-    collection: "Travel Desk",
     rating: 4.7,
     reviewCount: 21,
     reviews: [
@@ -329,7 +321,6 @@ export const products: Product[] = [
       "A silk-cotton scarf in a contemporary wax print designed for Kin & Compass. Wear it as a wrap, a headpiece, or a table runner on a picnic in Aburi.",
     details: ["90 × 90 cm", "Silk-cotton", "Hand-rolled edges"],
     stock: 20,
-    collection: "Heritage Edit",
     rating: 4.8,
     reviewCount: 29,
     reviews: [

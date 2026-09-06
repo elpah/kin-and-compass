@@ -25,7 +25,7 @@ export default function DonatePage() {
           <h2 className="display text-3xl text-burgundy">Ghana fund</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted">
             We have not published live projects yet. Your gift is an intention the
-            Accra desk will confirm, and it will go toward the first programmes we
+            Oregon desk will confirm, and it will go toward the first programmes we
             can name with a place and a partner.
           </p>
           <div className="mt-8 max-w-md rounded-lg bg-white p-6 ring-1 ring-sand">

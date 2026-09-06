@@ -38,7 +38,7 @@ export default function TrustPage() {
         <p className="mt-3">
           Registered NGO and fundraising numbers will be published on this page when
           filings are complete. We will not invent a certificate. Until then, gifts
-          are recorded, receipted in your account, and held by the Accra desk for
+          are recorded, receipted in your account, and held by the Oregon desk for
           the first named programmes. Tax deductions depend on your country and our
           status - we do not promise one.
         </p>

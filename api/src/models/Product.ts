@@ -26,7 +26,6 @@ const ProductSchema = new Schema(
     details: { type: [String], default: [] },
     stock: { type: Number, required: true, default: 0 },
     featured: { type: Boolean, default: false },
-    collection: { type: String, default: "" },
     rating: { type: Number, default: 0 },
     reviewCount: { type: Number, default: 0 },
     reviews: { type: [ReviewSchema], default: [] },

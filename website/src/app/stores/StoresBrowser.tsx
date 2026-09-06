@@ -5,23 +5,16 @@ import { ProductCard } from "@/components/ProductCard";
 import { PageHero } from "@/components/PageHero";
 import { productCategories } from "@kincompass/shared";
 import type { Product } from "@/lib/types";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export function StoresBrowser({ products }: { products: Product[] }) {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("All");
-  const [collection, setCollection] = useState<string>("All");
-
-  const collections = useMemo(
-    () => ["All", ...new Set(products.map((p) => p.collection).filter(Boolean) as string[])],
-    [products],
-  );
 
   const filtered = products.filter((p) => {
     const hay = `${p.name} ${p.vendor} ${p.category} ${p.description}`.toLowerCase();
     if (q && !hay.includes(q.toLowerCase())) return false;
     if (cat !== "All" && p.category !== cat) return false;
-    if (collection !== "All" && p.collection !== collection) return false;
     return true;
   });
 
@@ -48,15 +41,6 @@ export function StoresBrowser({ products }: { products: Product[] }) {
           >
             <option>All</option>
             {productCategories.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
-          <select
-            value={collection}
-            onChange={(e) => setCollection(e.target.value)}
-            className="h-12 rounded-lg border border-sand px-3 text-sm"
-          >
-            {collections.map((c) => (
               <option key={c}>{c}</option>
             ))}
           </select>

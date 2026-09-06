@@ -7,7 +7,7 @@ export const brand = {
   phone: "+233 20 555 0100",
   whatsapp: "233205550100",
   email: "hello@kinandcompass.com",
-  address: "Osu, Accra, Ghana",
+  address: "Oregon, USA",
 };
 
 export const nav = [
@@ -79,7 +79,7 @@ export const travelFaqs = [
 export const charityFaqs = [
   {
     q: "Is this a registered NGO?",
-    a: "Kin and Compass Travel and Tour runs the Give Back desk from Accra. Registered charity details, where applicable, are published on the Trust page as filings complete. We will not invent a registration number.",
+    a: "Kin and Compass Travel and Tour runs the Give Back desk from Oregon, USA. Registered charity details, where applicable, are published on the Trust page as filings complete. We will not invent a registration number.",
   },
   {
     q: "How are donations used?",

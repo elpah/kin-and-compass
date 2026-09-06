@@ -49,7 +49,7 @@ export default function TermsPage() {
         <section>
           <h2 className="display text-2xl text-burgundy">Charity and donations</h2>
           <p className="mt-2">
-            Gifts recorded on this site are intentions until the Accra desk confirms
+            Gifts recorded on this site are intentions until the Oregon desk confirms
             them. Live card processing is being enabled. We do not promise a tax
             deduction. Registered NGO details appear on the Trust page when filings
             are complete. Beneficiary privacy comes first.

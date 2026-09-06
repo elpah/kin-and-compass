@@ -11,6 +11,9 @@ export function ProductForm({ product }: { product?: Product }) {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [galleryKeep, setGalleryKeep] = useState(product?.gallery ?? []);
+  const [details, setDetails] = useState<string[]>(
+    product?.details?.length ? product.details : [""],
+  );
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -18,10 +21,17 @@ export function ProductForm({ product }: { product?: Product }) {
     setPending(true);
     const form = new FormData(event.currentTarget);
     form.set("keepGallery", galleryKeep.join(","));
+    form.set(
+      "details",
+      details
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .join("\n"),
+    );
     try {
       if (product) await updateProduct(product.slug, form);
       else await createProduct(form);
-      router.push("/");
+      router.push("/store");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -43,7 +53,7 @@ export function ProductForm({ product }: { product?: Product }) {
             name="category"
             required
             defaultValue={product?.category}
-            className="mt-1 h-12 w-full rounded-xl border border-sand bg-white px-3"
+            className="mt-1 h-12 w-full rounded-lg border border-sand bg-white px-3"
           >
             <option value="">Select</option>
             {productCategories.map((category) => (
@@ -57,7 +67,6 @@ export function ProductForm({ product }: { product?: Product }) {
         <Field label="Vendor" name="vendor" defaultValue={product?.vendor} required />
         <Field label="Country" name="country" defaultValue={product?.country ?? "Ghana"} required />
       </div>
-      <Field label="Collection (optional)" name="collection" defaultValue={product?.collection} />
       <label className="block text-sm">
         <span className="font-medium text-burgundy">Description</span>
         <textarea
@@ -65,18 +74,51 @@ export function ProductForm({ product }: { product?: Product }) {
           required
           rows={5}
           defaultValue={product?.description}
-          className="mt-1 w-full rounded-xl border border-sand px-3 py-2"
+          className="mt-1 w-full rounded-lg border border-sand px-3 py-2"
         />
       </label>
-      <label className="block text-sm">
-        <span className="font-medium text-burgundy">Details (one per line)</span>
-        <textarea
-          name="details"
-          rows={4}
-          defaultValue={product?.details.join("\n")}
-          className="mt-1 w-full rounded-xl border border-sand px-3 py-2"
-        />
-      </label>
+      <div>
+        <p className="text-sm font-medium text-burgundy">Details</p>
+        <p className="mt-1 text-xs text-muted">
+          Short facts under the description on the product page, as a bullet list. Material, size, care, what is in the box.
+        </p>
+        <div className="mt-2 grid gap-2">
+          {details.map((line, index) => (
+            <div key={index} className="flex gap-2">
+              <input
+                value={line}
+                onChange={(event) => {
+                  const next = [...details];
+                  next[index] = event.target.value;
+                  setDetails(next);
+                }}
+                placeholder={index === 0 ? "e.g. Handwoven cotton-silk blend" : "Add another fact"}
+                className="h-12 flex-1 rounded-lg border border-sand px-3 text-sm outline-none focus:ring-2 focus:ring-crimson/30"
+              />
+              <button
+                type="button"
+                className="h-12 shrink-0 px-3 text-sm font-semibold text-crimson"
+                onClick={() => {
+                  if (details.length === 1) {
+                    setDetails([""]);
+                    return;
+                  }
+                  setDetails(details.filter((_, i) => i !== index));
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="mt-2 text-sm font-semibold text-burgundy"
+          onClick={() => setDetails([...details, ""])}
+        >
+          Add detail
+        </button>
+      </div>
       <label className="flex items-center gap-2 text-sm font-medium text-burgundy">
         <input type="checkbox" name="featured" defaultChecked={product?.featured} />
         Featured on the homepage
@@ -102,7 +144,7 @@ export function ProductForm({ product }: { product?: Product }) {
                 key={src}
                 type="button"
                 onClick={() => setGalleryKeep((prev) => prev.filter((item) => item !== src))}
-                className="relative overflow-hidden rounded-xl ring-1 ring-sand"
+                className="relative overflow-hidden rounded-lg ring-1 ring-sand"
                 title="Remove from gallery"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -127,7 +169,7 @@ export function ProductForm({ product }: { product?: Product }) {
       <button
         type="submit"
         disabled={pending}
-        className="h-12 rounded bg-burgundy text-sm font-semibold text-white disabled:opacity-60"
+        className="h-12 rounded-lg bg-burgundy text-sm font-semibold text-white disabled:opacity-60"
       >
         {pending ? "Saving..." : product ? "Save changes" : "Add to store"}
       </button>
@@ -159,7 +201,7 @@ function Field({
         step={step}
         required={required}
         defaultValue={defaultValue ?? ""}
-        className="mt-1 h-12 w-full rounded-xl border border-sand px-3"
+        className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
       />
     </label>
   );
