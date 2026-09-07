@@ -1,29 +1,50 @@
+import { randomUUID } from "crypto";
 import { Router } from "express";
 import { requireAdmin } from "../auth.js";
 import { parseCustomExperienceFields } from "../parse-experience.js";
 import {
   CustomExperienceModel,
   serializeCustomExperience,
+  serializeTourImage,
 } from "../models/CustomExperience.js";
-import { fileUrl, upload } from "../uploads.js";
+import { DeletedCustomExperienceModel } from "../models/DeletedCustomExperience.js";
+import { moveToArchive } from "../archive.js";
 
 export const experienceRouter = Router();
 const imageUpload = upload.single("image");
 
 experienceRouter.get("/", async (req, res) => {
   try {
+    const view = String(req.query.view ?? "");
     const activeOnly = req.query.active === "true";
-    const filter = activeOnly ? { active: true } : {};
-    const rows = await CustomExperienceModel.find(filter).sort({ createdAt: -1 }).lean();
-    res.json({ experiences: rows.map((row) => serializeCustomExperience(row as Record<string, unknown>)) });
+
+    if (view === "deleted") {
+      const rows = await DeletedCustomExperienceModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
+      res.json({ experiences: rows.map((row) => serializeCustomExperience(row as Record<string, unknown>)) });
+      return;
+    }
+
+    const filter = activeOnly ? { active: { $ne: false } } : {};
+    const live = await CustomExperienceModel.find(filter).sort({ createdAt: -1 }).lean();
+    if (view === "all") {
+      const archived = await DeletedCustomExperienceModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
+      res.json({
+        experiences: [...live, ...archived].map((row) => serializeCustomExperience(row as Record<string, unknown>)),
+      });
+      return;
+    }
+
+    res.json({ experiences: live.map((row) => serializeCustomExperience(row as Record<string, unknown>)) });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Failed to load experiences" });
   }
 });
 
-experienceRouter.get("/:slug", async (req, res) => {
+experienceRouter.get("/:tourId", async (req, res) => {
   try {
-    const doc = await CustomExperienceModel.findOne({ slug: req.params.slug }).lean();
+    const doc = await CustomExperienceModel.findOne({
+      $or: [{ tourId: req.params.tourId }, { slug: req.params.tourId }],
+    }).lean();
     if (!doc) {
       res.status(404).json({ error: "Not found" });
       return;
@@ -37,36 +58,35 @@ experienceRouter.get("/:slug", async (req, res) => {
 experienceRouter.post("/", requireAdmin, imageUpload, async (req, res) => {
   try {
     const fields = parseCustomExperienceFields(req.body ?? {});
-    const image = fileUrl(req.file);
-    if (!image) {
+    const tourImage = await uploadToCloudinary(req.file, "custom-tours");
+    if (!tourImage) {
       res.status(400).json({ error: "An image is required" });
       return;
     }
-    const existing = await CustomExperienceModel.findOne({ slug: fields.slug });
-    if (existing) {
-      res.status(409).json({ error: "A trip with this name already exists" });
-      return;
-    }
-    const created = await CustomExperienceModel.create({ ...fields, image });
+    const tourId = randomUUID();
+    const created = await CustomExperienceModel.create({ ...fields, tourId, tourImage });
     res.status(201).json({ experience: serializeCustomExperience(created.toObject()) });
   } catch (error) {
     res.status(400).json({ error: error instanceof Error ? error.message : "Failed to create trip" });
   }
 });
 
-experienceRouter.put("/:slug", requireAdmin, imageUpload, async (req, res) => {
+experienceRouter.put("/:tourId", requireAdmin, imageUpload, async (req, res) => {
   try {
-    const current = await CustomExperienceModel.findOne({ slug: req.params.slug });
+    const current = await CustomExperienceModel.findOne({
+      $or: [{ tourId: req.params.tourId }, { slug: req.params.tourId }],
+    });
     if (!current) {
       res.status(404).json({ error: "Not found" });
       return;
     }
     const fields = parseCustomExperienceFields(req.body ?? {});
-    const nextImage = fileUrl(req.file);
+    const uploaded = await uploadToCloudinary(req.file, "custom-tours");
+    const currentImage = serializeTourImage(current.get("tourImage") ?? current.get("TourImage") ?? current.get("image"));
     current.set({
       ...fields,
-      slug: current.slug,
-      image: nextImage || current.image,
+      tourId: current.get("tourId"),
+      tourImage: uploaded ?? currentImage,
     });
     await current.save();
     res.json({ experience: serializeCustomExperience(current.toObject()) });
@@ -75,8 +95,10 @@ experienceRouter.put("/:slug", requireAdmin, imageUpload, async (req, res) => {
   }
 });
 
-experienceRouter.delete("/:slug", requireAdmin, async (req, res) => {
-  const deleted = await CustomExperienceModel.findOneAndDelete({ slug: req.params.slug });
+experienceRouter.delete("/:tourId", requireAdmin, async (req, res) => {
+  const deleted = await moveToArchive(CustomExperienceModel, DeletedCustomExperienceModel, {
+    $or: [{ tourId: req.params.tourId }, { slug: req.params.tourId }],
+  });
   if (!deleted) {
     res.status(404).json({ error: "Not found" });
     return;

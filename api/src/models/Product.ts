@@ -30,7 +30,7 @@ const ProductSchema = new Schema(
     reviewCount: { type: Number, default: 0 },
     reviews: { type: [ReviewSchema], default: [] },
   },
-  { timestamps: true },
+  { timestamps: true, collection: "stores" },
 );
 
 export const Product =

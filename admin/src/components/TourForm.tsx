@@ -11,9 +11,7 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [experiences, setExperiences] = useState<CustomExperience[]>([]);
-  const [picked, setPicked] = useState<string[]>(tour?.experienceSlugs ?? []);
-  const [price, setPrice] = useState(tour ? String(tour.price) : "");
-  const [priceTouched, setPriceTouched] = useState(Boolean(tour));
+  const [picked, setPicked] = useState<string[]>(tour?.tourIds ?? []);
   const [preview, setPreview] = useState(tour?.image ? asset(tour.image) : "");
   const [file, setFile] = useState<File | null>(null);
 
@@ -24,22 +22,21 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
   }, []);
 
   const selected = useMemo(
-    () => picked.map((slug) => experiences.find((item) => item.slug === slug)).filter(Boolean) as CustomExperience[],
+    () =>
+      picked
+        .map((id) => experiences.find((item) => item.tourId === id))
+        .filter(Boolean) as CustomExperience[],
     [picked, experiences],
   );
-  const suggested = selected.reduce((sum, item) => sum + item.price, 0);
+  const packagePrice = selected.reduce((sum, item) => sum + item.tourPrice, 0);
 
-  useEffect(() => {
-    if (!priceTouched) setPrice(suggested ? String(suggested) : "");
-  }, [suggested, priceTouched]);
-
-  function toggle(slug: string) {
-    setPicked((prev) => (prev.includes(slug) ? prev.filter((item) => item !== slug) : [...prev, slug]));
+  function toggle(id: string) {
+    setPicked((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   }
 
-  function move(slug: string, dir: -1 | 1) {
+  function move(id: string, dir: -1 | 1) {
     setPicked((prev) => {
-      const index = prev.indexOf(slug);
+      const index = prev.indexOf(id);
       const next = index + dir;
       if (index < 0 || next < 0 || next >= prev.length) return prev;
       const copy = [...prev];
@@ -57,11 +54,10 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
     }
     setPending(true);
     const form = new FormData(event.currentTarget);
-    form.set("experienceSlugs", picked.join(","));
-    form.set("price", price);
+    form.set("tourIds", picked.join(","));
     if (file) form.set("image", file);
     try {
-      if (tour) await updateTour(tour.slug, form);
+      if (tour) await updateTour(tour.packagedTourId, form);
       else await createTour(form);
       router.push("/visit-ghana");
     } catch (err) {
@@ -108,40 +104,40 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
       <div>
         <p className="text-sm font-medium text-burgundy">Custom trips in this tour</p>
         <p className="mt-1 text-xs text-muted">
-          Pick the pieces. Order is the itinerary. Price starts as their total - you can change it.
+          Pick the pieces. Order is the itinerary. Package price is the sum of the selected trips.
         </p>
         {experiences.length === 0 ? (
           <p className="mt-3 text-sm text-muted">No custom trips yet. Add some on the Custom trips tab first.</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {experiences.map((item) => {
-              const on = picked.includes(item.slug);
-              const order = picked.indexOf(item.slug);
+              const on = picked.includes(item.tourId);
+              const order = picked.indexOf(item.tourId);
               return (
                 <li
-                  key={item.slug}
+                  key={item.tourId}
                   className={`flex flex-wrap items-center gap-3 rounded-lg p-3 ring-1 ${
                     on ? "bg-blush ring-crimson/40" : "bg-white ring-sand"
                   }`}
                 >
                   <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
-                    <input type="checkbox" checked={on} onChange={() => toggle(item.slug)} />
+                    <input type="checkbox" checked={on} onChange={() => toggle(item.tourId)} />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={asset(item.image)} alt="" className="h-12 w-16 rounded object-cover" />
+                    <img src={asset(item.tourImage)} alt="" className="h-12 w-16 rounded object-cover" />
                     <span>
-                      <span className="block font-semibold text-burgundy">{item.name}</span>
+                      <span className="block font-semibold text-burgundy">{item.tourName}</span>
                       <span className="text-xs text-muted">
-                        {item.duration} · ${item.price}
+                        {item.tourDuration} · ${item.tourPrice}
                       </span>
                     </span>
                   </label>
                   {on && (
                     <div className="flex items-center gap-2 text-xs font-semibold">
                       <span className="text-muted">Day {order + 1}</span>
-                      <button type="button" className="text-burgundy" onClick={() => move(item.slug, -1)}>
+                      <button type="button" className="text-burgundy" onClick={() => move(item.tourId, -1)}>
                         Up
                       </button>
-                      <button type="button" className="text-burgundy" onClick={() => move(item.slug, 1)}>
+                      <button type="button" className="text-burgundy" onClick={() => move(item.tourId, 1)}>
                         Down
                       </button>
                     </div>
@@ -152,36 +148,25 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
           </ul>
         )}
         {selected.length > 0 && (
-          <p className="mt-3 text-sm text-muted">
-            Pieces total ${suggested}. Set the tour price below if the package should differ.
-          </p>
+          <p className="mt-3 text-sm font-semibold text-burgundy">Package price ${packagePrice}</p>
         )}
       </div>
 
       <label className="block text-sm">
-        <span className="font-medium text-burgundy">Tour price (USD)</span>
-        <input
-          name="price"
-          type="number"
-          step="0.01"
-          required
-          value={price}
-          onChange={(event) => {
-            setPriceTouched(true);
-            setPrice(event.target.value);
-          }}
-          className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
-        />
-      </label>
-
-      <label className="flex items-center gap-2 text-sm font-medium text-burgundy">
-        <input name="active" type="checkbox" defaultChecked={tour?.active !== false} />
-        Active on Visit Ghana
+        <span className="flex items-center gap-2 font-medium text-burgundy">
+          <input name="active" type="checkbox" defaultChecked={tour?.active !== false} />
+          Publish this tour
+        </span>
+        <span className="mt-1 block text-xs text-muted">
+          When this is on, shoppers can see the tour on the public Visit Ghana page. Leave it off to keep a draft.
+        </span>
       </label>
 
       <div>
         <p className="text-sm font-medium text-burgundy">Cover photo</p>
-        <p className="mt-1 text-xs text-muted">Optional. If you skip it, we use the first selected trip photo.</p>
+        <p className="mt-1 text-xs text-muted">
+          Optional. Uploads to Cloudinary in kinandcompass/packaged-tours. If you skip it, we use the first selected trip photo.
+        </p>
         <input
           id={fileId}
           type="file"

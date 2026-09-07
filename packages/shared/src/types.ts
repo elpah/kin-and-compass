@@ -40,23 +40,29 @@ export type AdminUser = {
   email: string;
 };
 
+export type CloudinaryImage = {
+  linkUrl: string;
+  publicId: string;
+};
+
 export type CustomExperience = {
-  slug: string;
-  name: string;
-  price: number;
-  duration: string;
-  description: string;
-  image: string;
+  tourId: string;
+  tourName: string;
+  tourDuration: string;
+  tourPrice: number;
+  tourImage: CloudinaryImage;
   active: boolean;
+  deleted?: boolean;
 };
 
 export type PackagedTour = {
-  slug: string;
+  packagedTourId: string;
   name: string;
   description: string;
   duration: string;
   price: number;
-  image: string;
-  experienceSlugs: string[];
+  image: CloudinaryImage;
+  tourIds: string[];
   active: boolean;
+  deleted?: boolean;
 };

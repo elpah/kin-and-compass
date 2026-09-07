@@ -3,7 +3,7 @@ import { requireAdmin } from "../auth.js";
 import { parseProductFields } from "../parse-product.js";
 import { getProductBySlug, listFeaturedProducts, listProducts, serializeProduct } from "../products.js";
 import { Product } from "../models/Product.js";
-import { fileUrl, upload } from "../uploads.js";
+import { upload, uploadManyToCloudinary, uploadToCloudinary } from "../uploads.js";
 
 export const productRouter = Router();
 
@@ -49,12 +49,14 @@ productRouter.post("/", requireAdmin, files, async (req, res) => {
   try {
     const fields = parseProductFields(req.body ?? {});
     const uploaded = req.files as Record<string, Express.Multer.File[]> | undefined;
-    const image = fileUrl(uploaded?.image?.[0]);
+    const cover = await uploadToCloudinary(uploaded?.image?.[0], "store");
+    const image = cover?.linkUrl ?? "";
     if (!image) {
       res.status(400).json({ error: "A product image is required" });
       return;
     }
-    const gallery = [image, ...(uploaded?.gallery ?? []).map((file) => fileUrl(file))];
+    const extra = await uploadManyToCloudinary(uploaded?.gallery, "store");
+    const gallery = [image, ...extra.map((item) => item.linkUrl)];
     const existing = await Product.findOne({ slug: fields.slug });
     if (existing) {
       res.status(409).json({ error: "A product with this name already exists" });
@@ -87,10 +89,12 @@ productRouter.put("/:slug", requireAdmin, files, async (req, res) => {
       .split(",")
       .map((item: string) => item.trim())
       .filter(Boolean);
-    const extra = (uploaded?.gallery ?? []).map((file) => fileUrl(file));
-    const nextImage = fileUrl(uploaded?.image?.[0]);
+    const extra = await uploadManyToCloudinary(uploaded?.gallery, "store");
+    const cover = await uploadToCloudinary(uploaded?.image?.[0], "store");
+    const nextImage = cover?.linkUrl ?? "";
+    const extraUrls = extra.map((item) => item.linkUrl);
     const image = nextImage || keepGallery[0] || (current.image as string);
-    const gallery = [...(nextImage ? [nextImage, ...keepGallery] : keepGallery), ...extra].filter(
+    const gallery = [...(nextImage ? [nextImage, ...keepGallery] : keepGallery), ...extraUrls].filter(
       (item, index, list) => item && list.indexOf(item) === index,
     );
     if (!image || !gallery.length) {

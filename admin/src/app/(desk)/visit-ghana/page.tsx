@@ -21,12 +21,11 @@ export default function VisitGhanaAdminPage() {
     form.set("name", tour.name);
     form.set("description", tour.description);
     form.set("duration", tour.duration);
-    form.set("price", String(tour.price));
-    form.set("experienceSlugs", tour.experienceSlugs.join(","));
+    form.set("tourIds", tour.tourIds.join(","));
     if (!tour.active) form.set("active", "on");
     try {
-      const data = await updateTour(tour.slug, form);
-      setTours((prev) => prev?.map((row) => (row.slug === tour.slug ? data.tour : row)) ?? null);
+      const data = await updateTour(tour.packagedTourId, form);
+      setTours((prev) => prev?.map((row) => (row.packagedTourId === tour.packagedTourId ? data.tour : row)) ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not update status");
     }
@@ -74,14 +73,14 @@ export default function VisitGhanaAdminPage() {
           <div className="overflow-hidden rounded-lg bg-white ring-1 ring-sand">
             <ul className="divide-y divide-sand">
               {tours.map((tour) => (
-                <li key={tour.slug} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+                <li key={tour.packagedTourId} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                   <div className="flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={asset(tour.image)} alt="" className="h-12 w-16 rounded-lg object-cover" />
                     <div>
                       <p className="font-semibold text-burgundy">{tour.name}</p>
                       <p className="text-sm text-muted">
-                        {tour.duration} · ${tour.price} · {tour.experienceSlugs.length} trips
+                        {tour.duration} · ${tour.price} · {tour.tourIds.length} trips
                       </p>
                     </div>
                   </div>
@@ -95,7 +94,7 @@ export default function VisitGhanaAdminPage() {
                     >
                       {tour.active ? "Active" : "Inactive"}
                     </button>
-                    <Link href={`/visit-ghana/tours/${tour.slug}/edit`} className="text-sm font-semibold text-burgundy">
+                    <Link href={`/visit-ghana/tours/${tour.packagedTourId}/edit`} className="text-sm font-semibold text-burgundy">
                       Edit
                     </Link>
                     <button
@@ -104,8 +103,8 @@ export default function VisitGhanaAdminPage() {
                       onClick={async () => {
                         if (!confirm(`Delete "${tour.name}"?`)) return;
                         try {
-                          await deleteTour(tour.slug);
-                          setTours((prev) => prev?.filter((row) => row.slug !== tour.slug) ?? []);
+                          await deleteTour(tour.packagedTourId);
+                          setTours((prev) => prev?.filter((row) => row.packagedTourId !== tour.packagedTourId) ?? []);
                         } catch (err) {
                           setError(err instanceof Error ? err.message : "Delete failed");
                         }

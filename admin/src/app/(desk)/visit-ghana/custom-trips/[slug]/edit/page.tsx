@@ -30,7 +30,7 @@ export default function EditExperiencePage() {
         </Link>{" "}
         / Edit
       </p>
-      <h1 className="display mt-2 text-4xl text-burgundy">{experience.name}</h1>
+      <h1 className="display mt-2 text-4xl text-burgundy">{experience.tourName}</h1>
       <div className="mt-8 rounded-lg bg-white p-6 ring-1 ring-sand sm:p-8">
         <ExperienceForm experience={experience} />
       </div>

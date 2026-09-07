@@ -11,3 +11,9 @@ export function mediaUrl(src: string, apiUrl: string) {
   const base = apiUrl.replace(/\/$/, "");
   return `${base}${src.startsWith("/") ? src : `/${src}`}`;
 }
+
+export function imageSrc(value: string | { linkUrl?: string } | undefined | null) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  return value.linkUrl ?? "";
+}

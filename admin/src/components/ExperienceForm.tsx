@@ -10,7 +10,7 @@ export function ExperienceForm({ experience }: { experience?: CustomExperience }
   const fileId = useId();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const [preview, setPreview] = useState(experience ? asset(experience.image) : "");
+  const [preview, setPreview] = useState(experience ? asset(experience.tourImage) : "");
   const [file, setFile] = useState<File | null>(null);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -24,7 +24,7 @@ export function ExperienceForm({ experience }: { experience?: CustomExperience }
     const form = new FormData(event.currentTarget);
     if (file) form.set("image", file);
     try {
-      if (experience) await updateExperience(experience.slug, form);
+      if (experience) await updateExperience(experience.tourId, form);
       else await createExperience(form);
       router.push("/visit-ghana/custom-trips");
     } catch (err) {
@@ -37,55 +37,50 @@ export function ExperienceForm({ experience }: { experience?: CustomExperience }
   return (
     <form onSubmit={onSubmit} className="grid gap-4">
       <label className="block text-sm">
-        <span className="font-medium text-burgundy">Trip name</span>
+        <span className="font-medium text-burgundy">Tour name</span>
         <input
-          name="name"
+          name="tourName"
           required
-          defaultValue={experience?.name}
+          defaultValue={experience?.tourName}
           placeholder="e.g. Kakum National Park"
           className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
         />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm">
-          <span className="font-medium text-burgundy">Price (USD)</span>
+          <span className="font-medium text-burgundy">Tour price (USD)</span>
           <input
-            name="price"
+            name="tourPrice"
             type="number"
             step="0.01"
             required
-            defaultValue={experience?.price}
+            defaultValue={experience?.tourPrice}
             className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
           />
         </label>
         <label className="block text-sm">
-          <span className="font-medium text-burgundy">Duration</span>
+          <span className="font-medium text-burgundy">Tour duration</span>
           <input
-            name="duration"
+            name="tourDuration"
             required
-            defaultValue={experience?.duration ?? "1 Day"}
+            defaultValue={experience?.tourDuration ?? "1 Day"}
             placeholder="e.g. 1 Day"
             className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
           />
         </label>
       </div>
       <label className="block text-sm">
-        <span className="font-medium text-burgundy">Description</span>
-        <textarea
-          name="description"
-          required
-          rows={5}
-          defaultValue={experience?.description}
-          className="mt-1 w-full rounded-lg border border-sand px-3 py-2"
-        />
-      </label>
-      <label className="flex items-center gap-2 text-sm font-medium text-burgundy">
-        <input name="active" type="checkbox" defaultChecked={experience?.active !== false} />
-        Active on the public Custom Trip page
+        <span className="flex items-center gap-2 font-medium text-burgundy">
+          <input name="active" type="checkbox" defaultChecked={experience?.active !== false} />
+          Publish this custom tour
+        </span>
+        <span className="mt-1 block text-xs text-muted">
+          When this is on, it appears on the public Custom Trip page. Leave it off to keep a draft.
+        </span>
       </label>
       <div>
-        <p className="text-sm font-medium text-burgundy">Photo</p>
-        <p className="mt-1 text-xs text-muted">Shown on the public builder. Click the box to choose a file.</p>
+        <p className="text-sm font-medium text-burgundy">Tour image</p>
+        <p className="mt-1 text-xs text-muted">Uploads to Cloudinary in the kinandcompass folder.</p>
         <input
           id={fileId}
           type="file"
@@ -118,7 +113,7 @@ export function ExperienceForm({ experience }: { experience?: CustomExperience }
         disabled={pending}
         className="h-12 rounded-lg bg-burgundy text-sm font-semibold text-white disabled:opacity-60"
       >
-        {pending ? "Saving..." : experience ? "Save trip" : "Add trip"}
+        {pending ? "Saving..." : experience ? "Save custom tour" : "Add custom tour"}
       </button>
     </form>
   );

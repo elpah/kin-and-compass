@@ -28,7 +28,7 @@ async function seed() {
     await Product.findOneAndUpdate({ slug: product.slug }, product, { upsert: true });
   }
   for (const experience of customExperiences) {
-    await CustomExperienceModel.findOneAndUpdate({ slug: experience.slug }, experience, { upsert: true });
+    await CustomExperienceModel.findOneAndUpdate({ tourId: experience.tourId }, experience, { upsert: true });
   }
   console.log(
     `Seeded admin ${env.adminEmail}, ${products.length} products, and ${customExperiences.length} custom trips.`,

@@ -18,14 +18,13 @@ export default function CustomTripsAdminPage() {
 
   async function toggleActive(item: CustomExperience) {
     const form = new FormData();
-    form.set("name", item.name);
-    form.set("price", String(item.price));
-    form.set("duration", item.duration);
-    form.set("description", item.description);
+    form.set("tourName", item.tourName);
+    form.set("tourPrice", String(item.tourPrice));
+    form.set("tourDuration", item.tourDuration);
     if (!item.active) form.set("active", "on");
     try {
-      const data = await updateExperience(item.slug, form);
-      setItems((prev) => prev?.map((row) => (row.slug === item.slug ? data.experience : row)) ?? null);
+      const data = await updateExperience(item.tourId, form);
+      setItems((prev) => prev?.map((row) => (row.tourId === item.tourId ? data.experience : row)) ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not update status");
     }
@@ -83,16 +82,16 @@ export default function CustomTripsAdminPage() {
               </thead>
               <tbody>
                 {items.map((item) => (
-                  <tr key={item.slug} className="border-t border-sand">
+                  <tr key={item.tourId} className="border-t border-sand">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={asset(item.image)} alt="" className="h-12 w-16 rounded-lg object-cover" />
-                        <p className="font-medium text-burgundy">{item.name}</p>
+                        <img src={asset(item.tourImage)} alt="" className="h-12 w-16 rounded-lg object-cover" />
+                        <p className="font-medium text-burgundy">{item.tourName}</p>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-muted">{item.duration}</td>
-                    <td className="px-4 py-3">${item.price}</td>
+                    <td className="px-4 py-3 text-muted">{item.tourDuration}</td>
+                    <td className="px-4 py-3">${item.tourPrice}</td>
                     <td className="px-4 py-3">
                       <button
                         type="button"
@@ -107,7 +106,7 @@ export default function CustomTripsAdminPage() {
                     <td className="px-4 py-3">
                       <div className="flex gap-4">
                         <Link
-                          href={`/visit-ghana/custom-trips/${item.slug}/edit`}
+                          href={`/visit-ghana/custom-trips/${item.tourId}/edit`}
                           className="font-semibold text-burgundy"
                         >
                           Edit
@@ -116,10 +115,10 @@ export default function CustomTripsAdminPage() {
                           type="button"
                           className="font-semibold text-crimson"
                           onClick={async () => {
-                            if (!confirm(`Delete "${item.name}"?`)) return;
+                            if (!confirm(`Delete "${item.tourName}"?`)) return;
                             try {
-                              await deleteExperience(item.slug);
-                              setItems((prev) => prev?.filter((row) => row.slug !== item.slug) ?? []);
+                              await deleteExperience(item.tourId);
+                              setItems((prev) => prev?.filter((row) => row.tourId !== item.tourId) ?? []);
                             } catch (err) {
                               setError(err instanceof Error ? err.message : "Delete failed");
                             }
