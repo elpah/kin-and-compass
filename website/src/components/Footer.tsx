@@ -10,18 +10,25 @@ export function Footer() {
         <div className="md:col-span-5">
           <div className="flex items-center gap-3">
             <span className="relative h-14 w-14 overflow-hidden rounded-full bg-white">
-              <Image src="/logo.jpeg" alt="" fill className="object-cover object-top scale-110" />
+              <Image
+                src="/logo.png"
+                alt=""
+                fill
+                className="object-cover object-top scale-110"
+              />
             </span>
             <div>
               <p className="text-xs font-extrabold tracking-[0.2em] uppercase">
                 {brand.name}
               </p>
-              <p className="script text-rose text-lg leading-none">{brand.tagline}</p>
+              <p className="script text-rose text-lg leading-none">
+                {brand.tagline}
+              </p>
             </div>
           </div>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/70">
-            Travel Ghana, shop African makers, give back in
-            Ghana, and explore legitimate opportunity - through one trusted house.
+            Travel Ghana, shop African makers, give back in Ghana, and explore
+            legitimate opportunity - through one trusted house.
           </p>
           <div className="mt-6 flex items-center gap-3">
             <SocialLink href="https://instagram.com" label="Instagram">
@@ -46,7 +53,10 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {nav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-white/80 hover:text-white">
+                <Link
+                  href={item.href}
+                  className="text-white/80 hover:text-white"
+                >
                   {item.label}
                 </Link>
               </li>
@@ -88,12 +98,18 @@ export function Footer() {
             </a>
           </p>
           <p className="mt-1 text-sm">
-            <a href={`mailto:${brand.bookingEmail}`} className="hover:text-rose">
+            <a
+              href={`mailto:${brand.bookingEmail}`}
+              className="hover:text-rose"
+            >
               {brand.bookingEmail}
             </a>
           </p>
           <p className="mt-1 text-sm">
-            <a href={`tel:${brand.phone.replace(/\s/g, "")}`} className="hover:text-rose">
+            <a
+              href={`tel:${brand.phone.replace(/\s/g, "")}`}
+              className="hover:text-rose"
+            >
               {brand.phone}
             </a>
           </p>
@@ -108,7 +124,9 @@ export function Footer() {
 
       <div className="border-t border-white/10 px-4 py-5 sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 text-center text-[11px] text-white/45 sm:flex-row sm:justify-between sm:text-left">
-          <p>© {new Date().getFullYear()} {brand.legal}</p>
+          <p>
+            © {new Date().getFullYear()} {brand.legal}
+          </p>
           <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             <Link href="/privacy" className="hover:text-white">
               Privacy
@@ -160,7 +178,15 @@ function SocialLink({
 function InstagramIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.7" />
+      <rect
+        x="3.5"
+        y="3.5"
+        width="17"
+        height="17"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
       <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.7" />
       <circle cx="17.2" cy="6.8" r="1" fill="currentColor" />
     </svg>
@@ -169,7 +195,13 @@ function InstagramIcon() {
 
 function TikTokIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M14.2 3h2.3c.2 1.9 1.3 3.3 3.3 3.6v2.3c-1.2 0-2.3-.4-3.3-1v6.8c0 3.4-2.6 5.8-6.1 5.8S4.3 18.1 4.3 14.7c0-3.3 2.6-5.7 6-5.8v2.5c-1.8.1-3.2 1.5-3.2 3.3 0 1.9 1.5 3.4 3.4 3.4s3.3-1.5 3.3-3.4V3z" />
     </svg>
   );
@@ -177,7 +209,13 @@ function TikTokIcon() {
 
 function WhatsAppIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M20.5 3.5A11 11 0 0 0 3.1 17.2L2 22l4.9-1.1A11 11 0 1 0 20.5 3.5zm-8.5 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.9.7.8-2.8-.2-.3A9 9 0 1 1 12 20.5zm5-6.7c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.1 8.1 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5.1-.3a.5.5 0 0 0 0-.5c0-.1-.6-1.5-.8-2s-.4-.5-.6-.5h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 15 15 0 0 0 1.5.5 3.6 3.6 0 0 0 1.6.1 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3z" />
     </svg>
   );

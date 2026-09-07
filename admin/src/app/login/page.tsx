@@ -15,7 +15,13 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md">
         <div className="flex items-center gap-3">
           <span className="relative h-12 w-12 overflow-hidden rounded-full bg-white ring-1 ring-burgundy/10">
-            <Image src="/logo.jpeg" alt="" fill className="object-cover object-top scale-110" sizes="48px" />
+            <Image
+              src="/logo.png"
+              alt=""
+              fill
+              className="object-cover object-top scale-110"
+              sizes="48px"
+            />
           </span>
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-burgundy">
@@ -25,7 +31,9 @@ export default function AdminLoginPage() {
           </div>
         </div>
         <h1 className="display mt-8 text-4xl text-burgundy">Sign in</h1>
-        <p className="mt-2 text-sm text-muted">House tools for the store and Visit Ghana.</p>
+        <p className="mt-2 text-sm text-muted">
+          House tools for the store and Visit Ghana.
+        </p>
         <form
           className="mt-8 grid gap-3"
           onSubmit={async (event) => {
@@ -34,10 +42,15 @@ export default function AdminLoginPage() {
             setPending(true);
             const form = new FormData(event.currentTarget);
             try {
-              await login(String(form.get("email")), String(form.get("password")));
+              await login(
+                String(form.get("email")),
+                String(form.get("password")),
+              );
               router.push("/");
             } catch (err) {
-              setError(err instanceof Error ? err.message : "Could not sign in");
+              setError(
+                err instanceof Error ? err.message : "Could not sign in",
+              );
             } finally {
               setPending(false);
             }

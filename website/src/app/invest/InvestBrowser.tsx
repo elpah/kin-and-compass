@@ -19,10 +19,10 @@ export function InvestBrowser() {
       <section className="border-b border-sand bg-white">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
           <div className="max-w-3xl">
-            <h2 className="display mt-1 text-3xl text-burgundy sm:text-4xl">Why Ghana</h2>
-            <p className="script mt-3 text-2xl text-rose sm:text-3xl">
+            <p className="script text-2xl text-rose sm:text-3xl">
               A Gateway to Opportunity in Africa
             </p>
+            <h2 className="display mt-2 text-3xl text-burgundy sm:text-4xl">Why Ghana</h2>
             <p className="mt-5 text-[17px] leading-relaxed text-ink/80">
               Ghana offers a unique combination of economic potential, cultural richness,
               strategic location, and growing industries. As the home of Kin and Compass,
