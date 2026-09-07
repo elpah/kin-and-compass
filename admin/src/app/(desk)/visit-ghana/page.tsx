@@ -5,7 +5,7 @@ import { asset, deleteTour, listTours, updateTour } from "@/lib/api";
 import type { PackagedTour } from "@kincompass/shared";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 function listView(status: string | null): "active" | "deleted" | "all" {
   if (status === "deleted" || status === "all") return status;
@@ -13,6 +13,14 @@ function listView(status: string | null): "active" | "deleted" | "all" {
 }
 
 export default function VisitGhanaAdminPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
+      <VisitGhanaAdmin />
+    </Suspense>
+  );
+}
+
+function VisitGhanaAdmin() {
   const params = useSearchParams();
   const status = listView(params.get("status"));
   const [tours, setTours] = useState<PackagedTour[] | null>(null);

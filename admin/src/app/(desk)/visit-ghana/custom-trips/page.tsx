@@ -5,7 +5,7 @@ import { asset, deleteExperience, listExperiences, updateExperience } from "@/li
 import type { CustomExperience } from "@kincompass/shared";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 function listView(status: string | null): "active" | "deleted" | "all" {
   if (status === "deleted" || status === "all") return status;
@@ -13,6 +13,14 @@ function listView(status: string | null): "active" | "deleted" | "all" {
 }
 
 export default function CustomTripsAdminPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
+      <CustomTripsAdmin />
+    </Suspense>
+  );
+}
+
+function CustomTripsAdmin() {
   const params = useSearchParams();
   const status = listView(params.get("status"));
   const [items, setItems] = useState<CustomExperience[] | null>(null);
