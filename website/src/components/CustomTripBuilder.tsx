@@ -9,34 +9,34 @@ import Link from "next/link";
 
 export function CustomTripBuilder({ experiences }: { experiences: CustomExperience[] }) {
   const { slugs, add, remove, has } = useCustomTrip();
-  const selected = experiences.filter((item) => slugs.includes(item.slug));
-  const total = selected.reduce((sum, item) => sum + item.price, 0);
+  const selected = experiences.filter((item) => slugs.includes(item.tourId));
+  const total = selected.reduce((sum, item) => sum + item.tourPrice, 0);
 
   return (
     <>
       {experiences.length === 0 ? (
         <p className="mt-8 text-muted">
-          No experiences are published yet. Check back soon, or write us at bookings.
+          No custom tours are published yet. Check back soon, or write us at bookings.
         </p>
       ) : (
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             {experiences.map((item) => {
-              const inTrip = has(item.slug);
+              const inTrip = has(item.tourId);
               return (
                 <article
-                  key={item.slug}
+                  key={item.tourId}
                   className="overflow-hidden rounded-lg bg-white ring-1 ring-sand md:grid md:grid-cols-5"
                 >
                   <div className="relative aspect-[16/10] md:col-span-2 md:aspect-auto md:min-h-[200px]">
-                    <Image src={asset(item.image)} alt="" fill className="object-cover" sizes="(min-width: 768px) 40vw, 100vw" />
+                    <Image src={asset(item.tourImage)} alt="" fill className="object-cover" sizes="(min-width: 768px) 40vw, 100vw" />
                   </div>
                   <div className="flex flex-col p-5 md:col-span-3 sm:p-6">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
-                        <h2 className="display text-2xl text-burgundy">{item.name}</h2>
+                        <h2 className="display text-2xl text-burgundy">{item.tourName}</h2>
                         <p className="mt-1 text-sm font-semibold text-crimson">
-                          {item.duration} · {formatMoney(item.price)}
+                          {item.tourDuration} · {formatMoney(item.tourPrice)}
                         </p>
                       </div>
                       {inTrip && (
@@ -45,11 +45,10 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
                         </span>
                       )}
                     </div>
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{item.description}</p>
                     {inTrip ? (
                       <button
                         type="button"
-                        onClick={() => remove(item.slug)}
+                        onClick={() => remove(item.tourId)}
                         className="mt-4 h-11 self-start rounded-lg px-5 text-sm font-semibold text-crimson ring-1 ring-sand"
                       >
                         Remove
@@ -57,7 +56,7 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
                     ) : (
                       <button
                         type="button"
-                        onClick={() => add(item.slug)}
+                        onClick={() => add(item.tourId)}
                         className="mt-4 h-11 self-start rounded-lg bg-burgundy px-5 text-sm font-semibold text-white"
                       >
                         Add to trip
@@ -73,18 +72,18 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
             <p className="script text-2xl text-rose">Your custom trip</p>
             <p className="mt-1 text-sm text-muted">
               {selected.length === 0
-                ? "Add experiences to build one itinerary."
-                : `${selected.length} experience${selected.length === 1 ? "" : "s"} selected.`}
+                ? "Add custom tours to build one itinerary."
+                : `${selected.length} custom tour${selected.length === 1 ? "" : "s"} selected.`}
             </p>
             {selected.length > 0 && (
               <ul className="mt-4 space-y-3 border-t border-sand pt-4">
                 {selected.map((item) => (
-                  <li key={item.slug} className="flex items-start justify-between gap-3 text-sm">
+                  <li key={item.tourId} className="flex items-start justify-between gap-3 text-sm">
                     <div>
-                      <p className="font-semibold text-burgundy">{item.name}</p>
-                      <p className="text-muted">{item.duration}</p>
+                      <p className="font-semibold text-burgundy">{item.tourName}</p>
+                      <p className="text-muted">{item.tourDuration}</p>
                     </div>
-                    <p className="shrink-0 font-semibold">{formatMoney(item.price)}</p>
+                    <p className="shrink-0 font-semibold">{formatMoney(item.tourPrice)}</p>
                   </li>
                 ))}
               </ul>

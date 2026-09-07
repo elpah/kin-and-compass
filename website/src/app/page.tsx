@@ -142,9 +142,9 @@ export default async function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40" />
           <div className="absolute inset-x-0 bottom-0 p-8">
             <p className="script text-2xl text-rose">Give back to Ghana</p>
-            <h2 className="display text-4xl text-white">Impact My Life</h2>
+            <h2 className="display text-4xl text-white">Travel With Purpose</h2>
             <p className="mt-3 max-w-md text-sm text-white/75">
-              A call for support as we stand up community work in Ghana.
+              Leave a legacy. Give back. Get involved. Make an impact.
             </p>
           </div>
         </Link>

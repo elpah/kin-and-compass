@@ -3,11 +3,11 @@ import { brand } from "@/data/site";
 
 export const industries = [
   "Agriculture",
-  "Factories",
-  "Mineral resources",
-  "Tourism",
-  "Real estate",
-  "Football",
+  "Real Estate",
+  "Factories & Manufacturing",
+  "Tourism & Hospitality",
+  "Mineral Resources",
+  "Sport & Football",
 ] as const;
 
 export const opportunities: Opportunity[] = [
@@ -18,7 +18,7 @@ export const opportunities: Opportunity[] = [
     industry: "Agriculture",
     image:
       "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1400&q=80",
-    hook: "Land, seasons, and the line from farm to market.",
+    hook: "Discover opportunities in farming, agribusiness, land, production, and agricultural development.",
     investmentLevel: "From smallholder partnerships to commercial farms",
     overview:
       "Food, cash crops, livestock, and agro-processing in Ghana. This desk is for people who want to understand how Ghanaian agriculture works - land, seasons, offtake, and the difference between a farm and a processing line - before they talk to operators.",
@@ -43,12 +43,12 @@ export const opportunities: Opportunity[] = [
   },
   {
     slug: "factories",
-    title: "Factories",
+    title: "Factories & Manufacturing",
     country: "Ghana",
-    industry: "Factories",
+    industry: "Factories & Manufacturing",
     image:
       "https://images.unsplash.com/photo-1504917595217-d4dc5abe6122?auto=format&fit=crop&w=1400&q=80",
-    hook: "Making more of what Ghana still imports.",
+    hook: "Explore Ghana's growing industrial and manufacturing landscape, from production to processing and development.",
     investmentLevel: "Typically larger tickets and longer build-out",
     overview:
       "Light manufacturing, assembly, packaging, and industrial parks in Ghana. The country still imports a great deal of what it could make at home. This brief covers how factory projects are usually structured, what power and ports matter, and how to start a conversation without a specific plant on the table.",
@@ -72,12 +72,12 @@ export const opportunities: Opportunity[] = [
   },
   {
     slug: "mineral-resources",
-    title: "Mineral resources",
+    title: "Mineral Resources",
     country: "Ghana",
-    industry: "Mineral resources",
+    industry: "Mineral Resources",
     image:
       "https://images.unsplash.com/photo-1610375461246-83df8590ea2f?auto=format&fit=crop&w=1400&q=80",
-    hook: "Gold, bauxite, manganese - and the rules around them.",
+    hook: "Gain insight into Ghana's mineral-resource sector and connect with appropriate professionals and stakeholders.",
     investmentLevel: "From artisanal supply chains to licensed concessions",
     overview:
       "Gold, bauxite, manganese, salt, and other resources in Ghana. This is an educational overview of how mineral activity is regulated, why community and environment sit at the centre, and how Kin and Compass can introduce you to the right kind of conversation - not a claim on any mine.",
@@ -101,12 +101,12 @@ export const opportunities: Opportunity[] = [
   },
   {
     slug: "tourism",
-    title: "Tourism",
+    title: "Tourism & Hospitality",
     country: "Ghana",
-    industry: "Tourism",
+    industry: "Tourism & Hospitality",
     image:
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
-    hook: "Lodges, hosts, and the work of receiving well.",
+    hook: "Discover investment and development opportunities within Ghana's tourism, hospitality, culture, and experiences.",
     investmentLevel: "Lodges, experiences, and supporting services",
     overview:
       "Lodges, tours, transport, and hospitality that host visitors well in Ghana. Tourism is seasonal and reputation-sensitive. This page is a general briefing on how Ghanaian tourism businesses tend to be built, staffed, and filled - and how our own travel work sits beside it.",
@@ -129,12 +129,12 @@ export const opportunities: Opportunity[] = [
   },
   {
     slug: "real-estate",
-    title: "Real estate",
+    title: "Real Estate",
     country: "Ghana",
-    industry: "Real estate",
+    industry: "Real Estate",
     image:
       "https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=1400&q=80",
-    hook: "Title, construction, and occupancy first.",
+    hook: "Navigate residential, commercial, land, hospitality, and development opportunities with informed local guidance.",
     investmentLevel: "Homes, rentals, and mixed-use in growing cities",
     overview:
       "Residential, rental, and mixed-use property in Ghanaian cities. Title, construction, and occupancy are the three questions that matter first. This is a general guide to how people usually approach real estate in Ghana - not a listing of units for sale.",
@@ -157,12 +157,12 @@ export const opportunities: Opportunity[] = [
   },
   {
     slug: "football",
-    title: "Football",
+    title: "Sport & Football",
     country: "Ghana",
-    industry: "Football",
+    industry: "Sport & Football",
     image:
       "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1400&q=80",
-    hook: "Academies, clubs, and the businesses around the game.",
+    hook: "Explore opportunities across football, sports development, talent, facilities, partnerships, and the wider sports economy.",
     investmentLevel: "Academies, clubs, and related businesses",
     overview:
       "Youth academies, clubs, facilities, and the businesses around Ghanaian football. Talent is deep. This brief explains the kinds of football-related work people ask us about, and what a responsible conversation usually includes - safeguarding, education, and Ghana Football Association rules.",

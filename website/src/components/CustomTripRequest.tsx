@@ -11,11 +11,11 @@ import { useMemo } from "react";
 export function CustomTripRequest({ experiences }: { experiences: CustomExperience[] }) {
   const { slugs } = useCustomTrip();
   const selected = useMemo(
-    () => slugs.map((slug) => experiences.find((item) => item.slug === slug)).filter(Boolean) as CustomExperience[],
+    () => slugs.map((id) => experiences.find((item) => item.tourId === id)).filter(Boolean) as CustomExperience[],
     [slugs, experiences],
   );
-  const total = selected.reduce((sum, item) => sum + item.price, 0);
-  const line = selected.map((item) => `${item.name} (${item.duration}, ${formatMoney(item.price)})`).join("; ");
+  const total = selected.reduce((sum, item) => sum + item.tourPrice, 0);
+  const line = selected.map((item) => `${item.tourName} (${item.tourDuration}, ${formatMoney(item.tourPrice)})`).join("; ");
 
   if (selected.length === 0) {
     return (
@@ -41,8 +41,8 @@ export function CustomTripRequest({ experiences }: { experiences: CustomExperien
         <p className="text-sm font-semibold text-burgundy">Attached itinerary</p>
         <ul className="mt-2 space-y-1 text-sm text-muted">
           {selected.map((item) => (
-            <li key={item.slug}>
-              {item.name} · {item.duration} · {formatMoney(item.price)}
+            <li key={item.tourId}>
+              {item.tourName} · {item.tourDuration} · {formatMoney(item.tourPrice)}
             </li>
           ))}
         </ul>

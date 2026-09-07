@@ -10,10 +10,10 @@ import { useMemo } from "react";
 export function CustomTripReview({ experiences }: { experiences: CustomExperience[] }) {
   const { slugs, remove } = useCustomTrip();
   const selected = useMemo(
-    () => slugs.map((slug) => experiences.find((item) => item.slug === slug)).filter(Boolean) as CustomExperience[],
+    () => slugs.map((id) => experiences.find((item) => item.tourId === id)).filter(Boolean) as CustomExperience[],
     [slugs, experiences],
   );
-  const total = selected.reduce((sum, item) => sum + item.price, 0);
+  const total = selected.reduce((sum, item) => sum + item.tourPrice, 0);
 
   if (selected.length === 0) {
     return (
@@ -41,12 +41,12 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
           </thead>
           <tbody>
             {selected.map((item) => (
-              <tr key={item.slug} className="border-t border-sand">
-                <td className="px-4 py-3 font-semibold text-burgundy">{item.name}</td>
-                <td className="px-4 py-3 text-muted">{item.duration}</td>
-                <td className="px-4 py-3">{formatMoney(item.price)}</td>
+              <tr key={item.tourId} className="border-t border-sand">
+                <td className="px-4 py-3 font-semibold text-burgundy">{item.tourName}</td>
+                <td className="px-4 py-3 text-muted">{item.tourDuration}</td>
+                <td className="px-4 py-3">{formatMoney(item.tourPrice)}</td>
                 <td className="px-4 py-3">
-                  <button type="button" className="font-semibold text-crimson" onClick={() => remove(item.slug)}>
+                  <button type="button" className="font-semibold text-crimson" onClick={() => remove(item.tourId)}>
                     Remove
                   </button>
                 </td>

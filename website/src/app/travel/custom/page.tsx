@@ -18,6 +18,8 @@ export default async function CustomTripPage() {
     <>
       <PageHero
         compact
+        backHref="/travel"
+        backLabel="Back to tours"
         kicker="Private tours"
         title="Build your Ghana."
         text="Pick the days you want - parks, castles, city walks - and we stitch them into one trip. Add as many as you like."

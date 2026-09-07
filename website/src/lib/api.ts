@@ -69,11 +69,11 @@ export async function listActiveExperiences() {
   if (useApi) {
     try {
       const data = await getJson<{ experiences: CustomExperience[] }>("/experiences?active=true");
-      const live = (data.experiences ?? []).filter((item) => item.active);
+      const live = (data.experiences ?? []).filter((item) => item.active !== false);
       if (live.length) return live;
     } catch {
       /* API or MongoDB not running - use placeholders */
     }
   }
-  return localExperiences.filter((item) => item.active);
+  return localExperiences.filter((item) => item.active !== false);
 }

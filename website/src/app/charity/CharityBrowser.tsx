@@ -11,8 +11,8 @@ export function CharityBrowser() {
     <>
       <PageHero
         kicker="Give back to Ghana"
-        title="Impact My Life"
-        text="We are building a Give Back desk so people can support community work in Ghana. The first projects are not live yet. We need partners, gifts, and people who will walk with us as the work is named."
+        title="Travel With Purpose. Leave a Legacy."
+        text="Your journey can be more than a memory, it can be a moment of change. We are building a Give Back initiative that connects travelers, partners, and compassionate individuals with meaningful community projects across Ghana. Together, we can support local communities, create opportunities, inspire hope, and make a lasting difference. Give back. Get involved. Make an impact."
         image={covers.impact}
       >
         <div className="flex flex-wrap gap-3">
@@ -20,13 +20,13 @@ export function CharityBrowser() {
             href="/charity/donate"
             className="inline-flex h-12 items-center rounded bg-crimson px-6 text-sm font-semibold text-white"
           >
-            Call for support
+            Support the Cause
           </Link>
           <Link
             href="/charity/get-involved"
             className="inline-flex h-12 items-center rounded bg-white/10 px-6 text-sm font-semibold text-white ring-1 ring-white/30"
           >
-            Get involved
+            Get Involved
           </Link>
         </div>
       </PageHero>
@@ -34,45 +34,63 @@ export function CharityBrowser() {
       <section className="border-b border-sand bg-white">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
           <div className="max-w-3xl">
-            <p className="script text-2xl text-rose">Purpose</p>
-            <h2 className="display mt-1 text-3xl text-burgundy sm:text-4xl">
-              Why this desk exists
-            </h2>
+            <h2 className="display text-3xl text-burgundy sm:text-4xl">Purpose</h2>
+            <p className="script mt-3 text-2xl text-rose sm:text-3xl">
+              Giving Back. Creating Hope. Changing Lives.
+            </p>
             <p className="mt-5 text-[17px] leading-relaxed text-ink/80">
-              Impact My Life will connect individuals, organisations, businesses, and
-              supporters with community work in Ghana - education, health, water,
-              skills, and care for families. The aim is a transparent, trusted space
-              where you can find what is needed, give, and later see what your gift
-              helped start.
+              Impact My Life is the community focused non-governmental organization (NGO)
+              dedicated to giving back and creating meaningful change in communities
+              across Ghana. Our mission is simple: to put smiles on faces, restore hope,
+              create opportunities, and leave a lasting mark in the lives of people who
+              need a helping hand.
             </p>
             <p className="mt-4 text-[17px] leading-relaxed text-ink/80">
-              Kin and Compass already welcomes people to visit, shop, and
-              look at opportunity. This room is for giving back. We will not invent
-              completed projects. When the first programmes are named, they will
-              appear here with a place, a purpose, and a way to help.
+              We believe that every contribution counts. Through donations, fundraising
+              campaigns, partnerships, sponsorships, community initiatives, and the
+              generosity of people who care, we aim to raise the resources needed to
+              support the less privileged in areas such as education, healthcare, food,
+              clean water, skills development, children, families, and community
+              empowerment. We want every gift to become something tangible: a child given
+              an opportunity, a family given hope, a community given support, and a smile
+              that says someone cared.
             </p>
-          </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                title: "Call for support",
-                text: "Gifts to the Ghana fund help us stand up the first work - with partners on the ground, not a brochure of results we do not have.",
-              },
-              {
-                title: "Walk with us",
-                text: "Volunteer time, professional skills, or a company partnership. We screen and schedule. We do not send unvetted visitors to children.",
-              },
-              {
-                title: "Stay honest",
-                text: "How gifts will be used is on the Trust page. Registration details will be published when filings are complete. We will not invent a number.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="rounded-lg bg-cream p-6 ring-1 ring-sand">
-                <h3 className="display text-2xl text-burgundy">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.text}</p>
-              </div>
-            ))}
+            <h3 className="display mt-12 text-3xl text-burgundy">Our Promise</h3>
+            <p className="mt-4 text-[17px] leading-relaxed text-ink/80">
+              We are committed to building a transparent, trusted, and compassionate
+              platform for giving. We will not create stories or claim projects that do
+              not exist. As our initiatives grow, we will share the people, communities,
+              needs, and projects we are supporting, giving our partners and donors the
+              opportunity to see how their generosity creates impact.
+            </p>
+            <p className="mt-4 text-[17px] leading-relaxed text-ink/80">
+              You may not be able to change the whole world, but together, we can change
+              someone&apos;s world.
+            </p>
+            <p className="mt-4 text-[17px] font-semibold leading-relaxed text-burgundy">
+              Give. Support. Empower. Leave a Mark. ❤️🇬🇭
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/charity/donate"
+                className="inline-flex h-12 items-center rounded bg-crimson px-6 text-sm font-semibold text-white"
+              >
+                Support Our Mission
+              </Link>
+              <Link
+                href="/charity/get-involved#partner"
+                className="inline-flex h-12 items-center rounded bg-burgundy px-6 text-sm font-semibold text-white"
+              >
+                Partner With Us
+              </Link>
+              <Link
+                href="/charity/get-involved"
+                className="inline-flex h-12 items-center rounded px-6 text-sm font-semibold text-burgundy ring-1 ring-sand"
+              >
+                Get Involved
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -142,19 +160,14 @@ export function CharityBrowser() {
       </section>
 
       <section className="relative isolate overflow-hidden py-20">
-        <Image
-          src={covers.impact}
-          alt=""
-          fill
-          className="object-cover"
-        />
+        <Image src={covers.impact} alt="" fill className="object-cover" />
         <div className="absolute inset-0 bg-burgundy-deep/80" />
         <div className="relative mx-auto max-w-3xl px-4 text-center text-white sm:px-6">
           <p className="script text-3xl text-rose">The house</p>
           <h2 className="display mt-2 text-4xl sm:text-5xl">Help us begin well.</h2>
           <p className="mt-4 text-white/80">
-            Visit, shop, invest - and, when you can, give back. Read how
-            gifts will be used, then support the fund or write to the desk.
+            Visit, shop, invest - and, when you can, give back. Read how gifts will be
+            used, then support the fund or write to the desk.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link

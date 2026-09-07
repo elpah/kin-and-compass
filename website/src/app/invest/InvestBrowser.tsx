@@ -4,66 +4,45 @@ import { FAQ } from "@/components/FAQ";
 import { InquiryForm } from "@/components/InquiryForm";
 import { PageHero } from "@/components/PageHero";
 import { industries, opportunities } from "@/data/opportunities";
-import { investFaqs, whyGhana } from "@/data/site";
+import { investFaqs } from "@/data/site";
 
 export function InvestBrowser() {
   return (
     <>
       <PageHero
-        kicker="Opportunity"
-        title="Invest in Ghana."
-        text="Agriculture, factories, mineral resources, tourism, real estate, and football. Briefings to start a careful conversation - not listings."
+        kicker="Invest in Ghana"
+        title="Discover What's Possible."
+        text="Ghana is more than a destination - it is a place of opportunity, growth, and possibility. Explore carefully curated opportunities across agriculture, manufacturing, mineral resources, tourism, real estate, and football. We bring together insights, sector briefings, and emerging opportunities designed to help you understand the landscape before making a move. Start a conversation. Explore the possibilities. Build something that lasts."
         image={covers.invest}
       />
 
       <section className="border-b border-sand bg-white">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
           <div className="max-w-3xl">
-            <p className="script text-2xl text-rose">A briefing</p>
-            <h2 className="display mt-1 text-3xl text-burgundy sm:text-4xl">
-              Why look at Ghana
-            </h2>
+            <h2 className="display mt-1 text-3xl text-burgundy sm:text-4xl">Why Ghana</h2>
+            <p className="script mt-3 text-2xl text-rose sm:text-3xl">
+              A Gateway to Opportunity in Africa
+            </p>
             <p className="mt-5 text-[17px] leading-relaxed text-ink/80">
-              Ghana is where Kin and Compass begins because it is home - and because
-              it is a practical place to study opportunity. English is the language
-              of business. The Ghana Investment Promotion Centre sets the frame for
-              foreigners. Accra, Tema, Kumasi, and Takoradi are not a slide. They
-              are ports, markets, and land registries you can visit.
+              Ghana offers a unique combination of economic potential, cultural richness,
+              strategic location, and growing industries. As the home of Kin and Compass,
+              Ghana is where our knowledge, relationships, and on-the-ground experience
+              begin.
             </p>
             <p className="mt-4 text-[17px] leading-relaxed text-ink/80">
-              This desk does not list mines, plants, or flats for sale. It teaches
-              the shape of six sectors so you can ask better questions - then, if it
-              fits, we introduce you to people on the ground. Nothing here is advice
-              or an offer. It is orientation, with care.
+              From agriculture and real estate to manufacturing, tourism, mineral
+              resources, and sport, we help you understand the opportunities, the
+              environment, and the considerations that matter before you make a decision.
             </p>
-          </div>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            {whyGhana.map((item, i) => (
-              <div key={item.title} className="rounded-lg bg-cream p-6 ring-1 ring-sand">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-crimson">
-                  {String(i + 1).padStart(2, "0")}
-                </p>
-                <h3 className="display mt-2 text-2xl text-burgundy">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.text}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="mb-8 max-w-2xl">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
-            Six sectors
-          </p>
-          <h2 className="display mt-2 text-3xl text-burgundy sm:text-4xl">
-            Where to begin
+        <div className="mb-8 max-w-3xl">
+          <h2 className="display text-3xl text-burgundy sm:text-4xl">
+            Explore. Understand. Decide. We Guide You All the Way.
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            Choose an area. Each page is a general briefing - risks, requirements,
-            and how to start a conversation.
-          </p>
         </div>
         <div className="grid gap-5 md:grid-cols-2">
           {opportunities.map((o, i) => (
@@ -72,18 +51,31 @@ export function InvestBrowser() {
         </div>
       </section>
 
+      <section className="border-t border-sand bg-cream">
+        <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+          <h2 className="display text-3xl text-burgundy sm:text-4xl">
+            More Than a Connection. A Complete Journey.
+          </h2>
+          <p className="mt-5 text-[17px] leading-relaxed text-ink/80">
+            From education and consultation to research, evaluation, introductions,
+            purchasing, and delivery, Kin and Compass remains your trusted partner
+            throughout the process.
+          </p>
+          <p className="mt-4 text-[17px] leading-relaxed text-ink/80">
+            You bring the vision. We help you navigate the journey.
+          </p>
+        </div>
+      </section>
+
       <section className="border-t border-sand bg-white">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2">
           <div>
-            <p className="script text-2xl text-rose">The desk</p>
-            <h2 className="display mt-1 text-3xl text-burgundy sm:text-4xl">
-              Request a conversation
-            </h2>
+            <h2 className="display text-3xl text-burgundy sm:text-4xl">Start Exploring Ghana</h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
-              Tell us which area you are exploring. We reply with questions and, if it
-              fits, an introduction.
+              Discover the opportunity. Ask the right questions.
             </p>
-            <div className="mt-8 max-w-lg">
+            <p className="script mt-8 text-2xl text-rose">Request a conversation</p>
+            <div className="mt-6 max-w-lg">
               <InquiryForm
                 kind="invest"
                 submitLabel="Request briefing"

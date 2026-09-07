@@ -39,25 +39,6 @@ export const investFaqs = [
   },
 ];
 
-export const whyGhana = [
-  {
-    title: "A known rulebook",
-    text: "Foreign participation sits under the Ghana Investment Promotion Centre, not a handshake. Sector minimums, local partners, and immigration status are written down. You still need counsel. You do not have to invent the map.",
-  },
-  {
-    title: "English, and a working door",
-    text: "Business, courts, and contracts run in English. Accra, Tema, and Takoradi are ports and cities you can fly into, walk, and leave with questions that have names - not a continent-sized abstraction.",
-  },
-  {
-    title: "A young country that still imports",
-    text: "Food, packaging, parts, and hospitality are growing faster than the factories and farms that could supply them. That gap is why people look at agriculture, plants, and lodges - and why patience matters more than a pitch.",
-  },
-  {
-    title: "Home for the diaspora",
-    text: "Many who write to this desk already know Ghana. Dual citizenship, family land, and a return after years away are ordinary here. We treat that as an advantage - and as a reason to go slowly on title and community consent.",
-  },
-];
-
 export const travelFaqs = [
   {
     q: "Do you take deposits online?",
