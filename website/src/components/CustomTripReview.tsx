@@ -34,7 +34,6 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
           <thead className="bg-sand/60 text-[11px] uppercase tracking-wider text-muted">
             <tr>
               <th className="px-4 py-3">Experience</th>
-              <th className="px-4 py-3">Duration</th>
               <th className="px-4 py-3">Price</th>
               <th className="px-4 py-3"> </th>
             </tr>
@@ -42,8 +41,10 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
           <tbody>
             {selected.map((item) => (
               <tr key={item.tourId} className="border-t border-sand">
-                <td className="px-4 py-3 font-semibold text-burgundy">{item.tourName}</td>
-                <td className="px-4 py-3 text-muted">{item.tourDuration}</td>
+                <td className="px-4 py-3">
+                  <p className="font-semibold text-burgundy">{item.tourName}</p>
+                  <p className="mt-1 text-muted">Duration: {item.tourDuration}</p>
+                </td>
                 <td className="px-4 py-3">{formatMoney(item.tourPrice)}</td>
                 <td className="px-4 py-3">
                   <button type="button" className="font-semibold text-crimson" onClick={() => remove(item.tourId)}>
@@ -55,7 +56,10 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
           </tbody>
         </table>
       </div>
-      <p className="mt-6 display text-3xl text-burgundy">Total price: {formatMoney(total)}</p>
+      <p className="mt-6 display text-3xl text-burgundy">Estimated price: {formatMoney(total)}</p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+        After you request, we will send a confirmed schedule.
+      </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/travel/custom"

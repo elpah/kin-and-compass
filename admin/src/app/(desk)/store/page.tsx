@@ -1,5 +1,6 @@
 "use client";
 
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { asset, deleteProduct, listProducts } from "@/lib/api";
 import type { Product } from "@kincompass/shared";
 import Link from "next/link";
@@ -8,6 +9,8 @@ import { useEffect, useState } from "react";
 export default function StorePage() {
   const [products, setProducts] = useState<Product[] | null>(null);
   const [error, setError] = useState("");
+  const [toDelete, setToDelete] = useState<Product | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     listProducts()
@@ -86,15 +89,7 @@ export default function StorePage() {
                         <button
                           type="button"
                           className="font-semibold text-crimson"
-                          onClick={async () => {
-                            if (!confirm(`Delete "${product.name}"?`)) return;
-                            try {
-                              await deleteProduct(product.slug);
-                              setProducts((prev) => prev?.filter((item) => item.slug !== product.slug) ?? []);
-                            } catch (err) {
-                              setError(err instanceof Error ? err.message : "Delete failed");
-                            }
-                          }}
+                          onClick={() => setToDelete(product)}
                         >
                           Delete
                         </button>
@@ -108,6 +103,37 @@ export default function StorePage() {
         ) : null}
         {error && <p className="mt-4 text-sm text-crimson">{error}</p>}
       </section>
+
+      <ConfirmModal
+        open={toDelete !== null}
+        title="Delete product"
+        description={
+          toDelete ? (
+            <>
+              Delete <span className="font-semibold text-ink">&ldquo;{toDelete.name}&rdquo;</span>? This cannot be
+              undone from this list.
+            </>
+          ) : null
+        }
+        pending={deleting}
+        onClose={() => {
+          if (!deleting) setToDelete(null);
+        }}
+        onConfirm={async () => {
+          if (!toDelete) return;
+          setDeleting(true);
+          setError("");
+          try {
+            await deleteProduct(toDelete.slug);
+            setProducts((prev) => prev?.filter((item) => item.slug !== toDelete.slug) ?? []);
+            setToDelete(null);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Delete failed");
+          } finally {
+            setDeleting(false);
+          }
+        }}
+      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ const CustomExperienceSchema = new Schema(
   {
     tourId: { type: String, required: true, unique: true, index: true },
     tourName: { type: String, required: true },
+    tourDescription: { type: String, default: "" },
     tourDuration: { type: String, required: true },
     tourPrice: { type: Number, required: true },
     tourImage: {
@@ -34,6 +35,7 @@ export function serializeCustomExperience(doc: Record<string, unknown>): CustomE
   return {
     tourId: String(doc.tourId ?? doc.slug ?? ""),
     tourName: String(doc.tourName ?? doc.name ?? ""),
+    tourDescription: String(doc.tourDescription ?? doc.description ?? ""),
     tourDuration: String(doc.tourDuration ?? doc.duration ?? ""),
     tourPrice: Number(doc.tourPrice ?? doc.price ?? 0),
     tourImage: serializeTourImage(doc.tourImage ?? doc.TourImage ?? doc.image),

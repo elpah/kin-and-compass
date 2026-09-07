@@ -34,10 +34,10 @@ export function CharityBrowser() {
       <section className="border-b border-sand bg-white">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
           <div className="max-w-3xl">
-            <h2 className="display text-3xl text-burgundy sm:text-4xl">Purpose</h2>
-            <p className="script mt-3 text-2xl text-rose sm:text-3xl">
+            <p className="script text-2xl text-rose sm:text-3xl">Purpose</p>
+            <h2 className="display mt-2 text-3xl text-burgundy sm:text-4xl">
               Giving Back. Creating Hope. Changing Lives.
-            </p>
+            </h2>
             <p className="mt-5 text-[17px] leading-relaxed text-ink/80">
               Impact My Life is the community focused non-governmental organization (NGO)
               dedicated to giving back and creating meaningful change in communities

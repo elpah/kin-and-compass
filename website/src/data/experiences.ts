@@ -4,6 +4,7 @@ export const customExperiences: CustomExperience[] = [
   {
     tourId: "kakum-national-park",
     tourName: "Kakum National Park",
+    tourDescription: "Canopy walkway through the rainforest with a local guide.",
     tourPrice: 150,
     tourDuration: "1 Day",
     tourImage: {
@@ -16,6 +17,7 @@ export const customExperiences: CustomExperience[] = [
   {
     tourId: "cape-coast-castle",
     tourName: "Cape Coast Castle",
+    tourDescription: "Guided visit through the castle, museum, and dungeons.",
     tourPrice: 120,
     tourDuration: "1 Day",
     tourImage: {
@@ -28,6 +30,7 @@ export const customExperiences: CustomExperience[] = [
   {
     tourId: "accra-city-tour",
     tourName: "Accra City Tour",
+    tourDescription: "Independence Square, Jamestown, and markets with a local historian.",
     tourPrice: 125,
     tourDuration: "1 Day",
     tourImage: {
@@ -40,6 +43,7 @@ export const customExperiences: CustomExperience[] = [
   {
     tourId: "kwame-nkrumah-memorial",
     tourName: "Kwame Nkrumah Memorial Park",
+    tourDescription: "Mausoleum, museum, and grounds of Ghana’s first president.",
     tourPrice: 75,
     tourDuration: "Half day",
     tourImage: {
@@ -52,6 +56,7 @@ export const customExperiences: CustomExperience[] = [
   {
     tourId: "elmina-fishing-harbour",
     tourName: "Elmina Fishing Harbour",
+    tourDescription: "Morning harbour walk among the boats and fish market.",
     tourPrice: 95,
     tourDuration: "Half day",
     tourImage: {

@@ -4,6 +4,7 @@ import { asset, createProduct, updateProduct } from "@/lib/api";
 import { productCategories, type Product, type ProductCategory } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useUnsavedChanges } from "@/components/UnsavedChanges";
 
 type ImageSlot =
   | { id: string; kind: "existing"; src: string }
@@ -22,6 +23,7 @@ function money(value: string) {
 export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
   const fileInputId = useId();
+  const clearDirty = useUnsavedChanges();
   const fileRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState<"edit" | "preview">("edit");
   const [error, setError] = useState("");
@@ -120,6 +122,7 @@ export function ProductForm({ product }: { product?: Product }) {
     try {
       if (product) await updateProduct(product.slug, form);
       else await createProduct(form);
+      clearDirty();
       router.push("/store");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

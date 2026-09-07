@@ -4,10 +4,12 @@ import { asset, createExperience, updateExperience } from "@/lib/api";
 import type { CustomExperience } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
 import { useId, useState, type FormEvent } from "react";
+import { useUnsavedChanges } from "@/components/UnsavedChanges";
 
 export function ExperienceForm({ experience }: { experience?: CustomExperience }) {
   const router = useRouter();
   const fileId = useId();
+  const clearDirty = useUnsavedChanges();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [preview, setPreview] = useState(experience ? asset(experience.tourImage) : "");
@@ -26,6 +28,7 @@ export function ExperienceForm({ experience }: { experience?: CustomExperience }
     try {
       if (experience) await updateExperience(experience.tourId, form);
       else await createExperience(form);
+      clearDirty();
       router.push("/visit-ghana/custom-trips");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -44,6 +47,17 @@ export function ExperienceForm({ experience }: { experience?: CustomExperience }
           defaultValue={experience?.tourName}
           placeholder="e.g. Kakum National Park"
           className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
+        />
+      </label>
+      <label className="block text-sm">
+        <span className="font-medium text-burgundy">Tour description</span>
+        <textarea
+          name="tourDescription"
+          required
+          rows={4}
+          defaultValue={experience?.tourDescription}
+          placeholder="What this custom trip includes."
+          className="mt-1 w-full rounded-lg border border-sand px-3 py-2"
         />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">

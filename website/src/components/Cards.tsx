@@ -14,7 +14,7 @@ export function TourCard({ tour }: { tour: Tour }) {
           className="object-cover transition duration-500 group-hover:scale-105"
         />
         <span className="absolute bottom-3 left-3 rounded bg-burgundy/90 px-3 py-1 text-[11px] font-semibold text-white">
-          {tour.duration} · from {formatMoney(tour.priceFrom)}
+          from {formatMoney(tour.priceFrom)}
         </span>
       </div>
       <div className="p-5">

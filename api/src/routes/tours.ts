@@ -5,7 +5,7 @@ import { CustomExperienceModel, serializeTourImage } from "../models/CustomExper
 import { PackagedTourModel, serializePackagedTour } from "../models/PackagedTour.js";
 import { parsePackagedTourFields } from "../parse-tour.js";
 import { DeletedPackagedTourModel } from "../models/DeletedPackagedTour.js";
-import { moveToArchive } from "../archive.js";
+import { hardDeleteFromArchive, moveToArchive, restoreFromArchive } from "../archive.js";
 import { upload, uploadToCloudinary } from "../uploads.js";
 
 export const tourRouter = Router();
@@ -50,7 +50,9 @@ tourRouter.get("/", async (req, res) => {
 
     if (view === "deleted") {
       const rows = await DeletedPackagedTourModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
-      res.json({ tours: rows.map((row) => serializePackagedTour(row as Record<string, unknown>)) });
+      res.json({
+        tours: rows.map((row) => ({ ...serializePackagedTour(row as Record<string, unknown>), deleted: true })),
+      });
       return;
     }
 
@@ -59,7 +61,10 @@ tourRouter.get("/", async (req, res) => {
     if (view === "all") {
       const archived = await DeletedPackagedTourModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
       res.json({
-        tours: [...live, ...archived].map((row) => serializePackagedTour(row as Record<string, unknown>)),
+        tours: [
+          ...live.map((row) => serializePackagedTour(row as Record<string, unknown>)),
+          ...archived.map((row) => ({ ...serializePackagedTour(row as Record<string, unknown>), deleted: true })),
+        ],
       });
       return;
     }
@@ -96,6 +101,7 @@ tourRouter.post("/", requireAdmin, imageUpload, async (req, res) => {
     const created = await PackagedTourModel.create({
       ...fields,
       packagedTourId: randomUUID(),
+      duration: "",
       price,
       image,
     });
@@ -121,6 +127,7 @@ tourRouter.put("/:id", requireAdmin, imageUpload, async (req, res) => {
     current.set({
       ...fields,
       packagedTourId: current.get("packagedTourId") || current.get("slug"),
+      duration: "",
       price,
       image,
     });
@@ -131,10 +138,39 @@ tourRouter.put("/:id", requireAdmin, imageUpload, async (req, res) => {
   }
 });
 
+const packagedTourLookup = (id: string) => ({
+  $or: [{ packagedTourId: id }, { slug: id }],
+});
+
+tourRouter.post("/:id/restore", requireAdmin, async (req, res) => {
+  try {
+    const restored = await restoreFromArchive(
+      DeletedPackagedTourModel,
+      PackagedTourModel,
+      packagedTourLookup(req.params.id),
+    );
+    if (!restored) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({ tour: serializePackagedTour(restored.toObject()) });
+  } catch (error) {
+    res.status(400).json({ error: error instanceof Error ? error.message : "Failed to restore tour" });
+  }
+});
+
 tourRouter.delete("/:id", requireAdmin, async (req, res) => {
-  const deleted = await moveToArchive(PackagedTourModel, DeletedPackagedTourModel, {
-    $or: [{ packagedTourId: req.params.id }, { slug: req.params.id }],
-  });
+  const query = packagedTourLookup(req.params.id);
+  if (req.query.permanent === "true") {
+    const removed = await hardDeleteFromArchive(DeletedPackagedTourModel, query);
+    if (!removed) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({ ok: true });
+    return;
+  }
+  const deleted = await moveToArchive(PackagedTourModel, DeletedPackagedTourModel, query);
   if (!deleted) {
     res.status(404).json({ error: "Not found" });
     return;

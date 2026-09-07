@@ -40,19 +40,19 @@ export const tours: Tour[] = [
       "Independence Arch at golden hour, Jamestown with a local historian, Makola’s colors, and a Labone dinner that explains why Accra stays up late.",
     itinerary: [
       {
-        day: "Day 1",
+        duration: "3 days",
         title: "Arrival & Osu evening",
         detail:
           "Airport welcome, check-in, light orientation walk, and a first plate of kelewele.",
       },
       {
-        day: "Day 2",
+        duration: "5 days",
         title: "City, harbor, and museum",
         detail:
           "Kwame Nkrumah Memorial, Independence Square, National Museum, and Jamestown lighthouse.",
       },
       {
-        day: "Day 3",
+        duration: "1 Day",
         title: "Markets and departure or extend",
         detail: "Makola or Arts Centre, optional Labadi beach hour, transfer or add-on night.",
       },
@@ -90,22 +90,22 @@ export const tours: Tour[] = [
       "Castles, canopy walk, and fishing harbors. Space to feel the history and still eat by the water at night.",
     itinerary: [
       {
-        day: "Day 1",
+        duration: "1 Day",
         title: "Accra to the coast",
         detail: "Scenic drive, Elmina town walk, check-in overlooking the harbor.",
       },
       {
-        day: "Day 2",
+        duration: "1 Day",
         title: "Cape Coast Castle",
         detail: "Guided castle visit, museum, and a quiet afternoon. Optional church or beach.",
       },
       {
-        day: "Day 3",
+        duration: "1 Day",
         title: "Kakum canopy",
         detail: "Early canopy walk, forest interpretation, return via a coastal village.",
       },
       {
-        day: "Day 4",
+        duration: "1 Day",
         title: "Elmina Castle & return",
         detail: "Elmina Castle, St. George’s, lunch, drive to Accra.",
       },
@@ -142,17 +142,17 @@ export const tours: Tour[] = [
       "Manhyia, kente looms in Bonwire, and Kejetia’s scale. Gold, cloth, and a city that still feels like a capital.",
     itinerary: [
       {
-        day: "Day 1",
+        duration: "1 Day",
         title: "Flight or drive to Kumasi",
         detail: "Manhyia Palace Museum and an evening in Adum.",
       },
       {
-        day: "Day 2",
+        duration: "1 Day",
         title: "Cloth and chiefs",
         detail: "Bonwire weaving demonstration, Ntonso adinkra, cultural protocol briefing.",
       },
       {
-        day: "Day 3",
+        duration: "1 Day",
         title: "Kejetia & return",
         detail: "Guided market circuit and return to Accra.",
       },
@@ -188,10 +188,10 @@ export const tours: Tour[] = [
     summary:
       "Wli Falls, Mount Afadja views, and a lake crossing. Cooler air, different languages, plates of akple.",
     itinerary: [
-      { day: "Day 1", title: "Accra to Ho", detail: "Drive via the Akwapim ridge, evening in Ho." },
-      { day: "Day 2", title: "Wli Falls", detail: "Hike to the lower (and optional upper) falls." },
-      { day: "Day 3", title: "Lake & villages", detail: "Volta Lake communities and craft stops." },
-      { day: "Day 4", title: "Return", detail: "Scenic descent to Accra." },
+      { duration: "1 Day", title: "Accra to Ho", detail: "Drive via the Akwapim ridge, evening in Ho." },
+      { duration: "1 Day", title: "Wli Falls", detail: "Hike to the lower (and optional upper) falls." },
+      { duration: "1 Day", title: "Lake & villages", detail: "Volta Lake communities and craft stops." },
+      { duration: "1 Day", title: "Return", detail: "Scenic descent to Accra." },
     ],
     accommodation: "Garden lodge, breakfast and one picnic lunch",
     transport: "Private 4x4 recommended in rainy months",
@@ -222,8 +222,8 @@ export const tours: Tour[] = [
     summary:
       "A short escape from Accra: botanical air, woodcarvers, and baboons on the rocks at Shai Hills.",
     itinerary: [
-      { day: "Day 1", title: "Aburi", detail: "Gardens, craft village, overnight in the hills." },
-      { day: "Day 2", title: "Shai Hills", detail: "Game reserve walk or drive, return to Accra." },
+      { duration: "1 Day", title: "Aburi", detail: "Gardens, craft village, overnight in the hills." },
+      { duration: "1 Day", title: "Shai Hills", detail: "Game reserve walk or drive, return to Accra." },
     ],
     accommodation: "Hill guesthouse, breakfast included",
     transport: "Private vehicle from Accra",
@@ -255,9 +255,9 @@ export const tours: Tour[] = [
     summary:
       "Palm, grilled fish, and the meeting of the Volta and the sea. Swim where the current allows; rest where it does not.",
     itinerary: [
-      { day: "Day 1", title: "Labadi or Bojo", detail: "Beach club day, Accra sunset." },
-      { day: "Day 2", title: "Ada Foah", detail: "River mouth, boat, and night on the sand." },
-      { day: "Day 3", title: "Slow morning", detail: "Optional salt flats visit, return." },
+      { duration: "1 Day", title: "Labadi or Bojo", detail: "Beach club day, Accra sunset." },
+      { duration: "1 Day", title: "Ada Foah", detail: "River mouth, boat, and night on the sand." },
+      { duration: "Half day", title: "Slow morning", detail: "Optional salt flats visit, return." },
     ],
     accommodation: "Beach lodge, breakfast included",
     transport: "Private vehicle; boat on Day 2",
@@ -290,7 +290,7 @@ export const tours: Tour[] = [
       "A curated night: live highlife or afrobeats, a rooftop, and a street-food close. You choose the volume.",
     itinerary: [
       {
-        day: "Evening",
+        duration: "1 night",
         title: "From dinner to last song",
         detail: "Pickup from your hotel, two venues matched to your mood, safe drop-off.",
       },
@@ -325,7 +325,7 @@ export const tours: Tour[] = [
       "Waakye at the right stall, jollof that ends arguments, and a sobolo in the shade. Come hungry.",
     itinerary: [
       {
-        day: "Morning-afternoon",
+        duration: "Half day",
         title: "Five stops, one city",
         detail: "Walking and short hops across Osu and the Ridge. Dietary notes welcome.",
       },

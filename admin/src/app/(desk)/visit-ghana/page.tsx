@@ -1,7 +1,8 @@
 "use client";
 
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { VisitGhanaStatusTabs, VisitGhanaTabs } from "@/components/VisitGhanaTabs";
-import { asset, deleteTour, listTours, updateTour } from "@/lib/api";
+import { asset, deleteTour, listTours, restoreTour, updateTour } from "@/lib/api";
 import type { PackagedTour } from "@kincompass/shared";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -25,6 +26,9 @@ function VisitGhanaAdmin() {
   const status = listView(params.get("status"));
   const [tours, setTours] = useState<PackagedTour[] | null>(null);
   const [error, setError] = useState("");
+  const [toDelete, setToDelete] = useState<{ item: PackagedTour; permanent: boolean } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
   useEffect(() => {
     setTours(null);
@@ -38,7 +42,6 @@ function VisitGhanaAdmin() {
     const form = new FormData();
     form.set("name", tour.name);
     form.set("description", tour.description);
-    form.set("duration", tour.duration);
     form.set("tourIds", tour.tourIds.join(","));
     if (!tour.active) form.set("active", "on");
     try {
@@ -89,62 +92,162 @@ function VisitGhanaAdmin() {
             )}
           </p>
         ) : tours ? (
-          <div className="overflow-hidden rounded-lg bg-white ring-1 ring-sand">
-            <ul className="divide-y divide-sand">
-              {tours.map((tour) => (
-                <li key={tour.packagedTourId} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={asset(tour.image)} alt="" className="h-12 w-16 rounded-lg object-cover" />
-                    <div>
-                      <p className="font-semibold text-burgundy">{tour.name}</p>
-                      <p className="text-sm text-muted">
-                        {tour.duration} · ${tour.price} · {tour.tourIds.length} custom trips
-                        {tour.deleted ? " · Deleted" : ""}
-                      </p>
-                    </div>
-                  </div>
-                  {!tour.deleted && (
-                    <div className="flex items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => toggleActive(tour)}
-                        className={`rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${
-                          tour.active ? "bg-burgundy text-white" : "bg-sand text-muted"
-                        }`}
-                      >
-                        {tour.active ? "Published" : "Draft"}
-                      </button>
-                      <Link
-                        href={`/visit-ghana/tours/${tour.packagedTourId}/edit`}
-                        className="text-sm font-semibold text-burgundy"
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        type="button"
-                        className="text-sm font-semibold text-crimson"
-                        onClick={async () => {
-                          if (!confirm(`Delete "${tour.name}"? It will move to deleted packaged tours.`)) return;
-                          try {
-                            await deleteTour(tour.packagedTourId);
-                            setTours((prev) => prev?.filter((row) => row.packagedTourId !== tour.packagedTourId) ?? []);
-                          } catch (err) {
-                            setError(err instanceof Error ? err.message : "Delete failed");
-                          }
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+          <div className="overflow-x-auto rounded-lg bg-white ring-1 ring-sand">
+            <table className="w-full min-w-[720px] text-left text-sm">
+              <thead className="bg-sand/60 text-[11px] uppercase tracking-wider text-muted">
+                <tr>
+                  <th className="px-4 py-3">Packaged tour</th>
+                  <th className="px-4 py-3">Price</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tours.map((tour) => {
+                  const archived = status === "deleted" || Boolean(tour.deleted);
+                  return (
+                    <tr key={tour.packagedTourId} className="border-t border-sand">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={asset(tour.image)} alt="" className="h-12 w-16 rounded-lg object-cover" />
+                          <div>
+                            <p className="font-medium text-burgundy">{tour.name}</p>
+                            <p className="text-xs text-muted">{tour.tourIds.length} custom trips</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">${tour.price}</td>
+                      <td className="px-4 py-3">
+                        {archived ? (
+                          <span className="rounded-lg bg-sand px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted">
+                            Deleted
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => toggleActive(tour)}
+                            className={`rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${
+                              tour.active ? "bg-burgundy text-white" : "bg-sand text-muted"
+                            }`}
+                          >
+                            {tour.active ? "Published" : "Draft"}
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        {archived ? (
+                          <div className="flex gap-4">
+                            <button
+                              type="button"
+                              className="font-semibold text-burgundy"
+                              disabled={restoringId === tour.packagedTourId}
+                              onClick={async () => {
+                                setError("");
+                                setRestoringId(tour.packagedTourId);
+                                try {
+                                  const data = await restoreTour(tour.packagedTourId);
+                                  setTours((prev) => {
+                                    if (!prev) return prev;
+                                    if (status === "deleted") {
+                                      return prev.filter((row) => row.packagedTourId !== tour.packagedTourId);
+                                    }
+                                    return prev.map((row) =>
+                                      row.packagedTourId === tour.packagedTourId ? data.tour : row,
+                                    );
+                                  });
+                                } catch (err) {
+                                  setError(err instanceof Error ? err.message : "Could not restore tour");
+                                } finally {
+                                  setRestoringId(null);
+                                }
+                              }}
+                            >
+                              {restoringId === tour.packagedTourId ? "Restoring..." : "Restore"}
+                            </button>
+                            <button
+                              type="button"
+                              className="font-semibold text-crimson"
+                              onClick={() => setToDelete({ item: tour, permanent: true })}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex gap-4">
+                            <Link
+                              href={`/visit-ghana/tours/${tour.packagedTourId}/edit`}
+                              className="font-semibold text-burgundy"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              type="button"
+                              className="font-semibold text-crimson"
+                              onClick={() => setToDelete({ item: tour, permanent: false })}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         ) : null}
         {error && <p className="mt-4 text-sm text-crimson">{error}</p>}
       </section>
+
+      <ConfirmModal
+        open={toDelete !== null}
+        title={toDelete?.permanent ? "Delete permanently" : "Delete packaged tour"}
+        confirmLabel={toDelete?.permanent ? "Delete permanently" : "Delete"}
+        description={
+          toDelete ? (
+            toDelete.permanent ? (
+              <>
+                Permanently delete{" "}
+                <span className="font-semibold text-ink">&ldquo;{toDelete.item.name}&rdquo;</span>? This cannot be
+                undone.
+              </>
+            ) : (
+              <>
+                Delete <span className="font-semibold text-ink">&ldquo;{toDelete.item.name}&rdquo;</span>? It will
+                move to deleted packaged tours.
+              </>
+            )
+          ) : null
+        }
+        pending={deleting}
+        onClose={() => {
+          if (!deleting) setToDelete(null);
+        }}
+        onConfirm={async () => {
+          if (!toDelete) return;
+          setDeleting(true);
+          setError("");
+          try {
+            await deleteTour(toDelete.item.packagedTourId, toDelete.permanent);
+            setTours((prev) => {
+              if (!prev) return prev;
+              if (status === "all" && !toDelete.permanent) {
+                return prev.map((row) =>
+                  row.packagedTourId === toDelete.item.packagedTourId ? { ...row, deleted: true } : row,
+                );
+              }
+              return prev.filter((row) => row.packagedTourId !== toDelete.item.packagedTourId);
+            });
+            setToDelete(null);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Delete failed");
+          } finally {
+            setDeleting(false);
+          }
+        }}
+      />
     </div>
   );
 }

@@ -8,7 +8,7 @@ import {
   serializeTourImage,
 } from "../models/CustomExperience.js";
 import { DeletedCustomExperienceModel } from "../models/DeletedCustomExperience.js";
-import { moveToArchive } from "../archive.js";
+import { hardDeleteFromArchive, moveToArchive, restoreFromArchive } from "../archive.js";
 import { upload, uploadToCloudinary } from "../uploads.js";
 
 export const experienceRouter = Router();
@@ -21,7 +21,12 @@ experienceRouter.get("/", async (req, res) => {
 
     if (view === "deleted") {
       const rows = await DeletedCustomExperienceModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
-      res.json({ experiences: rows.map((row) => serializeCustomExperience(row as Record<string, unknown>)) });
+      res.json({
+        experiences: rows.map((row) => ({
+          ...serializeCustomExperience(row as Record<string, unknown>),
+          deleted: true,
+        })),
+      });
       return;
     }
 
@@ -30,7 +35,13 @@ experienceRouter.get("/", async (req, res) => {
     if (view === "all") {
       const archived = await DeletedCustomExperienceModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
       res.json({
-        experiences: [...live, ...archived].map((row) => serializeCustomExperience(row as Record<string, unknown>)),
+        experiences: [
+          ...live.map((row) => serializeCustomExperience(row as Record<string, unknown>)),
+          ...archived.map((row) => ({
+            ...serializeCustomExperience(row as Record<string, unknown>),
+            deleted: true,
+          })),
+        ],
       });
       return;
     }
@@ -96,10 +107,39 @@ experienceRouter.put("/:tourId", requireAdmin, imageUpload, async (req, res) => 
   }
 });
 
+const experienceLookup = (tourId: string) => ({
+  $or: [{ tourId }, { slug: tourId }],
+});
+
+experienceRouter.post("/:tourId/restore", requireAdmin, async (req, res) => {
+  try {
+    const restored = await restoreFromArchive(
+      DeletedCustomExperienceModel,
+      CustomExperienceModel,
+      experienceLookup(req.params.tourId),
+    );
+    if (!restored) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({ experience: serializeCustomExperience(restored.toObject()) });
+  } catch (error) {
+    res.status(400).json({ error: error instanceof Error ? error.message : "Failed to restore trip" });
+  }
+});
+
 experienceRouter.delete("/:tourId", requireAdmin, async (req, res) => {
-  const deleted = await moveToArchive(CustomExperienceModel, DeletedCustomExperienceModel, {
-    $or: [{ tourId: req.params.tourId }, { slug: req.params.tourId }],
-  });
+  const query = experienceLookup(req.params.tourId);
+  if (req.query.permanent === "true") {
+    const removed = await hardDeleteFromArchive(DeletedCustomExperienceModel, query);
+    if (!removed) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({ ok: true });
+    return;
+  }
+  const deleted = await moveToArchive(CustomExperienceModel, DeletedCustomExperienceModel, query);
   if (!deleted) {
     res.status(404).json({ error: "Not found" });
     return;

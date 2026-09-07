@@ -36,8 +36,12 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
                       <div>
                         <h2 className="display text-2xl text-burgundy">{item.tourName}</h2>
                         <p className="mt-1 text-sm font-semibold text-crimson">
-                          {item.tourDuration} · {formatMoney(item.tourPrice)}
+                          {formatMoney(item.tourPrice)}
                         </p>
+                        <p className="mt-1 text-sm text-muted">Duration: {item.tourDuration}</p>
+                        {item.tourDescription ? (
+                          <p className="mt-2 text-sm leading-relaxed text-muted">{item.tourDescription}</p>
+                        ) : null}
                       </div>
                       {inTrip && (
                         <span className="rounded-lg bg-burgundy px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
@@ -81,7 +85,7 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
                   <li key={item.tourId} className="flex items-start justify-between gap-3 text-sm">
                     <div>
                       <p className="font-semibold text-burgundy">{item.tourName}</p>
-                      <p className="text-muted">{item.tourDuration}</p>
+                      <p className="text-muted">Duration: {item.tourDuration}</p>
                     </div>
                     <p className="shrink-0 font-semibold">{formatMoney(item.tourPrice)}</p>
                   </li>
@@ -89,7 +93,7 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
               </ul>
             )}
             <p className="mt-4 flex items-baseline justify-between border-t border-sand pt-4">
-              <span className="text-sm text-muted">Total</span>
+              <span className="text-sm text-muted">Estimated price</span>
               <span className="display text-3xl text-burgundy">{formatMoney(total)}</span>
             </p>
             <Link

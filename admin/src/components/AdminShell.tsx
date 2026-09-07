@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { UnsavedChangesProvider } from "@/components/UnsavedChanges";
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -34,6 +35,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
+    <UnsavedChangesProvider>
     <div className="min-h-dvh bg-cream">
       {open && (
         <button
@@ -125,6 +127,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">{children}</main>
       </div>
     </div>
+    </UnsavedChangesProvider>
   );
 }
 

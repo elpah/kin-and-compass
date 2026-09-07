@@ -4,10 +4,12 @@ import { asset, createTour, listExperiences, updateTour } from "@/lib/api";
 import type { CustomExperience, PackagedTour } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useState, type FormEvent } from "react";
+import { useUnsavedChanges } from "@/components/UnsavedChanges";
 
 export function TourForm({ tour }: { tour?: PackagedTour }) {
   const router = useRouter();
   const fileId = useId();
+  const clearDirty = useUnsavedChanges();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [experiences, setExperiences] = useState<CustomExperience[]>([]);
@@ -34,17 +36,6 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
     setPicked((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   }
 
-  function move(id: string, dir: -1 | 1) {
-    setPicked((prev) => {
-      const index = prev.indexOf(id);
-      const next = index + dir;
-      if (index < 0 || next < 0 || next >= prev.length) return prev;
-      const copy = [...prev];
-      [copy[index], copy[next]] = [copy[next], copy[index]];
-      return copy;
-    });
-  }
-
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -59,6 +50,7 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
     try {
       if (tour) await updateTour(tour.packagedTourId, form);
       else await createTour(form);
+      clearDirty();
       router.push("/visit-ghana");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -80,16 +72,6 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
         />
       </label>
       <label className="block text-sm">
-        <span className="font-medium text-burgundy">Duration</span>
-        <input
-          name="duration"
-          required
-          defaultValue={tour?.duration ?? "3 days"}
-          placeholder="e.g. 3 days"
-          className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
-        />
-      </label>
-      <label className="block text-sm">
         <span className="font-medium text-burgundy">Description</span>
         <textarea
           name="description"
@@ -104,7 +86,8 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
       <div>
         <p className="text-sm font-medium text-burgundy">Custom trips in this tour</p>
         <p className="mt-1 text-xs text-muted">
-          Pick the pieces. Order is the itinerary. Package price is the sum of the selected trips.
+          Pick the custom trips in this package. Price is the sum of the selected trips. Timing is confirmed
+          after checkout.
         </p>
         {experiences.length === 0 ? (
           <p className="mt-3 text-sm text-muted">No custom trips yet. Add some on the Custom trips tab first.</p>
@@ -112,7 +95,6 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
           <ul className="mt-3 space-y-2">
             {experiences.map((item) => {
               const on = picked.includes(item.tourId);
-              const order = picked.indexOf(item.tourId);
               return (
                 <li
                   key={item.tourId}
@@ -127,21 +109,13 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
                     <span>
                       <span className="block font-semibold text-burgundy">{item.tourName}</span>
                       <span className="text-xs text-muted">
-                        {item.tourDuration} · ${item.tourPrice}
+                        Duration: {item.tourDuration} · ${item.tourPrice}
                       </span>
+                      {item.tourDescription ? (
+                        <span className="mt-1 line-clamp-2 block text-xs text-muted">{item.tourDescription}</span>
+                      ) : null}
                     </span>
                   </label>
-                  {on && (
-                    <div className="flex items-center gap-2 text-xs font-semibold">
-                      <span className="text-muted">Day {order + 1}</span>
-                      <button type="button" className="text-burgundy" onClick={() => move(item.tourId, -1)}>
-                        Up
-                      </button>
-                      <button type="button" className="text-burgundy" onClick={() => move(item.tourId, 1)}>
-                        Down
-                      </button>
-                    </div>
-                  )}
                 </li>
               );
             })}

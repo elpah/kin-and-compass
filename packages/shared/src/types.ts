@@ -48,6 +48,7 @@ export type CloudinaryImage = {
 export type CustomExperience = {
   tourId: string;
   tourName: string;
+  tourDescription: string;
   tourDuration: string;
   tourPrice: number;
   tourImage: CloudinaryImage;

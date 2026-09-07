@@ -17,7 +17,11 @@ export function Header() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const overHero = pathname === "/";
 
   useEffect(() => {
@@ -39,7 +43,11 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3 shrink-0">
+        <Link
+          href="/"
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-3 shrink-0"
+        >
           <span
             className={cn(
               "relative overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-burgundy/10",
@@ -47,7 +55,7 @@ export function Header() {
             )}
           >
             <Image
-              src="/logo.jpeg"
+              src="/logo.png"
               alt={brand.name}
               fill
               className="object-cover object-top scale-110"
@@ -77,7 +85,8 @@ export function Header() {
 
         <nav className="hidden items-center gap-4 lg:flex xl:gap-6">
           {nav.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
@@ -89,8 +98,8 @@ export function Header() {
                       ? "text-crimson"
                       : "text-ink/80 hover:text-burgundy"
                     : active
-                      ? "text-white"
-                      : "text-white/80 hover:text-white",
+                    ? "text-white"
+                    : "text-white/80 hover:text-white",
                 )}
               >
                 {item.label}
@@ -104,7 +113,9 @@ export function Header() {
             href="/account"
             className={cn(
               "hidden sm:inline text-[13px] font-semibold",
-              solid ? "text-ink/80 hover:text-burgundy" : "text-white/85 hover:text-white",
+              solid
+                ? "text-ink/80 hover:text-burgundy"
+                : "text-white/85 hover:text-white",
             )}
           >
             {user ? user.name.split(" ")[0] : "Account"}
@@ -113,7 +124,9 @@ export function Header() {
             href="/cart"
             className={cn(
               "relative inline-flex h-10 w-10 items-center justify-center rounded",
-              solid ? "bg-burgundy text-white" : "bg-white/15 text-white ring-1 ring-white/30",
+              solid
+                ? "bg-burgundy text-white"
+                : "bg-white/15 text-white ring-1 ring-white/30",
             )}
             aria-label="Shopping cart"
           >
@@ -193,7 +206,11 @@ function MenuIcon({ open }: { open: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
       {open ? (
-        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" />
+        <path
+          d="M6 6l12 12M18 6L6 18"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
       ) : (
         <path
           d="M4 7h16M4 12h16M4 17h16"

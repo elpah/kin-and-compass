@@ -51,14 +51,12 @@ export default async function TourPage({
             ))}
           </div>
           <section>
-            <h2 className="display text-3xl text-burgundy">Itinerary</h2>
+            <h2 className="display text-3xl text-burgundy">What you will do</h2>
             <ol className="mt-5 space-y-4">
               {tour.itinerary.map((d) => (
-                <li key={d.day} className="rounded-lg bg-white p-5 ring-1 ring-sand">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-crimson">
-                    {d.day}
-                  </p>
-                  <h3 className="mt-1 font-semibold text-burgundy">{d.title}</h3>
+                <li key={d.title} className="rounded-lg bg-white p-5 ring-1 ring-sand">
+                  <h3 className="font-semibold text-burgundy">{d.title}</h3>
+                  <p className="mt-1 text-sm text-muted">Duration: {d.duration}</p>
                   <p className="mt-1 text-sm text-muted">{d.detail}</p>
                 </li>
               ))}
@@ -85,9 +83,11 @@ export default async function TourPage({
           </section>
         </div>
         <aside className="h-fit rounded-lg bg-white p-6 ring-1 ring-sand lg:sticky lg:top-24">
-          <p className="text-sm text-muted">{tour.duration}</p>
           <p className="display text-4xl text-burgundy">from {formatMoney(tour.priceFrom)}</p>
           <p className="mt-1 text-xs text-muted">Per person · deposits coming soon</p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            After you request, we will send a confirmed schedule.
+          </p>
           <p className="mt-3 text-sm">
             <a href={`mailto:${brand.bookingEmail}`} className="font-semibold text-burgundy hover:text-crimson">
               {brand.bookingEmail}

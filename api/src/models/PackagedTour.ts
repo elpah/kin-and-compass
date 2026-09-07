@@ -7,7 +7,7 @@ const PackagedTourSchema = new Schema(
     packagedTourId: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
-    duration: { type: String, required: true },
+    duration: { type: String, default: "" },
     price: { type: Number, required: true, default: 0 },
     image: {
       linkUrl: { type: String, default: "" },

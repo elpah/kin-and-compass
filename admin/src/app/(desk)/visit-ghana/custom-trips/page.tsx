@@ -1,7 +1,8 @@
 "use client";
 
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { VisitGhanaStatusTabs, VisitGhanaTabs } from "@/components/VisitGhanaTabs";
-import { asset, deleteExperience, listExperiences, updateExperience } from "@/lib/api";
+import { asset, deleteExperience, listExperiences, restoreExperience, updateExperience } from "@/lib/api";
 import type { CustomExperience } from "@kincompass/shared";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -25,6 +26,9 @@ function CustomTripsAdmin() {
   const status = listView(params.get("status"));
   const [items, setItems] = useState<CustomExperience[] | null>(null);
   const [error, setError] = useState("");
+  const [toDelete, setToDelete] = useState<{ item: CustomExperience; permanent: boolean } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
   useEffect(() => {
     setItems(null);
@@ -37,6 +41,7 @@ function CustomTripsAdmin() {
     if (item.deleted) return;
     const form = new FormData();
     form.set("tourName", item.tourName);
+    form.set("tourDescription", item.tourDescription ?? "");
     form.set("tourPrice", String(item.tourPrice));
     form.set("tourDuration", item.tourDuration);
     if (!item.active) form.set("active", "on");
@@ -100,7 +105,9 @@ function CustomTripsAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {items.map((item) => (
+                {items.map((item) => {
+                  const archived = status === "deleted" || Boolean(item.deleted);
+                  return (
                   <tr key={item.tourId} className="border-t border-sand">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -112,7 +119,7 @@ function CustomTripsAdmin() {
                     <td className="px-4 py-3 text-muted">{item.tourDuration}</td>
                     <td className="px-4 py-3">${item.tourPrice}</td>
                     <td className="px-4 py-3">
-                      {item.deleted ? (
+                      {archived ? (
                         <span className="rounded-lg bg-sand px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted">
                           Deleted
                         </span>
@@ -129,7 +136,42 @@ function CustomTripsAdmin() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      {!item.deleted && (
+                      {archived ? (
+                        <div className="flex gap-4">
+                          <button
+                            type="button"
+                            className="font-semibold text-burgundy"
+                            disabled={restoringId === item.tourId}
+                            onClick={async () => {
+                              setError("");
+                              setRestoringId(item.tourId);
+                              try {
+                                const data = await restoreExperience(item.tourId);
+                                setItems((prev) => {
+                                  if (!prev) return prev;
+                                  if (status === "deleted") {
+                                    return prev.filter((row) => row.tourId !== item.tourId);
+                                  }
+                                  return prev.map((row) => (row.tourId === item.tourId ? data.experience : row));
+                                });
+                              } catch (err) {
+                                setError(err instanceof Error ? err.message : "Could not restore custom trip");
+                              } finally {
+                                setRestoringId(null);
+                              }
+                            }}
+                          >
+                            {restoringId === item.tourId ? "Restoring..." : "Restore"}
+                          </button>
+                          <button
+                            type="button"
+                            className="font-semibold text-crimson"
+                            onClick={() => setToDelete({ item, permanent: true })}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ) : (
                         <div className="flex gap-4">
                           <Link
                             href={`/visit-ghana/custom-trips/${item.tourId}/edit`}
@@ -140,15 +182,7 @@ function CustomTripsAdmin() {
                           <button
                             type="button"
                             className="font-semibold text-crimson"
-                            onClick={async () => {
-                              if (!confirm(`Delete "${item.tourName}"? It will move to deleted custom trips.`)) return;
-                              try {
-                                await deleteExperience(item.tourId);
-                                setItems((prev) => prev?.filter((row) => row.tourId !== item.tourId) ?? []);
-                              } catch (err) {
-                                setError(err instanceof Error ? err.message : "Delete failed");
-                              }
-                            }}
+                            onClick={() => setToDelete({ item, permanent: false })}
                           >
                             Delete
                           </button>
@@ -156,13 +190,62 @@ function CustomTripsAdmin() {
                       )}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
         ) : null}
         {error && <p className="mt-4 text-sm text-crimson">{error}</p>}
       </section>
+
+      <ConfirmModal
+        open={toDelete !== null}
+        title={toDelete?.permanent ? "Delete permanently" : "Delete custom trip"}
+        confirmLabel={toDelete?.permanent ? "Delete permanently" : "Delete"}
+        description={
+          toDelete ? (
+            toDelete.permanent ? (
+              <>
+                Permanently delete{" "}
+                <span className="font-semibold text-ink">&ldquo;{toDelete.item.tourName}&rdquo;</span>? This cannot
+                be undone.
+              </>
+            ) : (
+              <>
+                Delete <span className="font-semibold text-ink">&ldquo;{toDelete.item.tourName}&rdquo;</span>? It
+                will move to deleted custom trips.
+              </>
+            )
+          ) : null
+        }
+        pending={deleting}
+        onClose={() => {
+          if (!deleting) setToDelete(null);
+        }}
+        onConfirm={async () => {
+          if (!toDelete) return;
+          setDeleting(true);
+          setError("");
+          try {
+            await deleteExperience(toDelete.item.tourId, toDelete.permanent);
+            setItems((prev) => {
+              if (!prev) return prev;
+              if (status === "all" && !toDelete.permanent) {
+                return prev.map((row) =>
+                  row.tourId === toDelete.item.tourId ? { ...row, deleted: true } : row,
+                );
+              }
+              return prev.filter((row) => row.tourId !== toDelete.item.tourId);
+            });
+            setToDelete(null);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Delete failed");
+          } finally {
+            setDeleting(false);
+          }
+        }}
+      />
     </div>
   );
 }

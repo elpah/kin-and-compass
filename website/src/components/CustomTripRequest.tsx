@@ -42,11 +42,14 @@ export function CustomTripRequest({ experiences }: { experiences: CustomExperien
         <ul className="mt-2 space-y-1 text-sm text-muted">
           {selected.map((item) => (
             <li key={item.tourId}>
-              {item.tourName} · {item.tourDuration} · {formatMoney(item.tourPrice)}
+              {item.tourName} · Duration: {item.tourDuration} · {formatMoney(item.tourPrice)}
             </li>
           ))}
         </ul>
-        <p className="mt-3 font-semibold text-burgundy">Total {formatMoney(total)}</p>
+        <p className="mt-3 font-semibold text-burgundy">Estimated price {formatMoney(total)}</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          After you request, we will send a confirmed schedule.
+        </p>
         <Link href="/travel/custom/review" className="mt-3 inline-block text-sm font-semibold text-crimson">
           Edit trip
         </Link>

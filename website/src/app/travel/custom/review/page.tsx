@@ -19,7 +19,7 @@ export default async function CustomTripReviewPage() {
         compact
         kicker="Your custom trip"
         title="Review before you send."
-        text="Remove a day, add another, then continue to the request form with this total attached."
+        text="Remove a day, add another, then continue to the request form with this estimated price attached."
         image={covers.travel}
       />
       <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">

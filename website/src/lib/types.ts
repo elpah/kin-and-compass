@@ -27,7 +27,7 @@ export type Tour = {
   image: string;
   gallery: string[];
   summary: string;
-  itinerary: { day: string; title: string; detail: string }[];
+  itinerary: { title: string; duration: string; detail: string }[];
   accommodation: string;
   transport: string;
   activities: string[];

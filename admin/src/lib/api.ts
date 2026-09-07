@@ -70,8 +70,13 @@ export function updateExperience(tourId: string, form: FormData) {
   return request<{ experience: CustomExperience }>(`/experiences/${tourId}`, { method: "PUT", body: form });
 }
 
-export function deleteExperience(tourId: string) {
-  return request<{ ok: boolean }>(`/experiences/${tourId}`, { method: "DELETE" });
+export function restoreExperience(tourId: string) {
+  return request<{ experience: CustomExperience }>(`/experiences/${tourId}/restore`, { method: "POST" });
+}
+
+export function deleteExperience(tourId: string, permanent = false) {
+  const query = permanent ? "?permanent=true" : "";
+  return request<{ ok: boolean }>(`/experiences/${tourId}${query}`, { method: "DELETE" });
 }
 
 export function listTours(view: "active" | "deleted" | "all" = "active") {
@@ -90,6 +95,11 @@ export function updateTour(packagedTourId: string, form: FormData) {
   return request<{ tour: PackagedTour }>(`/tours/${packagedTourId}`, { method: "PUT", body: form });
 }
 
-export function deleteTour(packagedTourId: string) {
-  return request<{ ok: boolean }>(`/tours/${packagedTourId}`, { method: "DELETE" });
+export function restoreTour(packagedTourId: string) {
+  return request<{ tour: PackagedTour }>(`/tours/${packagedTourId}/restore`, { method: "POST" });
+}
+
+export function deleteTour(packagedTourId: string, permanent = false) {
+  const query = permanent ? "?permanent=true" : "";
+  return request<{ ok: boolean }>(`/tours/${packagedTourId}${query}`, { method: "DELETE" });
 }

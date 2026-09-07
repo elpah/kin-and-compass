@@ -4,6 +4,7 @@ const DeletedCustomExperienceSchema = new Schema(
   {
     tourId: { type: String, required: true, index: true },
     tourName: { type: String, required: true },
+    tourDescription: { type: String, default: "" },
     tourDuration: { type: String, required: true },
     tourPrice: { type: Number, required: true },
     tourImage: {
