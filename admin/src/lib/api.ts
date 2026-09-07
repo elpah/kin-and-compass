@@ -74,8 +74,8 @@ export function deleteExperience(tourId: string) {
   return request<{ ok: boolean }>(`/experiences/${tourId}`, { method: "DELETE" });
 }
 
-export function listTours() {
-  return request<{ tours: PackagedTour[] }>("/tours");
+export function listTours(view: "active" | "deleted" | "all" = "active") {
+  return request<{ tours: PackagedTour[] }>(`/tours?view=${view}`);
 }
 
 export function getTour(packagedTourId: string) {

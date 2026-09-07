@@ -6,6 +6,7 @@ import { PackagedTourModel, serializePackagedTour } from "../models/PackagedTour
 import { parsePackagedTourFields } from "../parse-tour.js";
 import { DeletedPackagedTourModel } from "../models/DeletedPackagedTour.js";
 import { moveToArchive } from "../archive.js";
+import { upload, uploadToCloudinary } from "../uploads.js";
 
 export const tourRouter = Router();
 const imageUpload = upload.single("image");

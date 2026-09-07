@@ -9,6 +9,7 @@ import {
 } from "../models/CustomExperience.js";
 import { DeletedCustomExperienceModel } from "../models/DeletedCustomExperience.js";
 import { moveToArchive } from "../archive.js";
+import { upload, uploadToCloudinary } from "../uploads.js";
 
 export const experienceRouter = Router();
 const imageUpload = upload.single("image");

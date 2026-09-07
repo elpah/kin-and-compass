@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
-    "seed": "tsx src/seed.ts",
-    "build": "echo \"api runs with tsx\""
+    "seed": "tsx src/seed.ts"
   },
   "dependencies": {
-    "@kincompass/shared": "0.1.0",
+    "@kincompass/shared": "file:../packages/shared",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
     "cookie-parser": "^1.4.7",

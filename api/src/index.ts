@@ -9,8 +9,6 @@ import { experienceRouter } from "./routes/experiences.js";
 import { productRouter } from "./routes/products.js";
 import { uploadDir } from "./uploads.js";
 
-requireEnv();
-
 const app = express();
 app.use(
   cors({
@@ -18,6 +16,15 @@ app.use(
     credentials: true,
   }),
 );
+app.use(async (_req, _res, next) => {
+  try {
+    requireEnv();
+    await dbConnect();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 app.use(cookieParser());
 app.use(express.json());
 app.use("/uploads", express.static(uploadDir));
@@ -26,15 +33,23 @@ app.use("/products", productRouter);
 app.use("/experiences", experienceRouter);
 app.use("/tours", tourRouter);
 app.use("/admin", adminRouter);
-
-async function start() {
-  await dbConnect();
-  app.listen(env.port, () => {
-    console.log(`API listening on http://localhost:${env.port}`);
-  });
-}
-
-start().catch((error) => {
-  console.error(error);
-  process.exit(1);
+app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  const message = error instanceof Error ? error.message : "Server error";
+  res.status(500).json({ error: message });
 });
+
+export default app;
+
+if (!process.env.VERCEL) {
+  requireEnv();
+  dbConnect()
+    .then(() => {
+      app.listen(env.port, () => {
+        console.log(`API listening on http://localhost:${env.port}`);
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+}

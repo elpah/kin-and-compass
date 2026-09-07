@@ -10,7 +10,7 @@ export default function NewExperiencePage() {
         </Link>{" "}
         / New
       </p>
-      <h1 className="display mt-2 text-4xl text-burgundy">Add an experience</h1>
+      <h1 className="display mt-2 text-4xl text-burgundy">Add a custom trip</h1>
       <div className="mt-8 rounded-lg bg-white p-6 ring-1 ring-sand sm:p-8">
         <ExperienceForm />
       </div>
