@@ -6,6 +6,7 @@ import { PackagedTourModel, serializePackagedTour } from "../models/PackagedTour
 import { parsePackagedTourFields } from "../parse-tour.js";
 import { DeletedPackagedTourModel } from "../models/DeletedPackagedTour.js";
 import { hardDeleteFromArchive, moveToArchive, restoreFromArchive } from "../archive.js";
+import { routeParam } from "../route-param.js";
 import { upload, uploadToCloudinary } from "../uploads.js";
 
 export const tourRouter = Router();
@@ -77,7 +78,7 @@ tourRouter.get("/", async (req, res) => {
 
 tourRouter.get("/:id", async (req, res) => {
   try {
-    const doc = await findPackagedTour(req.params.id).lean();
+    const doc = await findPackagedTour(routeParam(req.params.id)).lean();
     if (!doc) {
       res.status(404).json({ error: "Not found" });
       return;
@@ -113,7 +114,7 @@ tourRouter.post("/", requireAdmin, imageUpload, async (req, res) => {
 
 tourRouter.put("/:id", requireAdmin, imageUpload, async (req, res) => {
   try {
-    const current = await findPackagedTour(req.params.id);
+    const current = await findPackagedTour(routeParam(req.params.id));
     if (!current) {
       res.status(404).json({ error: "Not found" });
       return;
@@ -147,7 +148,7 @@ tourRouter.post("/:id/restore", requireAdmin, async (req, res) => {
     const restored = await restoreFromArchive(
       DeletedPackagedTourModel,
       PackagedTourModel,
-      packagedTourLookup(req.params.id),
+      packagedTourLookup(routeParam(req.params.id)),
     );
     if (!restored) {
       res.status(404).json({ error: "Not found" });
@@ -160,7 +161,7 @@ tourRouter.post("/:id/restore", requireAdmin, async (req, res) => {
 });
 
 tourRouter.delete("/:id", requireAdmin, async (req, res) => {
-  const query = packagedTourLookup(req.params.id);
+  const query = packagedTourLookup(routeParam(req.params.id));
   if (req.query.permanent === "true") {
     const removed = await hardDeleteFromArchive(DeletedPackagedTourModel, query);
     if (!removed) {

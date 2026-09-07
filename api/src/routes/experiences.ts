@@ -9,6 +9,7 @@ import {
 } from "../models/CustomExperience.js";
 import { DeletedCustomExperienceModel } from "../models/DeletedCustomExperience.js";
 import { hardDeleteFromArchive, moveToArchive, restoreFromArchive } from "../archive.js";
+import { routeParam } from "../route-param.js";
 import { upload, uploadToCloudinary } from "../uploads.js";
 
 export const experienceRouter = Router();
@@ -54,8 +55,9 @@ experienceRouter.get("/", async (req, res) => {
 
 experienceRouter.get("/:tourId", async (req, res) => {
   try {
+    const tourId = routeParam(req.params.tourId);
     const doc = await CustomExperienceModel.findOne({
-      $or: [{ tourId: req.params.tourId }, { slug: req.params.tourId }],
+      $or: [{ tourId }, { slug: tourId }],
     }).lean();
     if (!doc) {
       res.status(404).json({ error: "Not found" });
@@ -85,8 +87,9 @@ experienceRouter.post("/", requireAdmin, imageUpload, async (req, res) => {
 
 experienceRouter.put("/:tourId", requireAdmin, imageUpload, async (req, res) => {
   try {
+    const tourId = routeParam(req.params.tourId);
     const current = await CustomExperienceModel.findOne({
-      $or: [{ tourId: req.params.tourId }, { slug: req.params.tourId }],
+      $or: [{ tourId }, { slug: tourId }],
     });
     if (!current) {
       res.status(404).json({ error: "Not found" });
@@ -116,7 +119,7 @@ experienceRouter.post("/:tourId/restore", requireAdmin, async (req, res) => {
     const restored = await restoreFromArchive(
       DeletedCustomExperienceModel,
       CustomExperienceModel,
-      experienceLookup(req.params.tourId),
+      experienceLookup(routeParam(req.params.tourId)),
     );
     if (!restored) {
       res.status(404).json({ error: "Not found" });
@@ -129,7 +132,7 @@ experienceRouter.post("/:tourId/restore", requireAdmin, async (req, res) => {
 });
 
 experienceRouter.delete("/:tourId", requireAdmin, async (req, res) => {
-  const query = experienceLookup(req.params.tourId);
+  const query = experienceLookup(routeParam(req.params.tourId));
   if (req.query.permanent === "true") {
     const removed = await hardDeleteFromArchive(DeletedCustomExperienceModel, query);
     if (!removed) {

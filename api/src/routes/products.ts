@@ -4,6 +4,7 @@ import { parseProductFields } from "../parse-product.js";
 import { getProductBySlug, listFeaturedProducts, listProducts, serializeProduct } from "../products.js";
 import { Product } from "../models/Product.js";
 import { upload, uploadManyToCloudinary, uploadToCloudinary } from "../uploads.js";
+import { routeParam } from "../route-param.js";
 
 export const productRouter = Router();
 
@@ -31,7 +32,7 @@ productRouter.get("/featured", async (req, res) => {
 
 productRouter.get("/:slug", async (req, res) => {
   try {
-    const product = await getProductBySlug(req.params.slug);
+    const product = await getProductBySlug(routeParam(req.params.slug));
     if (!product) {
       res.status(404).json({ error: "Not found" });
       return;
@@ -78,7 +79,7 @@ productRouter.post("/", requireAdmin, files, async (req, res) => {
 
 productRouter.put("/:slug", requireAdmin, files, async (req, res) => {
   try {
-    const current = await Product.findOne({ slug: req.params.slug });
+    const current = await Product.findOne({ slug: routeParam(req.params.slug) });
     if (!current) {
       res.status(404).json({ error: "Not found" });
       return;
@@ -111,7 +112,7 @@ productRouter.put("/:slug", requireAdmin, files, async (req, res) => {
 });
 
 productRouter.delete("/:slug", requireAdmin, async (req, res) => {
-  const deleted = await Product.findOneAndDelete({ slug: req.params.slug });
+  const deleted = await Product.findOneAndDelete({ slug: routeParam(req.params.slug) });
   if (!deleted) {
     res.status(404).json({ error: "Not found" });
     return;
