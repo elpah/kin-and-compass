@@ -11,8 +11,8 @@ export type ProductCategory =
 
 export type Review = {
   author: string;
-  rating: number;
   date: string;
+  rating: number;
   text: string;
 };
 

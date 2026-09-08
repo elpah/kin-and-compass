@@ -8,6 +8,6 @@ export const productCategories = [
   "Souvenirs",
   "Food",
   "Travel",
-] as const;
+];
 
 export const ADMIN_COOKIE = "kc_admin";
