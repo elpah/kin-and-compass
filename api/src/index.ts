@@ -30,6 +30,7 @@ app.use(async (_req, _res, next) => {
 app.use(cookieParser());
 app.use(express.json());
 app.use("/uploads", express.static(uploadDir));
+app.get("/", (_req, res) => res.json({ ok: true }));
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
