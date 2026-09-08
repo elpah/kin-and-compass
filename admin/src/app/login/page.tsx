@@ -1,5 +1,6 @@
 "use client";
 
+import { ErrorBanner, LoadingScreen, Spinner } from "@/components/Feedback";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -7,7 +8,7 @@ import { Suspense, useEffect, useState } from "react";
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<p className="px-6 py-16 text-sm text-muted">Loading...</p>}>
+    <Suspense fallback={<LoadingScreen />}>
       <AdminLoginForm />
     </Suspense>
   );
@@ -24,6 +25,10 @@ function AdminLoginForm() {
   useEffect(() => {
     if (status === "authenticated" && data?.user.role === "admin") router.replace(next);
   }, [status, data?.user.role, router, next]);
+
+  if (status === "loading" || (status === "authenticated" && data?.user.role === "admin")) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="flex min-h-dvh items-center justify-center px-4 py-16">
@@ -46,9 +51,7 @@ function AdminLoginForm() {
           </div>
         </div>
         <h1 className="display mt-8 text-4xl text-burgundy">Sign in</h1>
-        <p className="mt-2 text-sm text-muted">
-          Use the staff email and password from your .env.local file.
-        </p>
+        <p className="mt-2 text-sm text-muted">Staff email and password only.</p>
         <form
           className="mt-8 grid gap-3"
           onSubmit={async (event) => {
@@ -71,6 +74,8 @@ function AdminLoginForm() {
                 return;
               }
               router.push(next);
+            } catch (err) {
+              setError(err instanceof Error ? err.message : "Could not sign in. Try again.");
             } finally {
               setPending(false);
             }
@@ -90,13 +95,20 @@ function AdminLoginForm() {
             placeholder="Password"
             className="h-12 rounded-lg border border-sand bg-white px-4 outline-none focus:ring-2 focus:ring-crimson/30"
           />
-          {error && <p className="text-sm text-crimson">{error}</p>}
+          {error && <ErrorBanner title="Sign-in failed" message={error} />}
           <button
             type="submit"
             disabled={pending}
-            className="h-12 rounded-lg bg-burgundy font-semibold text-white disabled:opacity-60"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-burgundy font-semibold text-white disabled:opacity-60"
           >
-            {pending ? "Signing in..." : "Sign in"}
+            {pending ? (
+              <>
+                <Spinner className="h-4 w-4 border-white/30 border-t-white" />
+                Signing in
+              </>
+            ) : (
+              "Sign in"
+            )}
           </button>
         </form>
       </div>

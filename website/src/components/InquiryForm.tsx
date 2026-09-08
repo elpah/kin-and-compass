@@ -12,6 +12,8 @@ type Field = {
   textarea?: boolean;
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
 export function InquiryForm({
   kind,
   fields,
@@ -25,13 +27,15 @@ export function InquiryForm({
 }) {
   const { addInquiry } = useAuth();
   const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
   if (done) {
     return (
       <div className="rounded-lg bg-blush px-6 py-8 text-center ring-1 ring-sand">
         <p className="script text-2xl text-crimson">Received</p>
         <p className="mt-2 text-sm text-muted">
-          Thank you. A Kin and Compass lead will reply within two business days.
+          Thank you. We sent a confirmation to your email and will write back shortly.
         </p>
       </div>
     );
@@ -40,16 +44,31 @@ export function InquiryForm({
   return (
     <form
       className="grid gap-4"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
+        setError("");
+        setPending(true);
         const data = new FormData(e.currentTarget);
         const payload: Record<string, string> = {};
         fields.forEach((f) => {
           payload[f.name] = String(data.get(f.name) ?? "");
         });
         if (extraPayload) Object.assign(payload, extraPayload);
-        addInquiry(kind, payload);
-        setDone(true);
+        try {
+          const response = await fetch(`${API_URL}/inquiries`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ kind, payload }),
+          });
+          const body = (await response.json()) as { error?: string };
+          if (!response.ok) throw new Error(body.error ?? "Could not send your message.");
+          addInquiry(kind, payload);
+          setDone(true);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Could not send your message.");
+        } finally {
+          setPending(false);
+        }
       }}
     >
       {fields.map((field) => (
@@ -83,11 +102,13 @@ export function InquiryForm({
           )}
         </label>
       ))}
+      {error && <p className="text-sm text-crimson">{error}</p>}
       <button
         type="submit"
-        className="mt-2 h-12 rounded bg-burgundy text-sm font-semibold text-white hover:bg-burgundy-deep"
+        disabled={pending}
+        className="mt-2 h-12 rounded bg-burgundy text-sm font-semibold text-white hover:bg-burgundy-deep disabled:opacity-60"
       >
-        {submitLabel}
+        {pending ? "Sending..." : submitLabel}
       </button>
     </form>
   );

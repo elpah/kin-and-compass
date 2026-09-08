@@ -23,7 +23,7 @@ export async function signAuthToken(payload: AuthToken) {
 
 export async function verifyAuthToken(token: string): Promise<AuthToken> {
   const { payload } = await jwtVerify(token, secret());
-  const email = String(payload.email ?? "").toLowerCase();
+  const email = String(payload.email ?? "");
   const role = payload.role === "admin" ? "admin" : "customer";
   if (!payload.sub || !email) throw new Error("Invalid token");
   return {

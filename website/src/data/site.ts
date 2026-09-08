@@ -6,8 +6,8 @@ export const brand = {
   tagline: "Travel And Tour",
   phone: "+233 20 555 0100",
   whatsapp: "233205550100",
-  email: "info@kinandcompasstravels.com",
-  bookingEmail: "booking@kinandcompasstravels.com",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
+  bookingEmail: process.env.NEXT_PUBLIC_BOOKING_EMAIL ?? "",
   address: "Oregon, USA",
 };
 
@@ -73,7 +73,7 @@ export const charityFaqs = [
   },
   {
     q: "Can I volunteer or partner instead of giving money?",
-    a: "Yes. Use Get Involved to donate, volunteer, partner, or fundraise. Volunteer placements are scheduled and screened. We do not send unvetted visitors to children's homes.",
+    a: "Yes. Use Write to us to donate, volunteer, partner, or fundraise. Volunteer placements are scheduled and screened. We do not send unvetted visitors to children's homes.",
   },
 ];
 

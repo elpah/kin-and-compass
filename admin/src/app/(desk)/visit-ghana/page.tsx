@@ -8,9 +8,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
-function listView(status: string | null): "active" | "deleted" | "all" {
-  if (status === "deleted" || status === "all") return status;
-  return "active";
+function listView(status: string | null): "active" | "deleted" {
+  return status === "deleted" ? "deleted" : "active";
 }
 
 export default function VisitGhanaAdminPage() {
@@ -233,11 +232,6 @@ function VisitGhanaAdmin() {
             await deleteTour(toDelete.item.packagedTourId, toDelete.permanent);
             setTours((prev) => {
               if (!prev) return prev;
-              if (status === "all" && !toDelete.permanent) {
-                return prev.map((row) =>
-                  row.packagedTourId === toDelete.item.packagedTourId ? { ...row, deleted: true } : row,
-                );
-              }
               return prev.filter((row) => row.packagedTourId !== toDelete.item.packagedTourId);
             });
             setToDelete(null);

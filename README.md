@@ -30,4 +30,4 @@ npm run dev
 - Admin: [http://localhost:3001](http://localhost:3001)
 - API health: [http://localhost:4000/health](http://localhost:4000/health)
 
-Website and admin sign-in use NextAuth (email and password). `npm run seed` creates the staff user from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Customers register on the website. Put the same `AUTH_SECRET` on the API, website, and admin (Vercel).
+Website customers can sign in with Google, email/password, or phone (SMS code via Twilio). Inquiries and password reset send through Zoho SMTP. Set `ZOHO_SMTP_USER`, `ZOHO_SMTP_PASS`, `MAIL_ADMIN`, `MAIL_CONTACT`, and `MAIL_BOOKING` on the API. Every inquiry goes to `MAIL_ADMIN`, with `MAIL_CONTACT` or `MAIL_BOOKING` in CC depending on the form, and a confirmation to the sender. Put the public addresses in `NEXT_PUBLIC_CONTACT_EMAIL` and `NEXT_PUBLIC_BOOKING_EMAIL` on the website. Set `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` on the website and Twilio keys on the API when you want those methods live.

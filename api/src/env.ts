@@ -17,6 +17,16 @@ export const env = {
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY ?? "",
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET ?? "",
   cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
+  zohoSmtpHost: process.env.ZOHO_SMTP_HOST ?? "smtp.zoho.com",
+  zohoSmtpPort: Number(process.env.ZOHO_SMTP_PORT ?? 465),
+  zohoSmtpUser: process.env.ZOHO_SMTP_USER ?? "",
+  zohoSmtpPass: process.env.ZOHO_SMTP_PASS ?? "",
+  mailAdmin: process.env.MAIL_ADMIN ?? process.env.ADMIN_EMAIL ?? "",
+  mailContact: process.env.MAIL_CONTACT ?? "",
+  mailBooking: process.env.MAIL_BOOKING ?? "",
+  twilioAccountSid: process.env.TWILIO_ACCOUNT_SID ?? "",
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN ?? "",
+  twilioFrom: process.env.TWILIO_FROM ?? "",
 };
 
 export function requireEnv() {

@@ -1,5 +1,6 @@
 "use client";
 
+import { FormActions } from "@/components/FormActions";
 import { asset, createProduct, updateProduct } from "@/lib/api";
 import { productCategories, type Product, type ProductCategory } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
@@ -184,23 +185,16 @@ export function ProductForm({ product }: { product?: Product }) {
         </div>
 
         {error && <p className="mt-6 text-sm text-crimson">{error}</p>}
-        <div className="mt-8 flex flex-wrap gap-3">
-          <button
-            type="button"
-            className="h-12 rounded-lg px-6 text-sm font-semibold text-burgundy ring-1 ring-sand"
-            onClick={() => setStep("edit")}
-            disabled={pending}
-          >
-            Back to edit
-          </button>
-          <button
-            type="button"
-            className="h-12 rounded-lg bg-burgundy px-6 text-sm font-semibold text-white disabled:opacity-60"
-            onClick={publish}
-            disabled={pending}
-          >
-            {pending ? "Saving..." : product ? "Publish changes" : "Publish to store"}
-          </button>
+        <div className="mt-8">
+          <FormActions
+            cancelHref="/store"
+            secondaryLabel="Back to edit"
+            onSecondary={() => setStep("edit")}
+            primaryLabel={pending ? "Saving..." : product ? "Publish changes" : "Publish to store"}
+            primaryType="button"
+            pending={pending}
+            onPrimary={publish}
+          />
         </div>
       </div>
     );
@@ -353,9 +347,7 @@ export function ProductForm({ product }: { product?: Product }) {
       </div>
 
       {error && <p className="text-sm text-crimson">{error}</p>}
-      <button type="submit" className="h-12 rounded-lg bg-burgundy text-sm font-semibold text-white">
-        Preview
-      </button>
+      <FormActions cancelHref="/store" primaryLabel="Preview" />
     </form>
   );
 }

@@ -8,9 +8,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
-function listView(status: string | null): "active" | "deleted" | "all" {
-  if (status === "deleted" || status === "all") return status;
-  return "active";
+function listView(status: string | null): "active" | "deleted" {
+  return status === "deleted" ? "deleted" : "active";
 }
 
 export default function CustomTripsAdminPage() {
@@ -231,11 +230,6 @@ function CustomTripsAdmin() {
             await deleteExperience(toDelete.item.tourId, toDelete.permanent);
             setItems((prev) => {
               if (!prev) return prev;
-              if (status === "all" && !toDelete.permanent) {
-                return prev.map((row) =>
-                  row.tourId === toDelete.item.tourId ? { ...row, deleted: true } : row,
-                );
-              }
               return prev.filter((row) => row.tourId !== toDelete.item.tourId);
             });
             setToDelete(null);

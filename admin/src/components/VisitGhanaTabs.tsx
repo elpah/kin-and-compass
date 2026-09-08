@@ -30,21 +30,20 @@ export function VisitGhanaStatusTabs({
   current,
 }: {
   baseHref: string;
-  current: "active" | "deleted" | "all";
+  current: "active" | "deleted";
 }) {
   const tabs = [
     { id: "active" as const, label: "Active" },
     { id: "deleted" as const, label: "Deleted" },
-    { id: "all" as const, label: "All" },
   ];
 
   return (
-    <div className="mt-4 flex flex-wrap gap-2">
+    <div className="mt-4 flex w-full justify-between">
       {tabs.map((tab) => (
         <Link
           key={tab.id}
           href={tab.id === "active" ? baseHref : `${baseHref}?status=${tab.id}`}
-          className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
+          className={`inline-flex h-12 w-[49%] items-center justify-center rounded-lg text-sm font-semibold ${
             current === tab.id ? "bg-burgundy text-white" : "bg-white text-muted ring-1 ring-sand hover:text-burgundy"
           }`}
         >

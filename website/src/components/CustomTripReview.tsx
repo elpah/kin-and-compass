@@ -58,7 +58,7 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
       </div>
       <p className="mt-6 display text-3xl text-burgundy">Estimated price: {formatMoney(total)}</p>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-        After you request, we will send a confirmed schedule.
+        After you request, we will send a you a proposed itinerary.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Link

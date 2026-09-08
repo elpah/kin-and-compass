@@ -26,7 +26,7 @@ export function CharityBrowser() {
             href="/charity/get-involved"
             className="inline-flex h-12 items-center rounded bg-white/10 px-6 text-sm font-semibold text-white ring-1 ring-white/30"
           >
-            Get Involved
+            Write to us
           </Link>
         </div>
       </PageHero>
@@ -88,7 +88,7 @@ export function CharityBrowser() {
                 href="/charity/get-involved"
                 className="inline-flex h-12 items-center rounded px-6 text-sm font-semibold text-burgundy ring-1 ring-sand"
               >
-                Get Involved
+                Write to us
               </Link>
             </div>
           </div>

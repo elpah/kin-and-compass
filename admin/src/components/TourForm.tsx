@@ -1,18 +1,25 @@
 "use client";
 
+import { FormActions } from "@/components/FormActions";
+import { useUnsavedChanges } from "@/components/UnsavedChanges";
 import { asset, createTour, listExperiences, updateTour } from "@/lib/api";
 import type { CustomExperience, PackagedTour } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useState, type FormEvent } from "react";
-import { useUnsavedChanges } from "@/components/UnsavedChanges";
+
+const cancelHref = "/visit-ghana";
 
 export function TourForm({ tour }: { tour?: PackagedTour }) {
   const router = useRouter();
   const fileId = useId();
   const clearDirty = useUnsavedChanges();
+  const [step, setStep] = useState<"edit" | "preview">("edit");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [experiences, setExperiences] = useState<CustomExperience[]>([]);
+  const [name, setName] = useState(tour?.name ?? "");
+  const [description, setDescription] = useState(tour?.description ?? "");
+  const [active, setActive] = useState(tour?.active !== false);
   const [picked, setPicked] = useState<string[]>(tour?.tourIds ?? []);
   const [preview, setPreview] = useState(tour?.image ? asset(tour.image) : "");
   const [file, setFile] = useState<File | null>(null);
@@ -31,42 +38,101 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
     [picked, experiences],
   );
   const packagePrice = selected.reduce((sum, item) => sum + item.tourPrice, 0);
+  const cover = preview || (selected[0] ? asset(selected[0].tourImage) : "");
 
   function toggle(id: string) {
     setPicked((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   }
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     if (!picked.length) {
       setError("Select at least one custom trip.");
       return;
     }
+    setStep("preview");
+  }
+
+  async function save() {
+    setError("");
     setPending(true);
-    const form = new FormData(event.currentTarget);
+    const form = new FormData();
+    form.set("name", name.trim());
+    form.set("description", description.trim());
     form.set("tourIds", picked.join(","));
+    if (active) form.set("active", "on");
     if (file) form.set("image", file);
     try {
       if (tour) await updateTour(tour.packagedTourId, form);
       else await createTour(form);
       clearDirty();
-      router.push("/visit-ghana");
+      router.push(cancelHref);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
+      setStep("edit");
     } finally {
       setPending(false);
     }
   }
 
+  if (step === "preview") {
+    return (
+      <div>
+        <p className="script text-2xl text-crimson">Check it</p>
+        <h2 className="display text-3xl text-burgundy">Preview</h2>
+        <p className="mt-1 text-sm text-muted">This is how the tour will look. Nothing is saved yet.</p>
+        <div className="mt-8 overflow-hidden rounded-lg ring-1 ring-sand">
+          {cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={cover} alt="" className="aspect-[16/10] w-full object-cover" />
+          ) : (
+            <div className="flex aspect-[16/10] items-center justify-center bg-cream text-sm text-muted">No photo</div>
+          )}
+        </div>
+        <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-crimson">
+          {active ? "Published" : "Draft"} · ${packagePrice}
+        </p>
+        <h3 className="display mt-2 text-4xl text-burgundy">{name}</h3>
+        <p className="mt-3 leading-relaxed text-ink/80">{description}</p>
+        <ul className="mt-6 space-y-2">
+          {selected.map((item) => (
+            <li key={item.tourId} className="flex items-center gap-3 rounded-lg bg-blush p-3 ring-1 ring-sand">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={asset(item.tourImage)} alt="" className="h-12 w-16 rounded object-cover" />
+              <span>
+                <span className="block font-semibold text-burgundy">{item.tourName}</span>
+                <span className="text-xs text-muted">
+                  Duration: {item.tourDuration} · ${item.tourPrice}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        {error && <p className="mt-6 text-sm text-crimson">{error}</p>}
+        <div className="mt-8">
+          <FormActions
+            cancelHref={cancelHref}
+            secondaryLabel="Back to edit"
+            onSecondary={() => setStep("edit")}
+            primaryLabel={pending ? "Saving..." : tour ? "Save tour" : "Create tour"}
+            primaryType="button"
+            pending={pending}
+            onPrimary={save}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={onSubmit} className="grid gap-6">
+    <form onSubmit={onReview} className="grid gap-6">
       <label className="block text-sm">
         <span className="font-medium text-burgundy">Tour name</span>
         <input
-          name="name"
           required
-          defaultValue={tour?.name}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
           placeholder="e.g. Cape Coast Heritage"
           className="mt-1 h-12 w-full rounded-lg border border-sand px-3"
         />
@@ -74,10 +140,10 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
       <label className="block text-sm">
         <span className="font-medium text-burgundy">Description</span>
         <textarea
-          name="description"
           required
           rows={5}
-          defaultValue={tour?.description}
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
           placeholder="What this packaged tour includes and who it is for."
           className="mt-1 w-full rounded-lg border border-sand px-3 py-2"
         />
@@ -128,7 +194,7 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
 
       <label className="block text-sm">
         <span className="flex items-center gap-2 font-medium text-burgundy">
-          <input name="active" type="checkbox" defaultChecked={tour?.active !== false} />
+          <input type="checkbox" checked={active} onChange={(event) => setActive(event.target.checked)} />
           Publish this tour
         </span>
         <span className="mt-1 block text-xs text-muted">
@@ -166,13 +232,7 @@ export function TourForm({ tour }: { tour?: PackagedTour }) {
       </div>
 
       {error && <p className="text-sm text-crimson">{error}</p>}
-      <button
-        type="submit"
-        disabled={pending}
-        className="h-12 rounded-lg bg-burgundy text-sm font-semibold text-white disabled:opacity-60"
-      >
-        {pending ? "Saving..." : tour ? "Save tour" : "Create tour"}
-      </button>
+      <FormActions cancelHref={cancelHref} primaryLabel="Preview" />
     </form>
   );
 }

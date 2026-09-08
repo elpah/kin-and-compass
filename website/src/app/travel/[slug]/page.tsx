@@ -86,7 +86,7 @@ export default async function TourPage({
           <p className="display text-4xl text-burgundy">from {formatMoney(tour.priceFrom)}</p>
           <p className="mt-1 text-xs text-muted">Per person · deposits coming soon</p>
           <p className="mt-3 text-sm leading-relaxed text-muted">
-            After you request, we will send a confirmed schedule.
+            After you request, we will send a you proposed itinerary.
           </p>
           <p className="mt-3 text-sm">
             <a href={`mailto:${brand.bookingEmail}`} className="font-semibold text-burgundy hover:text-crimson">
