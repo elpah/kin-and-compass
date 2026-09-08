@@ -7,8 +7,15 @@ import { env } from "./env.js";
 
 export const CLOUDINARY_FOLDER = "kinandcompass";
 
-export const uploadDir = join(process.cwd(), "uploads");
-mkdirSync(uploadDir, { recursive: true });
+export const uploadDir = process.env.VERCEL
+  ? join("/tmp", "kinandcompass-uploads")
+  : join(process.cwd(), "uploads");
+
+try {
+  mkdirSync(uploadDir, { recursive: true });
+} catch {
+  /* Vercel lambda fs is read-only except /tmp; Cloudinary is used for files */
+}
 
 if (env.cloudinaryCloudName && env.cloudinaryApiKey && env.cloudinaryApiSecret) {
   cloudinary.config({
