@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import { existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { dbConnect } from "./db.js";
@@ -11,6 +12,14 @@ import { tourRouter } from "./routes/tours.js";
 import { experienceRouter } from "./routes/experiences.js";
 import { productRouter } from "./routes/products.js";
 import { uploadDir } from "./uploads.js";
+
+function publicFile(name: string) {
+  const candidates = [
+    join(dirname(fileURLToPath(import.meta.url)), "..", "public", name),
+    join(process.cwd(), "public", name),
+  ];
+  return candidates.find((path) => existsSync(path));
+}
 
 const publicDir = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 
@@ -23,7 +32,29 @@ app.use(
   }),
 );
 app.use(express.static(publicDir));
-app.get("/", (_req, res) => res.json({ ok: true }));
+app.get("/favicon.ico", (_req, res) => {
+  const file = publicFile("favicon.ico");
+  if (!file) {
+    res.status(404).end();
+    return;
+  }
+  res.type("image/x-icon").sendFile(file);
+});
+app.get("/", (_req, res) => {
+  res.type("html").send(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kin and Compass API</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <p>{"ok":true}</p>
+  </body>
+</html>`);
+});
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use(async (_req, _res, next) => {
   try {
