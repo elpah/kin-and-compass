@@ -1,6 +1,8 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { dbConnect } from "./db.js";
 import { env, requireEnv } from "./env.js";
 import { adminRouter } from "./routes/admin.js";
@@ -10,6 +12,8 @@ import { experienceRouter } from "./routes/experiences.js";
 import { productRouter } from "./routes/products.js";
 import { uploadDir } from "./uploads.js";
 
+const publicDir = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
+
 const app = express();
 app.use(
   cors({
@@ -18,6 +22,9 @@ app.use(
     allowedHeaders: ["Authorization", "Content-Type"],
   }),
 );
+app.use(express.static(publicDir));
+app.get("/", (_req, res) => res.json({ ok: true }));
+app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use(async (_req, _res, next) => {
   try {
     requireEnv();
@@ -30,8 +37,6 @@ app.use(async (_req, _res, next) => {
 app.use(cookieParser());
 app.use(express.json());
 app.use("/uploads", express.static(uploadDir));
-app.get("/", (_req, res) => res.json({ ok: true }));
-app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
 app.use("/experiences", experienceRouter);
