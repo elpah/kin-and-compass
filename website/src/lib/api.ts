@@ -1,9 +1,6 @@
-import type { CustomExperience, Product } from "@kincompass/shared";
-import { customExperiences as localExperiences } from "@/data/experiences";
-import { products as localProducts } from "@/data/products";
+import type { CustomExperience, PackagedTour, Product } from "@kincompass/shared";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-const useApi = process.env.NEXT_PUBLIC_USE_API === "true";
 
 async function getJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
@@ -15,50 +12,32 @@ async function getJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-function featuredFromLocal(limit: number) {
-  const featured = localProducts.filter((product) => product.featured);
-  return (featured.length ? featured : localProducts).slice(0, limit);
-}
-
 export async function listProducts() {
-  if (useApi) {
-    try {
-      const data = await getJson<{ products: Product[] }>("/products");
-      if (data.products?.length) return data.products;
-    } catch {
-      /* API or MongoDB not running - use the local catalogue */
-    }
+  try {
+    const data = await getJson<{ products: Product[] }>("/products");
+    return data.products ?? [];
+  } catch {
+    return [];
   }
-  return localProducts;
 }
 
 export async function listFeaturedProducts(limit = 4) {
-  if (useApi) {
-    try {
-      const data = await getJson<{ products: Product[] }>(`/products/featured?limit=${limit}`);
-      if (data.products?.length) return data.products;
-    } catch {
-      /* fall through */
-    }
+  try {
+    const data = await getJson<{ products: Product[] }>(`/products/featured?limit=${limit}`);
+    return data.products ?? [];
+  } catch {
+    return [];
   }
-  return featuredFromLocal(limit);
 }
 
 export async function getProductBySlug(slug: string) {
-  if (useApi) {
-    try {
-      const data = await getJson<{ product: Product; related: Product[] }>(`/products/${slug}`);
-      if (data.product) return data;
-    } catch {
-      /* fall through */
-    }
+  try {
+    const data = await getJson<{ product: Product; related: Product[] }>(`/products/${slug}`);
+    if (data.product) return data;
+  } catch {
+    /* missing product */
   }
-  const product = localProducts.find((item) => item.slug === slug);
-  if (!product) return null;
-  const related = localProducts
-    .filter((item) => item.category === product.category && item.slug !== product.slug)
-    .slice(0, 3);
-  return { product, related };
+  return null;
 }
 
 export function apiUrl() {
@@ -66,14 +45,27 @@ export function apiUrl() {
 }
 
 export async function listActiveExperiences() {
-  if (useApi) {
-    try {
-      const data = await getJson<{ experiences: CustomExperience[] }>("/experiences?active=true");
-      const live = (data.experiences ?? []).filter((item) => item.active !== false);
-      if (live.length) return live;
-    } catch {
-      /* API or MongoDB not running - use placeholders */
-    }
+  try {
+    const data = await getJson<{ experiences: CustomExperience[] }>("/experiences?active=true");
+    return (data.experiences ?? []).filter((item) => item.active !== false);
+  } catch {
+    return [];
   }
-  return localExperiences.filter((item) => item.active !== false);
+}
+
+export async function listActivePackagedTours() {
+  try {
+    const data = await getJson<{ tours: PackagedTour[] }>("/tours?active=true");
+    return (data.tours ?? []).filter((item) => item.active !== false);
+  } catch {
+    return [];
+  }
+}
+
+export async function getPackagedTour(id: string) {
+  try {
+    return await getJson<{ tour: PackagedTour; experiences: CustomExperience[] }>(`/tours/${id}`);
+  } catch {
+    return null;
+  }
 }

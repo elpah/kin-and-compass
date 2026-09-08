@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 
 export default function DeskLayout({ children }: { children: ReactNode }) {
   return (
-    <RequireAdmin>
-      <AdminShell>{children}</AdminShell>
-    </RequireAdmin>
+    <AdminShell>
+      <RequireAdmin>{children}</RequireAdmin>
+    </AdminShell>
   );
 }

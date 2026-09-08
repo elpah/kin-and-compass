@@ -3,34 +3,27 @@
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AccountPage() {
-  const { user, logout, orders, inquiries, donations } = useAuth();
+  const { user, ready, logout, orders, inquiries, donations } = useAuth();
+  const router = useRouter();
 
-  if (!user) {
-    return (
-      <div className="mx-auto max-w-lg px-4 py-32 text-center">
-        <h1 className="display text-4xl text-burgundy">Your account</h1>
-        <p className="mt-3 text-muted">
-          Track orders, gifts, and inquiries in one place.
-        </p>
-        <Link
-          href="/login"
-          className="mt-6 inline-flex h-12 items-center rounded bg-burgundy px-6 text-sm font-semibold text-white"
-        >
-          Sign in
-        </Link>
-      </div>
-    );
+  useEffect(() => {
+    if (ready && !user) router.replace("/login");
+  }, [ready, user, router]);
+
+  if (!ready || !user) {
+    return <p className="px-4 py-32 text-center text-sm text-muted">Loading...</p>;
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="script text-2xl text-crimson">Welcome</p>
-          <h1 className="display text-4xl text-burgundy">{user.name}</h1>
-          <p className="text-sm text-muted">{user.email}</p>
+          <h1 className="text-3xl font-semibold text-burgundy">Account</h1>
+          <p className="mt-1 text-sm text-muted">{user.email}</p>
         </div>
         <div className="flex gap-3">
           {user.isAdmin && (
@@ -48,7 +41,7 @@ export default function AccountPage() {
       </div>
 
       <section className="mt-12">
-        <h2 className="display text-3xl text-burgundy">Orders</h2>
+        <h2 className="text-xl font-semibold text-burgundy">Orders</h2>
         {orders.length === 0 ? (
           <p className="mt-3 text-sm text-muted">No orders yet.</p>
         ) : (
@@ -68,7 +61,7 @@ export default function AccountPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="display text-3xl text-burgundy">Gifts</h2>
+        <h2 className="text-xl font-semibold text-burgundy">Gifts</h2>
         {donations.length === 0 ? (
           <p className="mt-3 text-sm text-muted">
             No gifts yet.{" "}
@@ -92,7 +85,7 @@ export default function AccountPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="display text-3xl text-burgundy">Your inquiries</h2>
+        <h2 className="text-xl font-semibold text-burgundy">Your inquiries</h2>
         {inquiries.length === 0 ? (
           <p className="mt-3 text-sm text-muted">Tour, invest, and charity requests will appear here.</p>
         ) : (

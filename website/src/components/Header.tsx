@@ -110,7 +110,7 @@ export function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="/account"
+            href={user ? "/account" : "/login"}
             className={cn(
               "hidden sm:inline text-[13px] font-semibold",
               solid
@@ -166,11 +166,11 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="/account"
+              href={user ? "/account" : "/login"}
               onClick={() => setOpen(false)}
               className="rounded px-3 py-3 text-sm font-semibold text-burgundy hover:bg-sand"
             >
-              Account
+              {user ? "Account" : "Sign in"}
             </Link>
             <Link
               href="/travel/custom"

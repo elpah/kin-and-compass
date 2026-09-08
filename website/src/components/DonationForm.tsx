@@ -38,7 +38,7 @@ export function DonationForm({
           A record is stored in your browser. Sign in to keep it on your account.
         </p>
         <Link
-          href="/account"
+          href={user ? "/account" : "/login"}
           className="mt-5 inline-flex h-11 items-center rounded bg-burgundy px-5 text-sm font-semibold text-white"
         >
           View donation history

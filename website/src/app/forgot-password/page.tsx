@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthCard, authField, authPrimary } from "@/components/AuthCard";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -11,19 +12,15 @@ export default function ForgotPasswordPage() {
   const [pending, setPending] = useState(false);
 
   return (
-    <div className="mx-auto max-w-md px-4 pb-20 pt-32">
-      <p className="script text-2xl text-crimson">Account</p>
-      <h1 className="display text-4xl text-burgundy">Reset password</h1>
-      <p className="mt-2 text-sm text-muted">
-        Enter the email on your account. If it exists, we will send a reset link.
-      </p>
+    <AuthCard
+      title="Reset password"
+      text="Enter the email on your account. If it exists, we will send a reset link."
+    >
       {sent ? (
-        <p className="mt-8 text-sm text-burgundy">
-          If that email has a password, check your inbox for a reset link.
-        </p>
+        <p className="text-sm text-burgundy">If that email has a password, check your inbox for a reset link.</p>
       ) : (
         <form
-          className="mt-8 grid gap-3"
+          className="grid gap-4"
           onSubmit={async (event) => {
             event.preventDefault();
             setError("");
@@ -44,16 +41,19 @@ export default function ForgotPasswordPage() {
             }
           }}
         >
-          <input name="email" type="email" required placeholder="Email" className="h-12 rounded-lg border border-sand px-4" />
+          <label className="block text-sm font-medium text-burgundy">
+            Email
+            <input name="email" type="email" required autoComplete="email" className={authField} />
+          </label>
           {error && <p className="text-sm text-crimson">{error}</p>}
-          <button type="submit" disabled={pending} className="h-12 rounded bg-burgundy font-semibold text-white disabled:opacity-60">
+          <button type="submit" disabled={pending} className={authPrimary}>
             {pending ? "Please wait..." : "Send reset link"}
           </button>
         </form>
       )}
-      <Link href="/login" className="mt-6 inline-block text-sm text-crimson">
+      <Link href="/login" className="mt-6 inline-block text-sm font-semibold text-crimson hover:underline">
         Back to sign in
       </Link>
-    </div>
+    </AuthCard>
   );
 }

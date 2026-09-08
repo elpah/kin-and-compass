@@ -3,10 +3,10 @@ import { FAQ } from "@/components/FAQ";
 import { covers } from "@/assets/covers";
 import { PageHero } from "@/components/PageHero";
 import { travelFaqs } from "@/data/site";
-import { tours } from "@/data/tours";
+import type { PackagedTour } from "@kincompass/shared";
 import Link from "next/link";
 
-export function TravelBrowser() {
+export function TravelBrowser({ tours }: { tours: PackagedTour[] }) {
   return (
     <>
       <PageHero
@@ -23,11 +23,15 @@ export function TravelBrowser() {
         </Link>
       </PageHero>
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          {tours.map((t) => (
-            <TourCard key={t.slug} tour={t} />
-          ))}
-        </div>
+        {tours.length === 0 ? (
+          <p className="text-sm text-muted">No tours are published yet. Check back soon.</p>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2">
+            {tours.map((t) => (
+              <TourCard key={t.packagedTourId} tour={t} />
+            ))}
+          </div>
+        )}
         <div className="mt-16">
           <h2 className="display text-3xl text-burgundy">Before you pack</h2>
           <div className="mt-6 max-w-3xl">

@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthCard, authField, authPrimary } from "@/components/AuthCard";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -8,7 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<p className="px-4 py-32 text-sm text-muted">Loading...</p>}>
+    <Suspense fallback={<p className="px-4 py-32 text-center text-sm text-muted">Loading...</p>}>
       <ResetPasswordForm />
     </Suspense>
   );
@@ -22,21 +23,18 @@ function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <div className="mx-auto max-w-md px-4 pb-20 pt-32">
-        <h1 className="display text-4xl text-burgundy">Reset password</h1>
-        <p className="mt-3 text-sm text-muted">This link is missing a token.</p>
-        <Link href="/forgot-password" className="mt-6 inline-block text-sm text-crimson">
+      <AuthCard title="Reset password" text="This link is missing a token.">
+        <Link href="/forgot-password" className="text-sm font-semibold text-crimson hover:underline">
           Request a new link
         </Link>
-      </div>
+      </AuthCard>
     );
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 pb-20 pt-32">
-      <h1 className="display text-4xl text-burgundy">Choose a new password</h1>
+    <AuthCard title="Choose a new password">
       <form
-        className="mt-8 grid gap-3"
+        className="grid gap-4"
         onSubmit={async (event) => {
           event.preventDefault();
           setError("");
@@ -64,13 +62,19 @@ function ResetPasswordForm() {
           }
         }}
       >
-        <input name="password" type="password" required minLength={6} placeholder="New password" className="h-12 rounded-lg border border-sand px-4" />
-        <input name="confirm" type="password" required minLength={6} placeholder="Confirm password" className="h-12 rounded-lg border border-sand px-4" />
+        <label className="block text-sm font-medium text-burgundy">
+          New password
+          <input name="password" type="password" required minLength={6} autoComplete="new-password" className={authField} />
+        </label>
+        <label className="block text-sm font-medium text-burgundy">
+          Confirm password
+          <input name="confirm" type="password" required minLength={6} autoComplete="new-password" className={authField} />
+        </label>
         {error && <p className="text-sm text-crimson">{error}</p>}
-        <button type="submit" disabled={pending} className="h-12 rounded bg-burgundy font-semibold text-white disabled:opacity-60">
+        <button type="submit" disabled={pending} className={authPrimary}>
           {pending ? "Please wait..." : "Update password"}
         </button>
       </form>
-    </div>
+    </AuthCard>
   );
 }

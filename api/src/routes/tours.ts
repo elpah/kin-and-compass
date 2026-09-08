@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { Router } from "express";
 import { requireAdmin } from "../auth.js";
-import { CustomExperienceModel, serializeTourImage } from "../models/CustomExperience.js";
+import { CustomExperienceModel, serializeCustomExperience, serializeTourImage } from "../models/CustomExperience.js";
 import { PackagedTourModel, serializePackagedTour } from "../models/PackagedTour.js";
 import { parsePackagedTourFields } from "../parse-tour.js";
 import { DeletedPackagedTourModel } from "../models/DeletedPackagedTour.js";
@@ -44,6 +44,26 @@ async function priceFromCustomTours(ids: string[]) {
   return ids.reduce((sum, id) => sum + (byId.get(id) ?? 0), 0);
 }
 
+async function experiencesForIds(ids: string[]) {
+  if (!ids.length) return [];
+  const rows = await CustomExperienceModel.find({
+    $or: [{ tourId: { $in: ids } }, { slug: { $in: ids } }],
+  }).lean();
+  const byId = new Map<string, ReturnType<typeof serializeCustomExperience>>();
+  for (const row of rows) {
+    const experience = serializeCustomExperience(row as Record<string, unknown>);
+    byId.set(experience.tourId, experience);
+    const slug = String((row as { slug?: string }).slug ?? "");
+    if (slug) byId.set(slug, experience);
+  }
+  return ids.map((id) => byId.get(id)).filter((item) => item !== undefined);
+}
+
+async function withCover(tour: ReturnType<typeof serializePackagedTour>) {
+  if (tour.image.linkUrl || !tour.tourIds.length) return tour;
+  return { ...tour, image: await coverFromCustomTours(tour.tourIds) };
+}
+
 tourRouter.get("/", async (req, res) => {
   try {
     const view = String(req.query.view ?? "");
@@ -59,18 +79,21 @@ tourRouter.get("/", async (req, res) => {
 
     const filter = activeOnly ? { active: { $ne: false } } : {};
     const live = await PackagedTourModel.find(filter).sort({ createdAt: -1 }).lean();
+    const tours = await Promise.all(
+      live.map((row) => withCover(serializePackagedTour(row as Record<string, unknown>))),
+    );
     if (view === "all") {
       const archived = await DeletedPackagedTourModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
       res.json({
         tours: [
-          ...live.map((row) => serializePackagedTour(row as Record<string, unknown>)),
+          ...tours,
           ...archived.map((row) => ({ ...serializePackagedTour(row as Record<string, unknown>), deleted: true })),
         ],
       });
       return;
     }
 
-    res.json({ tours: live.map((row) => serializePackagedTour(row as Record<string, unknown>)) });
+    res.json({ tours });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Failed to load tours" });
   }
@@ -83,7 +106,9 @@ tourRouter.get("/:id", async (req, res) => {
       res.status(404).json({ error: "Not found" });
       return;
     }
-    res.json({ tour: serializePackagedTour(doc as Record<string, unknown>) });
+    const tour = await withCover(serializePackagedTour(doc as Record<string, unknown>));
+    const experiences = await experiencesForIds(tour.tourIds);
+    res.json({ tour, experiences });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Failed to load tour" });
   }

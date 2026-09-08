@@ -31,8 +31,8 @@ function AdminLoginForm() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md">
+    <div className="flex min-h-dvh items-center justify-center bg-burgundy-deep px-4 py-16">
+      <div className="w-full max-w-md rounded-xl bg-cream p-6 shadow-sm ring-1 ring-white/10 sm:p-8">
         <div className="flex items-center gap-3">
           <span className="relative h-12 w-12 overflow-hidden rounded-full bg-white ring-1 ring-burgundy/10">
             <Image
@@ -47,13 +47,15 @@ function AdminLoginForm() {
             <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-burgundy">
               Kin and Compass
             </p>
-            <p className="script text-lg leading-none text-crimson">Admin</p>
+            <p className="text-sm font-semibold text-crimson">Staff desk</p>
           </div>
         </div>
-        <h1 className="display mt-8 text-4xl text-burgundy">Sign in</h1>
-        <p className="mt-2 text-sm text-muted">Staff email and password only.</p>
+        <h1 className="mt-8 text-2xl font-semibold text-burgundy">Staff sign in</h1>
+        <p className="mt-2 text-sm text-muted">
+          Email and password for the admin desk only. This is not the public website.
+        </p>
         <form
-          className="mt-8 grid gap-3"
+          className="mt-8 grid gap-4"
           onSubmit={async (event) => {
             event.preventDefault();
             setError("");
@@ -68,7 +70,7 @@ function AdminLoginForm() {
               if (result?.error) {
                 setError(
                   result.error === "AccessDenied"
-                    ? "This account cannot use admin."
+                    ? "This account cannot use the staff desk. Use the public website to sign in."
                     : "Email or password is incorrect.",
                 );
                 return;
@@ -81,25 +83,31 @@ function AdminLoginForm() {
             }
           }}
         >
-          <input
-            name="email"
-            type="email"
-            required
-            placeholder="Email"
-            className="h-12 rounded-lg border border-sand bg-white px-4 outline-none focus:ring-2 focus:ring-crimson/30"
-          />
-          <input
-            name="password"
-            type="password"
-            required
-            placeholder="Password"
-            className="h-12 rounded-lg border border-sand bg-white px-4 outline-none focus:ring-2 focus:ring-crimson/30"
-          />
+          <label className="block text-sm font-medium text-burgundy">
+            Staff email
+            <input
+              name="email"
+              type="email"
+              required
+              autoComplete="username"
+              className="mt-1 h-12 w-full rounded-lg border border-sand bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-crimson/25"
+            />
+          </label>
+          <label className="block text-sm font-medium text-burgundy">
+            Password
+            <input
+              name="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              className="mt-1 h-12 w-full rounded-lg border border-sand bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-crimson/25"
+            />
+          </label>
           {error && <ErrorBanner title="Sign-in failed" message={error} />}
           <button
             type="submit"
             disabled={pending}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-burgundy font-semibold text-white disabled:opacity-60"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-burgundy text-sm font-semibold text-white disabled:opacity-60"
           >
             {pending ? (
               <>
@@ -107,7 +115,7 @@ function AdminLoginForm() {
                 Signing in
               </>
             ) : (
-              "Sign in"
+              "Sign in to desk"
             )}
           </button>
         </form>

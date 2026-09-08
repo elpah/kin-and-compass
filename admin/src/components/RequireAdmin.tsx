@@ -1,68 +1,87 @@
 "use client";
 
-import { ErrorBanner, LoadingScreen } from "@/components/Feedback";
+import { ErrorBanner, Spinner } from "@/components/Feedback";
 import { me } from "@/lib/api";
 import { signOut, useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+
+function loginPath() {
+  const next = typeof window === "undefined" ? "/" : window.location.pathname || "/";
+  return `/login?next=${encodeURIComponent(next)}`;
+}
 
 export function RequireAdmin({ children }: { children: ReactNode }) {
   const { status, data } = useSession();
   const router = useRouter();
-  const pathname = usePathname();
   const [allowed, setAllowed] = useState(false);
   const [error, setError] = useState("");
 
   const verify = useCallback(() => {
     setError("");
-    setAllowed(false);
     return me()
       .then(() => setAllowed(true))
       .catch(async (err) => {
         const message = err instanceof Error ? err.message : "This account cannot use admin.";
         if (/sign in/i.test(message)) {
           await signOut({ redirect: false });
-          router.replace(`/login?next=${encodeURIComponent(pathname || "/")}`);
+          router.replace(loginPath());
           return;
         }
+        setAllowed(false);
         setError(message);
       });
-  }, [pathname, router]);
+  }, [router]);
 
   useEffect(() => {
     if (status === "loading") return;
     if (status !== "authenticated" || data?.user.role !== "admin") {
-      router.replace(`/login?next=${encodeURIComponent(pathname || "/")}`);
+      router.replace(loginPath());
       return;
     }
     let cancelled = false;
-    verify().then(() => {
-      if (cancelled) setAllowed(false);
-    });
+    void me()
+      .then(() => {
+        if (!cancelled) setAllowed(true);
+      })
+      .catch(async (err) => {
+        if (cancelled) return;
+        const message = err instanceof Error ? err.message : "This account cannot use admin.";
+        if (/sign in/i.test(message)) {
+          await signOut({ redirect: false });
+          router.replace(loginPath());
+          return;
+        }
+        setAllowed(false);
+        setError(message);
+      });
     return () => {
       cancelled = true;
     };
-  }, [status, data?.user.role, router, pathname, verify]);
+  }, [status, data?.user.role, router]);
 
   if (error) {
     return (
-      <div className="flex min-h-dvh items-center justify-center px-4">
-        <div className="w-full max-w-md">
-          <ErrorBanner title="Could not open admin" message={error} onRetry={() => void verify()} />
-          <button
-            type="button"
-            className="mt-4 text-sm font-semibold text-burgundy"
-            onClick={() => void signOut({ callbackUrl: "/login" })}
-          >
-            Sign out
-          </button>
-        </div>
+      <div className="max-w-md">
+        <ErrorBanner title="Could not open admin" message={error} onRetry={() => void verify()} />
+        <button
+          type="button"
+          className="mt-4 text-sm font-semibold text-burgundy"
+          onClick={() => void signOut({ callbackUrl: "/login" })}
+        >
+          Sign out
+        </button>
       </div>
     );
   }
 
   if (status === "loading" || !allowed) {
-    return <LoadingScreen />;
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <Spinner className="h-10 w-10" />
+        <span className="sr-only">Loading</span>
+      </div>
+    );
   }
 
   return children;

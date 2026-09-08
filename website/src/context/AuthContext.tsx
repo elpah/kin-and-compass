@@ -70,11 +70,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [donations, setDonations] = useState<Donation[]>([]);
   const ready = status !== "loading";
-  const user = session?.user?.email
+  const user = session?.user?.email && session.user.role !== "admin"
     ? {
         name: session.user.name || session.user.email.split("@")[0],
         email: session.user.email,
-        isAdmin: session.user.role === "admin",
+        isAdmin: false,
       }
     : null;
 
@@ -123,6 +123,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (result?.error) throw new Error("Account created, but sign-in failed. Try signing in.");
       },
       loginWithGoogle: async () => {
+        const { getProviders } = await import("next-auth/react");
+        const providers = await getProviders();
+        if (!providers?.google) {
+          throw new Error(
+            "Google sign-in is not set up yet. Add AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET, and authorize http://localhost:3000/api/auth/callback/google.",
+          );
+        }
         await signIn("google", { callbackUrl: "/account" });
       },
       loginWithPhone: async (phone, code, name) => {

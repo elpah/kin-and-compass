@@ -37,6 +37,29 @@ body {
   font-family: var(--font-jakarta), system-ui, sans-serif;
 }
 
+a,
+button,
+[type="button"],
+[type="submit"],
+[type="reset"],
+summary,
+select,
+label {
+  cursor: pointer;
+}
+
+button:disabled,
+[type="button"]:disabled,
+[type="submit"]:disabled,
+[disabled] {
+  cursor: not-allowed;
+}
+
+input,
+textarea {
+  cursor: text;
+}
+
 ::selection {
   background: #c00c30;
   color: #fff;

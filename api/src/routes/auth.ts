@@ -102,11 +102,15 @@ authRouter.post("/oauth", async (req, res) => {
     return;
   }
   let user = await User.findOne({ $or: [{ googleId }, { email }] });
+  if (user?.role === "admin") {
+    res.status(403).json({ error: "Staff must use the admin desk." });
+    return;
+  }
   if (!user) {
     user = await User.create({ name, email, googleId, role: "customer" });
   } else {
     if (!user.googleId) user.googleId = googleId;
-    if (!user.name) user.name = name;
+    if (name && !user.name) user.name = name;
     await user.save();
   }
   res.json(await sessionFor(user));

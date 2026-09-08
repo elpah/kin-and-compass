@@ -1,6 +1,5 @@
 import { StoreBrowser } from "./StoreBrowser";
 import { listProducts } from "@/lib/api";
-import type { Product } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -11,11 +10,6 @@ export const metadata = {
 };
 
 export default async function StorePage() {
-  let products: Product[] = [];
-  try {
-    products = await listProducts();
-  } catch {
-    products = [];
-  }
+  const products = await listProducts();
   return <StoreBrowser products={products} />;
 }

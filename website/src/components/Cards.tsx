@@ -1,28 +1,33 @@
 import { formatMoney } from "@/lib/utils";
-import type { Opportunity, Tour } from "@/lib/types";
+import { asset } from "@/lib/media";
+import type { Opportunity } from "@/lib/types";
+import type { PackagedTour } from "@kincompass/shared";
 import Image from "next/image";
 import Link from "next/link";
 
-export function TourCard({ tour }: { tour: Tour }) {
+export function TourCard({ tour }: { tour: PackagedTour }) {
+  const src = asset(tour.image);
   return (
-    <Link href={`/travel/${tour.slug}`} className="group block overflow-hidden rounded-lg bg-white ring-1 ring-sand">
-      <div className="relative aspect-[16/10] overflow-hidden">
-        <Image
-          src={tour.image}
-          alt={tour.name}
-          fill
-          className="object-cover transition duration-500 group-hover:scale-105"
-        />
+    <Link href={`/travel/${tour.packagedTourId}`} className="group block overflow-hidden rounded-lg bg-white ring-1 ring-sand">
+      <div className="relative aspect-[16/10] overflow-hidden bg-sand">
+        {src ? (
+          <Image
+            src={src}
+            alt={tour.name}
+            fill
+            className="object-cover transition duration-500 group-hover:scale-105"
+          />
+        ) : null}
         <span className="absolute bottom-3 left-3 rounded bg-burgundy/90 px-3 py-1 text-[11px] font-semibold text-white">
-          from {formatMoney(tour.priceFrom)}
+          from {formatMoney(tour.price)}
         </span>
       </div>
       <div className="p-5">
         <p className="text-[11px] font-bold uppercase tracking-wider text-crimson">
-          {tour.region} · {tour.type}
+          {tour.duration || `${tour.tourIds.length} stops`}
         </p>
         <h3 className="display mt-1 text-2xl text-burgundy">{tour.name}</h3>
-        <p className="mt-2 line-clamp-2 text-sm text-muted">{tour.summary}</p>
+        <p className="mt-2 line-clamp-2 text-sm text-muted">{tour.description}</p>
       </div>
     </Link>
   );

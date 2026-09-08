@@ -3,12 +3,29 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const secure = process.env.NODE_ENV === "production";
+
+function authCookies(prefix: string) {
+  const base = {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    path: "/",
+    secure,
+  };
+  const name = (key: string) => `${secure ? "__Secure-" : ""}${prefix}.${key}`;
+  return {
+    sessionToken: { name: name("session-token"), options: base },
+    callbackUrl: { name: name("callback-url"), options: { ...base, httpOnly: false } },
+    csrfToken: { name: name("csrf-token"), options: { ...base, httpOnly: false } },
+  };
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 },
   pages: { signIn: "/login" },
+  cookies: authCookies("kc-admin"),
   providers: [
     Credentials({
       credentials: {
@@ -29,6 +46,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token: string;
           user: { id: string; name: string; email: string; role: "admin" | "customer" };
         };
+        if (data.user.role !== "admin") return null;
         return {
           id: data.user.id,
           name: data.user.name,
