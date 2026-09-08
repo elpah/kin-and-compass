@@ -124,9 +124,11 @@ tourRouter.post("/", requireAdmin, imageUpload, async (req, res) => {
       return;
     }
     const price = await priceFromCustomTours(fields.tourIds);
+    const packagedTourId = randomUUID();
     const created = await PackagedTourModel.create({
       ...fields,
-      packagedTourId: randomUUID(),
+      packagedTourId,
+      slug: packagedTourId,
       duration: "",
       price,
       image,

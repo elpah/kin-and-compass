@@ -78,7 +78,7 @@ experienceRouter.post("/", requireAdmin, imageUpload, async (req, res) => {
       return;
     }
     const tourId = randomUUID();
-    const created = await CustomExperienceModel.create({ ...fields, tourId, tourImage });
+    const created = await CustomExperienceModel.create({ ...fields, tourId, slug: tourId, tourImage });
     res.status(201).json({ experience: serializeCustomExperience(created.toObject()) });
   } catch (error) {
     res.status(400).json({ error: error instanceof Error ? error.message : "Failed to create trip" });

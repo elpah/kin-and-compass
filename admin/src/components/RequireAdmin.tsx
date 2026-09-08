@@ -6,11 +6,6 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 
-function loginPath() {
-  const next = typeof window === "undefined" ? "/" : window.location.pathname || "/";
-  return `/login?next=${encodeURIComponent(next)}`;
-}
-
 export function RequireAdmin({ children }: { children: ReactNode }) {
   const { status, data } = useSession();
   const router = useRouter();
@@ -25,7 +20,7 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
         const message = err instanceof Error ? err.message : "This account cannot use admin.";
         if (/sign in/i.test(message)) {
           await signOut({ redirect: false });
-          router.replace(loginPath());
+          router.replace("/login");
           return;
         }
         setAllowed(false);
@@ -36,7 +31,7 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (status === "loading") return;
     if (status !== "authenticated" || data?.user.role !== "admin") {
-      router.replace(loginPath());
+      router.replace("/login");
       return;
     }
     let cancelled = false;
@@ -49,7 +44,7 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
         const message = err instanceof Error ? err.message : "This account cannot use admin.";
         if (/sign in/i.test(message)) {
           await signOut({ redirect: false });
-          router.replace(loginPath());
+          router.replace("/login");
           return;
         }
         setAllowed(false);

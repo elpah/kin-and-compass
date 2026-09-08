@@ -3,28 +3,18 @@
 import { ErrorBanner, LoadingScreen, Spinner } from "@/components/Feedback";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function AdminLoginPage() {
-  return (
-    <Suspense fallback={<LoadingScreen />}>
-      <AdminLoginForm />
-    </Suspense>
-  );
-}
-
-function AdminLoginForm() {
   const router = useRouter();
-  const params = useSearchParams();
   const { status, data } = useSession();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const next = params.get("next") || "/";
 
   useEffect(() => {
-    if (status === "authenticated" && data?.user.role === "admin") router.replace(next);
-  }, [status, data?.user.role, router, next]);
+    if (status === "authenticated" && data?.user.role === "admin") router.replace("/");
+  }, [status, data?.user.role, router]);
 
   if (status === "loading" || (status === "authenticated" && data?.user.role === "admin")) {
     return <LoadingScreen />;
@@ -75,7 +65,7 @@ function AdminLoginForm() {
                 );
                 return;
               }
-              router.push(next);
+              router.push("/");
             } catch (err) {
               setError(err instanceof Error ? err.message : "Could not sign in. Try again.");
             } finally {
