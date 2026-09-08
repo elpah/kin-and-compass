@@ -33,13 +33,15 @@ export default function AccountPage() {
           <p className="text-sm text-muted">{user.email}</p>
         </div>
         <div className="flex gap-3">
-          <a
-            href={process.env.NEXT_PUBLIC_ADMIN_URL ?? "http://localhost:3001"}
-            className="text-sm font-semibold text-crimson"
-          >
-            Admin
-          </a>
-          <button type="button" onClick={logout} className="text-sm font-semibold text-burgundy">
+          {user.isAdmin && (
+            <a
+              href={process.env.NEXT_PUBLIC_ADMIN_URL ?? "http://localhost:3001"}
+              className="text-sm font-semibold text-crimson"
+            >
+              Admin
+            </a>
+          )}
+          <button type="button" onClick={() => void logout()} className="text-sm font-semibold text-burgundy">
             Sign out
           </button>
         </div>

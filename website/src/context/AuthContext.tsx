@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export type User = {
   name: string;
@@ -43,84 +44,91 @@ export type Donation = {
 
 type AuthContextValue = {
   user: User | null;
+  ready: boolean;
   inquiries: Inquiry[];
   orders: Order[];
   donations: Donation[];
-  login: (email: string, name?: string) => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
+  logout: () => Promise<void>;
   addInquiry: (kind: string, payload: Record<string, string>) => void;
   addOrder: (order: Omit<Order, "id" | "createdAt" | "status">) => string;
   addDonation: (donation: Omit<Donation, "id" | "createdAt">) => string;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
-const USER_KEY = "kc-user";
 const INQ_KEY = "kc-inquiries";
 const ORD_KEY = "kc-orders";
 const DON_KEY = "kc-donations";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [donations, setDonations] = useState<Donation[]>([]);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    queueMicrotask(() => {
-      if (cancelled) return;
-      try {
-        const u = localStorage.getItem(USER_KEY);
-        const i = localStorage.getItem(INQ_KEY);
-        const o = localStorage.getItem(ORD_KEY);
-        const d = localStorage.getItem(DON_KEY);
-        if (u) setUser(JSON.parse(u) as User);
-        if (i) setInquiries(JSON.parse(i) as Inquiry[]);
-        if (o) setOrders(JSON.parse(o) as Order[]);
-        if (d) setDonations(JSON.parse(d) as Donation[]);
-      } catch {
-        /* ignore */
+  const ready = status !== "loading";
+  const user = session?.user?.email
+    ? {
+        name: session.user.name || session.user.email.split("@")[0],
+        email: session.user.email,
+        isAdmin: session.user.role === "admin",
       }
-      setReady(true);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    : null;
 
   useEffect(() => {
     if (!ready) return;
-    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
-    else localStorage.removeItem(USER_KEY);
+    try {
+      const i = localStorage.getItem(INQ_KEY);
+      const o = localStorage.getItem(ORD_KEY);
+      const d = localStorage.getItem(DON_KEY);
+      if (i) setInquiries(JSON.parse(i) as Inquiry[]);
+      if (o) setOrders(JSON.parse(o) as Order[]);
+      if (d) setDonations(JSON.parse(d) as Donation[]);
+    } catch {
+      /* ignore */
+    }
+  }, [ready]);
+
+  useEffect(() => {
+    if (!ready) return;
     localStorage.setItem(INQ_KEY, JSON.stringify(inquiries));
     localStorage.setItem(ORD_KEY, JSON.stringify(orders));
     localStorage.setItem(DON_KEY, JSON.stringify(donations));
-  }, [user, inquiries, orders, donations, ready]);
+  }, [inquiries, orders, donations, ready]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
+      ready,
       inquiries,
       orders,
       donations,
-      login: (email, name) => {
-        setUser({
-          name: name || email.split("@")[0],
-          email,
-          isAdmin:
-            email.endsWith("@kinandcompass.com") ||
-            email.endsWith("@kinandcompasstravels.com"),
-        });
+      login: async (email, password) => {
+        const result = await signIn("credentials", { email, password, redirect: false });
+        if (result?.error) throw new Error("Email or password is incorrect.");
       },
-      logout: () => setUser(null),
+      register: async (email, password, name) => {
+        const response = await fetch(`${API_URL}/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, name }),
+        });
+        const data = (await response.json()) as { error?: string };
+        if (!response.ok) throw new Error(data.error ?? "Could not create account.");
+        const result = await signIn("credentials", { email, password, redirect: false });
+        if (result?.error) throw new Error("Account created, but sign-in failed. Try signing in.");
+      },
+      logout: async () => {
+        await signOut({ redirect: false });
+      },
       addInquiry: (kind, payload) =>
         setInquiries((prev) => [
           {
             id: `inq-${Date.now()}`,
             kind,
-            createdAt: new Date().toISOString(),
             payload,
+            createdAt: new Date().toISOString(),
           },
           ...prev,
         ]),
@@ -150,7 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return id;
       },
     }),
-    [user, inquiries, orders, donations],
+    [user, ready, inquiries, orders, donations],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

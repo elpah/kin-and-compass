@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function LoginPage() {
-  const { login, user } = useAuth();
+  const { login, register, user } = useAuth();
   const router = useRouter();
   const [mode, setMode] = useState<"in" | "up">("in");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     if (user) router.replace("/account");
@@ -20,24 +22,41 @@ export default function LoginPage() {
         {mode === "in" ? "Sign in" : "Join the house"}
       </h1>
       <p className="mt-2 text-sm text-muted">
-        Customer accounts live in this browser. Staff use the admin sign-in.
+        Use your email and password. Staff sign in on the admin site.
       </p>
       <form
         className="mt-8 grid gap-3"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
+          setError("");
+          setPending(true);
           const data = new FormData(e.currentTarget);
-          login(String(data.get("email")), String(data.get("name") || ""));
-          router.push("/account");
+          try {
+            if (mode === "up") {
+              await register(
+                String(data.get("email")),
+                String(data.get("password")),
+                String(data.get("name") || ""),
+              );
+            } else {
+              await login(String(data.get("email")), String(data.get("password")));
+            }
+            router.push("/account");
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Could not sign in");
+          } finally {
+            setPending(false);
+          }
         }}
       >
         {mode === "up" && (
           <input name="name" required placeholder="Full name" className="h-12 rounded-lg border border-sand px-4" />
         )}
         <input name="email" type="email" required placeholder="Email" className="h-12 rounded-lg border border-sand px-4" />
-        <input name="password" type="password" required placeholder="Password" className="h-12 rounded-lg border border-sand px-4" />
-        <button type="submit" className="h-12 rounded bg-burgundy font-semibold text-white">
-          Continue
+        <input name="password" type="password" required minLength={6} placeholder="Password" className="h-12 rounded-lg border border-sand px-4" />
+        {error && <p className="text-sm text-crimson">{error}</p>}
+        <button type="submit" disabled={pending} className="h-12 rounded bg-burgundy font-semibold text-white disabled:opacity-60">
+          {pending ? "Please wait..." : "Continue"}
         </button>
       </form>
       <button

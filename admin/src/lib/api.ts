@@ -1,4 +1,5 @@
 import { imageSrc, mediaUrl, type AdminUser, type CustomExperience, type PackagedTour, type Product } from "@kincompass/shared";
+import { getSession } from "next-auth/react";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -6,9 +7,19 @@ export function asset(src: string | { linkUrl?: string } | undefined) {
   return mediaUrl(imageSrc(src), API_URL);
 }
 
+async function authHeaders() {
+  const session = await getSession();
+  if (!session?.accessToken) return {};
+  return { Authorization: `Bearer ${session.accessToken}` };
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers);
+  const auth = await authHeaders();
+  if (auth.Authorization) headers.set("Authorization", auth.Authorization);
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
+    headers,
     credentials: "include",
   });
   const data = (await response.json()) as T & { error?: string };
@@ -38,20 +49,16 @@ export function deleteProduct(slug: string) {
   return request<{ ok: boolean }>(`/products/${slug}`, { method: "DELETE" });
 }
 
-export function login(email: string, password: string) {
-  return request<{ user: AdminUser }>("/admin/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-}
-
-export function logout() {
-  return request<{ ok: boolean }>("/admin/logout", { method: "POST" });
-}
-
 export function me() {
   return request<{ user: AdminUser }>("/admin/me");
+}
+
+export function changePassword(currentPassword: string, newPassword: string) {
+  return request<{ ok: boolean }>("/auth/password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
 }
 
 export function listExperiences(view: "active" | "deleted" | "all" = "active") {

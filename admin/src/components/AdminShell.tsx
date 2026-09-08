@@ -2,7 +2,8 @@
 
 import { adminNav, adminSettings } from "@/data/nav";
 import { cn } from "@/lib/cn";
-import { logout, me } from "@/lib/api";
+import { me } from "@/lib/api";
+import { signOut } from "next-auth/react";
 import type { AdminUser } from "@kincompass/shared";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +13,7 @@ import { UnsavedChangesProvider } from "@/components/UnsavedChanges";
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [user, setUser] = useState<AdminUser>({ name: "Preview", email: "admin@kinandcompass.com" });
+  const [user, setUser] = useState<AdminUser>({ name: "", email: "" });
   const [signedIn, setSignedIn] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -26,7 +27,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           setSignedIn(true);
         })
         .catch(() => {
-          /* Desk is open without a session while the UI is still being designed. */
+          setSignedIn(false);
         });
     });
     return () => {
@@ -100,9 +101,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
               type="button"
               className="mt-1 px-3 text-left text-sm font-semibold text-rose hover:text-white"
               onClick={async () => {
-                await logout();
+                await signOut({ redirect: false });
                 setSignedIn(false);
-                setUser({ name: "Preview", email: "admin@kinandcompass.com" });
+                setUser({ name: "", email: "" });
               }}
             >
               Sign out

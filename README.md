@@ -13,7 +13,7 @@ packages/shared   types and helpers used by all three
 
 Requires Node 20+ and MongoDB.
 
-1. Copy `.env.example` to `.env.local` and set `MONGODB_URI`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `AUTH_SECRET`.
+1. Copy `.env.example` to `.env.local` and set `MONGODB_URI`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `AUTH_SECRET`. Put the same `AUTH_SECRET` on the website, admin, and API (locally in `website/.env.local` and `admin/.env.local`, and on each Vercel project).
 
 2. Install and seed:
 
@@ -30,4 +30,4 @@ npm run dev
 - Admin: [http://localhost:3001](http://localhost:3001)
 - API health: [http://localhost:4000/health](http://localhost:4000/health)
 
-Admin login uses `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env.local`.
+Website and admin sign-in use NextAuth (email and password). `npm run seed` creates the staff user from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Customers register on the website. Put the same `AUTH_SECRET` on the API, website, and admin (Vercel).

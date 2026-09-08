@@ -13,17 +13,20 @@ async function seed() {
     throw new Error("Set ADMIN_EMAIL and ADMIN_PASSWORD in .env.local");
   }
   await mongoose.connect(env.mongoUri);
-  const passwordHash = await bcrypt.hash(env.adminPassword, 10);
-  await User.findOneAndUpdate(
-    { email: env.adminEmail.toLowerCase() },
-    {
+  const email = env.adminEmail.toLowerCase();
+  const existing = await User.findOne({ email });
+  if (existing) {
+    existing.role = "admin";
+    if (!existing.name) existing.name = "Admin";
+    await existing.save();
+  } else {
+    await User.create({
       name: "Admin",
-      email: env.adminEmail.toLowerCase(),
-      passwordHash,
+      email,
+      passwordHash: await bcrypt.hash(env.adminPassword, 10),
       role: "admin",
-    },
-    { upsert: true },
-  );
+    });
+  }
   for (const product of products) {
     await Product.findOneAndUpdate({ slug: product.slug }, product, { upsert: true });
   }

@@ -21,5 +21,7 @@ export const env = {
 
 export function requireEnv() {
   if (!env.mongoUri) throw new Error("MONGODB_URI is not set");
-  if (!env.authSecret) throw new Error("AUTH_SECRET is not set");
+  if (!env.authSecret || env.authSecret.length < 16) {
+    throw new Error("Set AUTH_SECRET to a long random string");
+  }
 }

@@ -1,14 +1,29 @@
 "use client";
 
-import { login } from "@/lib/api";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<p className="px-6 py-16 text-sm text-muted">Loading...</p>}>
+      <AdminLoginForm />
+    </Suspense>
+  );
+}
+
+function AdminLoginForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const { status, data } = useSession();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const next = params.get("next") || "/";
+
+  useEffect(() => {
+    if (status === "authenticated" && data?.user.role === "admin") router.replace(next);
+  }, [status, data?.user.role, router, next]);
 
   return (
     <div className="flex min-h-dvh items-center justify-center px-4 py-16">
@@ -32,7 +47,7 @@ export default function AdminLoginPage() {
         </div>
         <h1 className="display mt-8 text-4xl text-burgundy">Sign in</h1>
         <p className="mt-2 text-sm text-muted">
-          House tools for the store and Visit Ghana.
+          Use the staff email and password from your .env.local file.
         </p>
         <form
           className="mt-8 grid gap-3"
@@ -42,15 +57,20 @@ export default function AdminLoginPage() {
             setPending(true);
             const form = new FormData(event.currentTarget);
             try {
-              await login(
-                String(form.get("email")),
-                String(form.get("password")),
-              );
-              router.push("/");
-            } catch (err) {
-              setError(
-                err instanceof Error ? err.message : "Could not sign in",
-              );
+              const result = await signIn("credentials", {
+                email: String(form.get("email")),
+                password: String(form.get("password")),
+                redirect: false,
+              });
+              if (result?.error) {
+                setError(
+                  result.error === "AccessDenied"
+                    ? "This account cannot use admin."
+                    : "Email or password is incorrect.",
+                );
+                return;
+              }
+              router.push(next);
             } finally {
               setPending(false);
             }

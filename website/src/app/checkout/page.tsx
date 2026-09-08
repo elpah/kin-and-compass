@@ -8,7 +8,7 @@ import { useState } from "react";
 
 export default function CheckoutPage() {
   const { items, total, clear } = useCart();
-  const { addOrder, login, user } = useAuth();
+  const { addOrder, user } = useAuth();
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -37,7 +37,6 @@ export default function CheckoutPage() {
             setError("Enter a valid email.");
             return;
           }
-          if (!user) login(email, String(data.get("name") ?? ""));
           const id = addOrder({
             total,
             items: items.map((i) => ({ name: i.name, qty: i.qty, price: i.price })),

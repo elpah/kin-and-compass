@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Great_Vibes, Plus_Jakarta_Sans } from "next/font/google";
+import { AuthSessionProvider } from "@/components/AuthSessionProvider";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -39,7 +40,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${jakarta.variable} ${cormorant.variable} ${script.variable} h-dvh antialiased`}
     >
-      <body className="min-h-dvh bg-cream text-ink font-sans">{children}</body>
+      <body className="min-h-dvh bg-cream text-ink font-sans">
+        <AuthSessionProvider>{children}</AuthSessionProvider>
+      </body>
     </html>
   );
 }
