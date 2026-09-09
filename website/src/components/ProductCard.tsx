@@ -23,7 +23,9 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex items-end justify-between gap-2 p-3">
         <Link href={`/store/${product.slug}`} className="min-w-0">
           <h3 className="display truncate text-lg leading-tight text-burgundy">{product.name}</h3>
-          <p className="mt-0.5 truncate text-xs text-muted">{product.vendor}</p>
+          {product.vendor ? (
+            <p className="mt-0.5 truncate text-xs text-muted">{product.vendor}</p>
+          ) : null}
           <p className="mt-1.5 text-sm font-semibold text-ink">
             {formatMoney(product.price)}
             {product.compareAt && (

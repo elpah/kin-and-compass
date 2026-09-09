@@ -43,7 +43,7 @@ export default async function ProductPage({
         </div>
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-crimson">
-            {product.vendor} · {product.country}
+            {[product.vendor, product.country].filter(Boolean).join(" · ")}
           </p>
           <h1 className="display mt-2 text-4xl text-burgundy sm:text-5xl">{product.name}</h1>
           <p className="mt-3 text-xl font-semibold">

@@ -78,7 +78,7 @@ export default function StorePage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-muted">{product.vendor}</td>
+                    <td className="px-4 py-3 text-muted">{product.vendor || "—"}</td>
                     <td className="px-4 py-3">{product.stock}</td>
                     <td className="px-4 py-3">${product.price}</td>
                     <td className="px-4 py-3">

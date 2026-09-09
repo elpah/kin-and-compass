@@ -9,7 +9,7 @@ export function serializeProduct(doc: Record<string, unknown>): ProductType {
     price: row.price,
     compareAt: row.compareAt || undefined,
     category: row.category,
-    vendor: row.vendor,
+    vendor: row.vendor ?? "",
     country: row.country,
     image: row.image,
     gallery: row.gallery?.length ? row.gallery : [row.image],

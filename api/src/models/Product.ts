@@ -18,7 +18,7 @@ const ProductSchema = new Schema(
     price: { type: Number, required: true },
     compareAt: { type: Number },
     category: { type: String, required: true, enum: productCategories },
-    vendor: { type: String, required: true },
+    vendor: { type: String, default: "" },
     country: { type: String, required: true, default: "Ghana" },
     image: { type: String, required: true },
     gallery: { type: [String], default: [] },

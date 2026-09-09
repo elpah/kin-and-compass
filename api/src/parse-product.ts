@@ -19,7 +19,6 @@ export function parseProductFields(body: Record<string, unknown>) {
   if (!name) throw new Error("Name is required");
   if (!Number.isFinite(price) || price < 0) throw new Error("Price is required");
   if (!productCategories.includes(category)) throw new Error("Choose a valid category");
-  if (!vendor) throw new Error("Vendor is required");
   if (!description) throw new Error("Description is required");
 
   return {

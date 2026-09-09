@@ -161,7 +161,7 @@ export function ProductForm({ product }: { product?: Product }) {
           </div>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-crimson">
-              {vendor} · {country}
+              {[vendor, country].filter(Boolean).join(" · ")}
             </p>
             <h3 className="display mt-2 text-4xl text-burgundy">{name}</h3>
             <p className="mt-3 text-xl font-semibold">
@@ -225,7 +225,7 @@ export function ProductForm({ product }: { product?: Product }) {
         <Field label="Stock" type="number" value={stock} onChange={setStock} required />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Vendor" value={vendor} onChange={setVendor} required />
+        <Field label="Vendor" value={vendor} onChange={setVendor} />
         <Field label="Country" value={country} onChange={setCountry} required />
       </div>
       <label className="block text-sm">
