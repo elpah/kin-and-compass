@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthCard, authField, authPrimary } from "@/components/AuthCard";
+import { RequiredMark } from "@/components/RequiredMark";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
@@ -138,11 +139,13 @@ export function LoginForm({ googleReady }: { googleReady: boolean }) {
           {mode === "up" && (
             <label className="block text-sm font-medium text-burgundy">
               Full name
+              <RequiredMark />
               <input name="name" required autoComplete="name" className={authField} />
             </label>
           )}
           <label className="block text-sm font-medium text-burgundy">
             {mode === "up" ? "Email" : "Email or phone"}
+            <RequiredMark />
             <input
               name="email"
               type={mode === "up" ? "email" : "text"}
@@ -159,6 +162,7 @@ export function LoginForm({ googleReady }: { googleReady: boolean }) {
           )}
           <label className="block text-sm font-medium text-burgundy">
             Password
+            <RequiredMark />
             <input
               name="password"
               type="password"
@@ -263,11 +267,13 @@ function PhoneForm({
       )}
       <label className="block text-sm font-medium text-burgundy">
         Phone
+        <RequiredMark />
         <input name="phone" type="tel" required autoComplete="tel" placeholder="+233..." className={authField} />
       </label>
       {codeSent && (
         <label className="block text-sm font-medium text-burgundy">
           Code
+          <RequiredMark />
           <input
             name="code"
             required

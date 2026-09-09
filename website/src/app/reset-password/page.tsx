@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthCard, authField, authPrimary } from "@/components/AuthCard";
+import { RequiredMark } from "@/components/RequiredMark";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -64,10 +65,12 @@ function ResetPasswordForm() {
       >
         <label className="block text-sm font-medium text-burgundy">
           New password
+          <RequiredMark />
           <input name="password" type="password" required minLength={6} autoComplete="new-password" className={authField} />
         </label>
         <label className="block text-sm font-medium text-burgundy">
           Confirm password
+          <RequiredMark />
           <input name="confirm" type="password" required minLength={6} autoComplete="new-password" className={authField} />
         </label>
         {error && <p className="text-sm text-crimson">{error}</p>}

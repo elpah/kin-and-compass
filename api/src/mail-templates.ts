@@ -19,6 +19,8 @@ const fieldLabels: Record<string, string> = {
   email: "Email",
   phone: "Phone",
   topic: "Topic",
+  reason: "Reason for contact",
+  organisation: "Organisation",
   message: "Message",
   note: "Notes",
   dates: "Preferred dates",

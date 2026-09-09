@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthCard, authField, authPrimary } from "@/components/AuthCard";
+import { RequiredMark } from "@/components/RequiredMark";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -43,6 +44,7 @@ export default function ForgotPasswordPage() {
         >
           <label className="block text-sm font-medium text-burgundy">
             Email
+            <RequiredMark />
             <input name="email" type="email" required autoComplete="email" className={authField} />
           </label>
           {error && <p className="text-sm text-crimson">{error}</p>}

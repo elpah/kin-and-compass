@@ -73,7 +73,7 @@ export const charityFaqs = [
   },
   {
     q: "Can I volunteer or partner instead of giving money?",
-    a: "Yes. Use Write to us to donate, volunteer, partner, or fundraise. Volunteer placements are scheduled and screened. We do not send unvetted visitors to children's homes.",
+    a: "Yes. Use Contact to volunteer, partner, or fundraise, and choose a reason. Volunteer placements are scheduled and screened. We do not send unvetted visitors to children's homes.",
   },
 ];
 

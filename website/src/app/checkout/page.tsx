@@ -1,5 +1,6 @@
 "use client";
 
+import { RequiredMark } from "@/components/RequiredMark";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { formatMoney } from "@/lib/utils";
@@ -45,14 +46,56 @@ export default function CheckoutPage() {
           router.push(`/order/${id}`);
         }}
       >
-        <input name="name" required placeholder="Full name" className="h-12 rounded-lg border border-sand px-4" />
-        <input name="email" type="email" required placeholder="Email" className="h-12 rounded-lg border border-sand px-4" />
-        <input name="phone" required placeholder="Phone" className="h-12 rounded-lg border border-sand px-4" />
-        <input name="address" required placeholder="Shipping address" className="h-12 rounded-lg border border-sand px-4" />
-        <input name="city" required placeholder="City" className="h-12 rounded-lg border border-sand px-4" />
+        <label className="block text-sm">
+          <span className="font-medium text-burgundy">
+            Full name
+            <RequiredMark />
+          </span>
+          <input name="name" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium text-burgundy">
+            Email
+            <RequiredMark />
+          </span>
+          <input name="email" type="email" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium text-burgundy">
+            Phone
+            <RequiredMark />
+          </span>
+          <input name="phone" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium text-burgundy">
+            Shipping address
+            <RequiredMark />
+          </span>
+          <input name="address" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium text-burgundy">
+            City
+            <RequiredMark />
+          </span>
+          <input name="city" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+        </label>
         <div className="grid gap-4 sm:grid-cols-2">
-          <input name="card" required placeholder="Card number (demo)" className="h-12 rounded-lg border border-sand px-4" />
-          <input name="exp" required placeholder="MM/YY" className="h-12 rounded-lg border border-sand px-4" />
+          <label className="block text-sm">
+            <span className="font-medium text-burgundy">
+              Card number (demo)
+              <RequiredMark />
+            </span>
+            <input name="card" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium text-burgundy">
+              MM/YY
+              <RequiredMark />
+            </span>
+            <input name="exp" required className="mt-1 h-12 w-full rounded-lg border border-sand px-4" />
+          </label>
         </div>
         {error && <p className="text-sm text-crimson">{error}</p>}
         <p className="text-lg font-semibold text-burgundy">Pay {formatMoney(total)}</p>

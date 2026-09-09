@@ -23,10 +23,10 @@ export function CharityBrowser() {
             Support the Cause
           </Link>
           <Link
-            href="/charity/get-involved"
+            href="/contact"
             className="inline-flex h-12 items-center rounded bg-white/10 px-6 text-sm font-semibold text-white ring-1 ring-white/30"
           >
-            Write to us
+            Contact us
           </Link>
         </div>
       </PageHero>
@@ -71,24 +71,12 @@ export function CharityBrowser() {
             <p className="mt-4 text-[17px] font-semibold leading-relaxed text-burgundy">
               Give. Support. Empower. Leave a Mark. ❤️🇬🇭
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8">
               <Link
                 href="/charity/donate"
                 className="inline-flex h-12 items-center rounded bg-crimson px-6 text-sm font-semibold text-white"
               >
                 Support Our Mission
-              </Link>
-              <Link
-                href="/charity/get-involved#partner"
-                className="inline-flex h-12 items-center rounded bg-burgundy px-6 text-sm font-semibold text-white"
-              >
-                Partner With Us
-              </Link>
-              <Link
-                href="/charity/get-involved"
-                className="inline-flex h-12 items-center rounded px-6 text-sm font-semibold text-burgundy ring-1 ring-sand"
-              >
-                Write to us
               </Link>
             </div>
           </div>
@@ -131,17 +119,17 @@ export function CharityBrowser() {
                 text: "Give once or monthly to the Ghana fund while the first programmes are formed.",
               },
               {
-                href: "/charity/get-involved#volunteer",
+                href: "/contact?reason=Volunteer",
                 title: "Volunteer",
                 text: "Offer time and skills. We will only place people when there is real work to do.",
               },
               {
-                href: "/charity/get-involved#partner",
+                href: "/contact?reason=Partner",
                 title: "Partner",
                 text: "Collaborate as an organisation or business to help stand up the desk.",
               },
               {
-                href: "/charity/get-involved#fundraise",
+                href: "/contact?reason=Fundraise",
                 title: "Fundraise",
                 text: "Raise with us for the fund, and later for named programmes.",
               },

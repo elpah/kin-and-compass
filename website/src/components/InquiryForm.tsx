@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { RequiredMark } from "@/components/RequiredMark";
 import { useState } from "react";
 
 type Field = {
@@ -11,6 +12,7 @@ type Field = {
   options?: string[];
   textarea?: boolean;
   checkboxes?: { value: string; label: string }[];
+  defaultValue?: string;
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -107,7 +109,10 @@ export function InquiryForm({
           </fieldset>
         ) : (
         <label key={field.name} className="block text-sm">
-          <span className="font-medium text-burgundy">{field.label}</span>
+          <span className="font-medium text-burgundy">
+            {field.label}
+            {field.required ? <RequiredMark /> : null}
+          </span>
           {field.textarea ? (
             <textarea
               name={field.name}
@@ -119,6 +124,7 @@ export function InquiryForm({
             <select
               name={field.name}
               required={field.required}
+              defaultValue={field.defaultValue ?? ""}
               className="mt-1 w-full rounded-lg border border-sand bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-crimson/30"
             >
               <option value="">Select</option>
@@ -149,6 +155,7 @@ export function InquiryForm({
               name={field.name}
               type={field.type ?? "text"}
               required={field.required}
+              defaultValue={field.defaultValue}
               className="mt-1 w-full rounded-lg border border-sand bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-crimson/30"
             />
           )}

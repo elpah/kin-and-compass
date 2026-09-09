@@ -9,13 +9,35 @@ export const metadata = {
     "Write to Kin and Compass in Oregon, USA - travel, store, invest, or charity.",
 };
 
-export default function ContactPage() {
+const reasons = [
+  "Travel",
+  "Store",
+  "Invest in Ghana",
+  "Donate",
+  "Volunteer",
+  "Partner",
+  "Fundraise",
+  "Press",
+  "Vendors",
+  "Other",
+];
+
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reason?: string }>;
+}) {
+  const { reason } = await searchParams;
+  const selected = reasons.find(
+    (item) => item.toLowerCase() === String(reason ?? "").toLowerCase(),
+  );
+
   return (
     <>
       <PageHero
         kicker="Contact"
         title="Write to the house."
-        text="Travel plans, store orders, a gift, a briefing, or a vendor who wants to join - one form, a real reply from Oregon, USA."
+        text="Travel plans, store orders, a gift, a donation, a briefing, or a vendor who wants to join - one form, a real reply from Oregon, USA."
         image={covers.travel}
       />
       <section className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-5">
@@ -81,18 +103,13 @@ export default function ContactPage() {
                 { name: "email", label: "Email", type: "email", required: true },
                 { name: "phone", label: "Phone (optional)" },
                 {
-                  name: "topic",
-                  label: "Topic",
-                  options: [
-                    "Travel",
-                    "Store",
-                    "Invest",
-                    "Charity",
-                    "Press",
-                    "Vendors",
-                  ],
+                  name: "reason",
+                  label: "Reason for contact",
+                  options: reasons,
                   required: true,
+                  defaultValue: selected,
                 },
+                { name: "organisation", label: "Organisation (optional)" },
                 { name: "message", label: "Message", textarea: true, required: true },
               ]}
             />

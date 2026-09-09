@@ -1,5 +1,6 @@
 "use client";
 
+import { RequiredMark } from "@/components/RequiredMark";
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney } from "@/lib/utils";
 import Link from "next/link";
@@ -121,7 +122,10 @@ export function DonationForm({
       </label>
 
       <label className="block text-sm">
-        <span className="font-medium text-burgundy">Name</span>
+        <span className="font-medium text-burgundy">
+          Name
+          <RequiredMark />
+        </span>
         <input
           name="name"
           required
@@ -130,7 +134,10 @@ export function DonationForm({
         />
       </label>
       <label className="block text-sm">
-        <span className="font-medium text-burgundy">Email</span>
+        <span className="font-medium text-burgundy">
+          Email
+          <RequiredMark />
+        </span>
         <input
           name="email"
           type="email"
