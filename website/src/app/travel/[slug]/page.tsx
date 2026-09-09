@@ -95,8 +95,20 @@ export default async function TourPage({
               fields={[
                 { name: "name", label: "Name", required: true },
                 { name: "email", label: "Email", type: "email", required: true },
-                { name: "dates", label: "Preferred dates", type: "text", required: true },
+                { name: "start", label: "Preferred start date", type: "date", required: true },
+                { name: "end", label: "Preferred end date", type: "date", required: true },
                 { name: "guests", label: "Guests", type: "number", required: true },
+                {
+                  name: "include",
+                  label: "Include",
+                  checkboxes: [
+                    { value: "Hotel", label: "Hotel" },
+                    { value: "Flight", label: "Flight" },
+                    { value: "Transport", label: "Transport" },
+                    { value: "Food", label: "Food" },
+                    { value: "Photographer", label: "Photographer" },
+                  ],
+                },
                 { name: "note", label: "Notes", textarea: true },
               ]}
             />

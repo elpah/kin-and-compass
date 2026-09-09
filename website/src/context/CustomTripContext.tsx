@@ -50,7 +50,10 @@ export function CustomTripProvider({ children }: { children: ReactNode }) {
       slugs,
       add: (slug) => setSlugs((prev) => (prev.includes(slug) ? prev : [...prev, slug])),
       remove: (slug) => setSlugs((prev) => prev.filter((item) => item !== slug)),
-      clear: () => setSlugs([]),
+      clear: () => {
+        setSlugs([]);
+        localStorage.removeItem(KEY);
+      },
       has: (slug) => slugs.includes(slug),
     }),
     [slugs],

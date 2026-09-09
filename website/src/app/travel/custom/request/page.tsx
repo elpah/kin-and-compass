@@ -17,7 +17,7 @@ export default async function CustomTripRequestPage() {
     <>
       <PageHero
         compact
-        kicker="Request"
+        kicker="Booking request"
         title="Tell us when you travel."
         text="Your selected experiences and total come with this note. We reply within two business days."
         image={covers.travel}

@@ -1,16 +1,9 @@
 import { Router } from "express";
 import { env } from "../env.js";
+import { guestInquiryHtml, houseInquiryHtml, inquirySubject } from "../mail-templates.js";
 import { sendMail } from "../notify.js";
 
 export const inquiryRouter = Router();
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 function ccFor(kind: string) {
   if (kind === "custom-trip" || kind.startsWith("tour:")) return env.mailBooking;
@@ -35,18 +28,16 @@ inquiryRouter.post("/", async (req, res) => {
     res.status(503).json({ error: "Email is not configured." });
     return;
   }
-  const rows = Object.entries(payload)
-    .map(([key, value]) => `<tr><td style="padding:6px 12px 6px 0;vertical-align:top"><strong>${escapeHtml(key)}</strong></td><td>${escapeHtml(String(value ?? ""))}</td></tr>`)
-    .join("");
-  const houseHtml = `<p>New ${escapeHtml(kind)} inquiry from ${escapeHtml(name)}.</p><table>${rows}</table>`;
-  const guestHtml = `<p>Hello ${escapeHtml(name)},</p><p>We received your message and will write back shortly.</p><p>Kin and Compass</p>`;
   try {
-    const houseOk = await sendMail(desk, `New inquiry: ${kind}`, houseHtml, { cc, replyTo: email });
-    const guestOk = await sendMail(email, "We received your message", guestHtml, { replyTo: desk });
-    if (!houseOk || !guestOk) {
+    const houseOk = await sendMail(desk, inquirySubject(kind, name), houseInquiryHtml(kind, payload), {
+      cc,
+      replyTo: email,
+    });
+    if (!houseOk) {
       res.status(503).json({ error: "Could not send email." });
       return;
     }
+    await sendMail(email, "We received your message", guestInquiryHtml(name), { replyTo: desk });
     res.json({ ok: true });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Could not send email." });

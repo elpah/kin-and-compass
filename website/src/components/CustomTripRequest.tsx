@@ -6,14 +6,15 @@ import { brand } from "@/data/site";
 import { formatMoney } from "@/lib/utils";
 import type { CustomExperience } from "@kincompass/shared";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export function CustomTripRequest({
   experiences,
 }: {
   experiences: CustomExperience[];
 }) {
-  const { slugs } = useCustomTrip();
+  const { slugs, clear } = useCustomTrip();
+  const [sent, setSent] = useState(false);
   const selected = useMemo(
     () =>
       slugs
@@ -29,7 +30,20 @@ export function CustomTripRequest({
           item.tourPrice,
         )})`,
     )
-    .join("; ");
+    .join("\n");
+
+  if (sent) {
+    return (
+      <div className="mx-auto max-w-xl">
+        <div className="rounded-lg bg-blush px-6 py-8 text-center ring-1 ring-sand">
+          <p className="script text-2xl text-crimson">Received</p>
+          <p className="mt-2 text-sm text-muted">
+            Thank you. We sent a confirmation to your email and will write back shortly.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (selected.length === 0) {
     return (
@@ -46,7 +60,7 @@ export function CustomTripRequest({
   return (
     <div className="mx-auto max-w-xl">
       <p className="mb-6 text-sm text-muted">
-        Bookings:{" "}
+        Booking request:{" "}
         <a
           href={`mailto:${brand.bookingEmail}`}
           className="font-semibold text-burgundy hover:text-crimson"
@@ -82,6 +96,10 @@ export function CustomTripRequest({
       <InquiryForm
         kind="custom-trip"
         submitLabel="Request my itinerary"
+        onSuccess={() => {
+          setSent(true);
+          clear();
+        }}
         extraPayload={{
           experiences: line,
           total: String(total),
@@ -96,6 +114,17 @@ export function CustomTripRequest({
             label: "Group size",
             type: "number",
             required: true,
+          },
+          {
+            name: "include",
+            label: "Include",
+            checkboxes: [
+              { value: "Hotel", label: "Hotel" },
+              { value: "Flight", label: "Flight" },
+              { value: "Transport", label: "Transport" },
+              { value: "Food", label: "Food" },
+              { value: "Photographer", label: "Photographer" },
+            ],
           },
           { name: "note", label: "Anything else", textarea: true },
         ]}

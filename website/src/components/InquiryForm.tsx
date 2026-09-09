@@ -10,6 +10,7 @@ type Field = {
   required?: boolean;
   options?: string[];
   textarea?: boolean;
+  checkboxes?: { value: string; label: string }[];
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -19,16 +20,20 @@ export function InquiryForm({
   fields,
   submitLabel = "Send inquiry",
   extraPayload,
+  onSuccess,
 }: {
   kind: string;
   fields: Field[];
   submitLabel?: string;
   extraPayload?: Record<string, string>;
+  onSuccess?: () => void;
 }) {
   const { addInquiry } = useAuth();
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   if (done) {
     return (
@@ -51,6 +56,11 @@ export function InquiryForm({
         const data = new FormData(e.currentTarget);
         const payload: Record<string, string> = {};
         fields.forEach((f) => {
+          if (f.checkboxes) {
+            const selected = data.getAll(f.name).map(String).filter(Boolean);
+            if (selected.length) payload[f.name] = selected.join("\n");
+            return;
+          }
           payload[f.name] = String(data.get(f.name) ?? "");
         });
         if (extraPayload) Object.assign(payload, extraPayload);
@@ -63,6 +73,7 @@ export function InquiryForm({
           const body = (await response.json()) as { error?: string };
           if (!response.ok) throw new Error(body.error ?? "Could not send your message.");
           addInquiry(kind, payload);
+          onSuccess?.();
           setDone(true);
         } catch (err) {
           setError(err instanceof Error ? err.message : "Could not send your message.");
@@ -71,7 +82,30 @@ export function InquiryForm({
         }
       }}
     >
-      {fields.map((field) => (
+      {fields.map((field) =>
+        field.checkboxes ? (
+          <fieldset key={field.name} className="rounded-lg bg-blush/60 p-4 ring-1 ring-sand">
+            <legend className="px-1 text-sm font-semibold uppercase tracking-wider text-burgundy">
+              {field.label}
+            </legend>
+            <div className="mt-2 space-y-1">
+              {field.checkboxes.map((option) => (
+                <label
+                  key={option.value}
+                  className="flex cursor-pointer items-center gap-3 rounded-md px-1 py-2 text-sm text-burgundy hover:bg-white/70"
+                >
+                  <input
+                    type="checkbox"
+                    name={field.name}
+                    value={option.value}
+                    className="h-4 w-4 shrink-0 accent-[#360000]"
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        ) : (
         <label key={field.name} className="block text-sm">
           <span className="font-medium text-burgundy">{field.label}</span>
           {field.textarea ? (
@@ -92,6 +126,24 @@ export function InquiryForm({
                 <option key={o}>{o}</option>
               ))}
             </select>
+          ) : field.type === "date" && (field.name === "start" || field.name === "end") ? (
+            <input
+              name={field.name}
+              type="date"
+              required={field.required}
+              value={field.name === "start" ? startDate : endDate}
+              min={field.name === "end" && startDate ? startDate : undefined}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (field.name === "start") {
+                  setStartDate(value);
+                  if (endDate && value && endDate < value) setEndDate("");
+                  return;
+                }
+                setEndDate(value);
+              }}
+              className="mt-1 w-full rounded-lg border border-sand bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-crimson/30"
+            />
           ) : (
             <input
               name={field.name}
@@ -101,7 +153,8 @@ export function InquiryForm({
             />
           )}
         </label>
-      ))}
+        ),
+      )}
       {error && <p className="text-sm text-crimson">{error}</p>}
       <button
         type="submit"

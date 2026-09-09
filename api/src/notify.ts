@@ -18,19 +18,24 @@ export async function sendMail(
   to: string,
   subject: string,
   html: string,
-  extra?: { replyTo?: string; cc?: string },
+  extra?: { replyTo?: string; cc?: string; text?: string },
 ) {
   const mailer = transporter();
   if (!mailer || !to) return false;
-  await mailer.sendMail({
-    from: env.zohoSmtpUser,
-    to,
-    cc: extra?.cc || undefined,
-    subject,
-    html,
-    replyTo: extra?.replyTo,
-  });
-  return true;
+  try {
+    await mailer.sendMail({
+      from: `"Kin and Compass" <${env.zohoSmtpUser}>`,
+      to,
+      cc: extra?.cc || undefined,
+      subject,
+      html,
+      text: extra?.text,
+      replyTo: extra?.replyTo,
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function sendSms(to: string, body: string) {
