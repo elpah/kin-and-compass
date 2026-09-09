@@ -5,6 +5,24 @@ config({ path: resolve(process.cwd(), ".env.local") });
 config({ path: resolve(process.cwd(), "../.env") });
 config({ path: resolve(process.cwd(), "../.env.local"), override: true });
 
+function originFrom(url: string) {
+  const trimmed = url.trim().replace(/\/$/, "");
+  if (!trimmed) return [];
+  try {
+    const parsed = new URL(trimmed);
+    const hosts = new Set([parsed.origin]);
+    if (parsed.hostname.startsWith("www.")) {
+      parsed.hostname = parsed.hostname.slice(4);
+    } else if (parsed.hostname !== "localhost" && !parsed.hostname.endsWith(".localhost")) {
+      parsed.hostname = `www.${parsed.hostname}`;
+    }
+    hosts.add(parsed.origin);
+    return [...hosts];
+  } catch {
+    return [trimmed];
+  }
+}
+
 export const env = {
   port: Number(process.env.API_PORT ?? 4000),
   mongoUri: process.env.MONGODB_URI ?? "",
@@ -28,6 +46,14 @@ export const env = {
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN ?? "",
   twilioFrom: process.env.TWILIO_FROM ?? "",
 };
+
+export const corsOrigins = [
+  ...originFrom(env.websiteUrl),
+  ...originFrom(env.adminUrl),
+  ...(process.env.CORS_ORIGINS ?? "")
+    .split(",")
+    .flatMap((value) => originFrom(value)),
+].filter((value, index, all) => all.indexOf(value) === index);
 
 export function requireEnv() {
   if (!env.mongoUri) throw new Error("MONGODB_URI is not set");

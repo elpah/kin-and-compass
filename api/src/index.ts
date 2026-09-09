@@ -5,7 +5,7 @@ import { existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { dbConnect } from "./db.js";
-import { env, requireEnv } from "./env.js";
+import { env, requireEnv, corsOrigins } from "./env.js";
 import { inquiryRouter } from "./routes/inquiries.js";
 import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
@@ -27,11 +27,13 @@ const publicDir = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 const app = express();
 app.use(
   cors({
-    origin: [env.websiteUrl, env.adminUrl],
+    origin: corsOrigins,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Authorization", "Content-Type"],
   }),
 );
+app.options(/.*/, cors({ origin: corsOrigins, credentials: true }));
 app.use(express.static(publicDir));
 app.get("/favicon.ico", (_req, res) => {
   const file = publicFile("favicon.ico");
@@ -57,7 +59,11 @@ app.get("/", (_req, res) => {
 </html>`);
 });
 app.get("/health", (_req, res) => res.json({ ok: true }));
-app.use(async (_req, _res, next) => {
+app.use(async (req, _res, next) => {
+  if (req.method === "OPTIONS") {
+    next();
+    return;
+  }
   try {
     requireEnv();
     await dbConnect();
