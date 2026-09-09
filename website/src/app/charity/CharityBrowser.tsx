@@ -148,7 +148,7 @@ export function CharityBrowser() {
       </section>
 
       <section className="relative isolate overflow-hidden py-20">
-        <Image src={covers.impact} alt="" fill className="object-cover" />
+        <Image src={covers.impact} alt="" fill sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-burgundy-deep/80" />
         <div className="relative mx-auto max-w-3xl px-4 text-center text-white sm:px-6">
           <p className="script text-3xl text-rose">The house</p>

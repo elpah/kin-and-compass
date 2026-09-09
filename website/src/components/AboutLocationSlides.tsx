@@ -24,20 +24,13 @@ export function AboutLocationSlides() {
   }, []);
 
   return (
-    <>
-      {slides.map((src, i) => (
-        <Image
-          key={src.src}
-          src={src}
-          alt=""
-          fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          priority={i === 0}
-          className={`object-cover transition-opacity duration-500 ${
-            i === index ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      ))}
-    </>
+    <Image
+      src={slides[index]}
+      alt=""
+      fill
+      sizes="(max-width: 1024px) 100vw, 50vw"
+      priority
+      className="object-cover"
+    />
   );
 }

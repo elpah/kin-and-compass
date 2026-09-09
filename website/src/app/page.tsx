@@ -18,8 +18,9 @@ export default async function Home() {
           src={covers.homepage}
           alt=""
           fill
-          className="object-cover"
           priority
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-burgundy-deep/90 via-ink/55 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-transparent to-ink/30" />
@@ -68,6 +69,7 @@ export default async function Home() {
                 src={p.image}
                 alt={p.title}
                 fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 className="object-cover transition duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40 to-transparent" />
@@ -121,6 +123,7 @@ export default async function Home() {
             src={covers.invest}
             alt=""
             fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover transition duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40" />
@@ -137,6 +140,7 @@ export default async function Home() {
             src={covers.impact}
             alt=""
             fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover transition duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40" />

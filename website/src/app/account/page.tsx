@@ -1,104 +1,104 @@
 "use client";
 
+import { inquiryLabel } from "@/components/account/labels";
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export default function AccountPage() {
-  const { user, ready, logout, orders, inquiries, donations } = useAuth();
-  const router = useRouter();
+export default function AccountOverviewPage() {
+  const { user, orders, donations, inquiries } = useAuth();
+  if (!user) return null;
 
-  useEffect(() => {
-    if (ready && !user) router.replace("/login");
-  }, [ready, user, router]);
-
-  if (!ready || !user) {
-    return <p className="px-4 py-32 text-center text-sm text-muted">Loading...</p>;
-  }
+  const cards = [
+    { label: "Orders", value: String(orders.length), href: "/account/orders" },
+    { label: "Gifts", value: String(donations.length), href: "/charity/donate" },
+    { label: "Requests", value: String(inquiries.length), href: "/contact" },
+  ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold text-burgundy">Account</h1>
-          <p className="mt-1 text-sm text-muted">{user.email}</p>
-        </div>
-        <div className="flex gap-3">
-          {user.isAdmin && (
-            <a
-              href={process.env.NEXT_PUBLIC_ADMIN_URL ?? "http://localhost:3001"}
-              className="text-sm font-semibold text-crimson"
-            >
-              Admin
-            </a>
-          )}
-          <button type="button" onClick={() => void logout()} className="text-sm font-semibold text-burgundy">
-            Sign out
-          </button>
-        </div>
+    <div className="space-y-8">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-crimson">Overview</p>
+        <h2 className="display mt-1 text-3xl text-burgundy">Welcome back.</h2>
+        <p className="mt-2 max-w-xl text-sm text-muted">
+          Manage your profile, follow store orders, and keep your sign-in details current.
+        </p>
       </div>
 
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold text-burgundy">Orders</h2>
-        {orders.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">No orders yet.</p>
-        ) : (
-          <ul className="mt-4 space-y-3">
-            {orders.map((o) => (
-              <li key={o.id} className="rounded-lg bg-white p-5 ring-1 ring-sand">
-                <Link href={`/order/${o.id}`} className="font-semibold text-burgundy">
-                  {o.id}
-                </Link>
-                <p className="text-sm text-muted">
-                  {o.status} · {formatMoney(o.total)} · {new Date(o.createdAt).toLocaleDateString()}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {cards.map((card) => (
+          <Link
+            key={card.label}
+            href={card.href}
+            className="rounded-lg bg-white p-5 ring-1 ring-sand hover:ring-crimson/40"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">{card.label}</p>
+            <p className="display mt-2 text-4xl text-burgundy">{card.value}</p>
+          </Link>
+        ))}
+      </div>
 
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold text-burgundy">Gifts</h2>
-        {donations.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">
-            No gifts yet.{" "}
-            <Link href="/charity" className="font-semibold text-crimson">
-              Give back to Ghana
+      <section className="rounded-lg bg-white p-6 ring-1 ring-sand">
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="font-semibold text-burgundy">Recent orders</h3>
+          <Link href="/account/orders" className="text-sm font-semibold text-crimson">
+            View all
+          </Link>
+        </div>
+        {orders.length === 0 ? (
+          <p className="mt-4 text-sm text-muted">
+            No store orders yet.{" "}
+            <Link href="/store" className="font-semibold text-crimson">
+              Shop the store
             </Link>
           </p>
         ) : (
-          <ul className="mt-4 space-y-3">
-            {donations.map((d) => (
-              <li key={d.id} className="rounded-lg bg-white p-5 ring-1 ring-sand">
-                <p className="font-semibold text-burgundy">{d.id}</p>
-                <p className="text-sm text-muted">
-                  {formatMoney(d.amount)} · {d.frequency === "monthly" ? "Monthly" : "One-time"} ·{" "}
-                  {d.projectName} · {new Date(d.createdAt).toLocaleDateString()}
-                </p>
+          <ul className="mt-4 divide-y divide-sand">
+            {orders.slice(0, 3).map((order) => (
+              <li key={order.id} className="flex items-center justify-between gap-4 py-3">
+                <div>
+                  <Link href={`/order/${order.id}`} className="font-semibold text-burgundy">
+                    {order.id}
+                  </Link>
+                  <p className="text-sm text-muted">
+                    {order.status} · {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-ink">{formatMoney(order.total)}</p>
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold text-burgundy">Your inquiries</h2>
-        {inquiries.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">Tour, invest, and charity requests will appear here.</p>
-        ) : (
+      {inquiries.length > 0 && (
+        <section className="rounded-lg bg-white p-6 ring-1 ring-sand">
+          <h3 className="font-semibold text-burgundy">Latest requests</h3>
           <ul className="mt-4 space-y-3">
-            {inquiries.map((i) => (
-              <li key={i.id} className="rounded-lg bg-white p-5 text-sm ring-1 ring-sand">
-                <p className="font-semibold text-burgundy">{i.kind}</p>
-                <p className="text-muted">{new Date(i.createdAt).toLocaleString()}</p>
+            {inquiries.slice(0, 3).map((item) => (
+              <li key={item.id} className="text-sm">
+                <p className="font-semibold text-burgundy">{inquiryLabel(item.kind)}</p>
+                <p className="text-muted">{new Date(item.createdAt).toLocaleString()}</p>
               </li>
             ))}
           </ul>
-        )}
-      </section>
+        </section>
+      )}
+
+      <div className="flex flex-wrap gap-3">
+        <Link
+          href="/account/profile"
+          className="inline-flex h-11 items-center rounded-lg bg-burgundy px-5 text-sm font-semibold text-white"
+        >
+          Edit profile
+        </Link>
+        <Link
+          href="/account/settings"
+          className="inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold text-burgundy ring-1 ring-sand"
+        >
+          Account settings
+        </Link>
+      </div>
     </div>
   );
 }

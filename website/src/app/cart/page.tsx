@@ -30,7 +30,7 @@ export default function CartPage() {
                 className="flex gap-4 rounded-lg bg-white p-4 ring-1 ring-sand"
               >
                 <div className="relative h-24 w-20 overflow-hidden rounded-lg bg-sand">
-                  <Image src={asset(item.image)} alt="" fill className="object-cover" />
+                  <Image src={asset(item.image)} alt="" fill sizes="80px" className="object-cover" />
                 </div>
                 <div className="flex-1">
                   <Link href={`/store/${item.slug}`} className="font-semibold text-burgundy">

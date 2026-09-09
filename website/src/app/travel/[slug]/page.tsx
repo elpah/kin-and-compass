@@ -30,7 +30,7 @@ export default async function TourPage({
     <article>
       <div className="relative isolate min-h-[55vh] bg-sand">
         {cover ? (
-          <Image src={cover} alt="" fill className="object-cover" priority />
+          <Image src={cover} alt="" fill priority sizes="100vw" className="object-cover" />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40" />
         <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-32 sm:px-6">
@@ -54,7 +54,9 @@ export default async function TourPage({
                   const src = asset(item.tourImage);
                   return (
                     <div key={item.tourId} className="relative aspect-[4/3] overflow-hidden rounded-lg bg-sand">
-                      {src ? <Image src={src} alt="" fill className="object-cover" /> : null}
+                      {src ? (
+                        <Image src={src} alt="" fill sizes="(max-width: 640px) 100vw, 30vw" className="object-cover" />
+                      ) : null}
                     </div>
                   );
                 })}

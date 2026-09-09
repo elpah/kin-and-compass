@@ -114,7 +114,9 @@ export function Header() {
             className={cn(
               "hidden sm:inline text-[13px] font-semibold",
               solid
-                ? "text-ink/80 hover:text-burgundy"
+                ? pathname.startsWith("/account") || pathname.startsWith("/login")
+                  ? "text-crimson"
+                  : "text-ink/80 hover:text-burgundy"
                 : "text-white/85 hover:text-white",
             )}
           >

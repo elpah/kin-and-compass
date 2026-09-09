@@ -26,7 +26,7 @@ export default async function OpportunityPage({
   return (
     <article>
       <div className="relative isolate min-h-[58vh]">
-        <Image src={item.image} alt="" fill className="object-cover" priority />
+        <Image src={item.image} alt="" fill priority sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/45 to-ink/20" />
         <div className="relative mx-auto flex min-h-[58vh] max-w-7xl flex-col justify-end px-4 pb-12 pt-32 sm:px-6 sm:pb-16">
           <p className="text-sm text-white/70">
@@ -97,6 +97,7 @@ export default async function OpportunityPage({
                   src={o.image}
                   alt=""
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/30" />

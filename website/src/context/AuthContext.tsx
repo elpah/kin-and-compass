@@ -13,17 +13,18 @@ import { signIn, signOut, useSession } from "next-auth/react";
 export type User = {
   name: string;
   email: string;
+  phone?: string;
   isAdmin?: boolean;
 };
 
-type Inquiry = {
+export type Inquiry = {
   id: string;
   kind: string;
   createdAt: string;
   payload: Record<string, string>;
 };
 
-type Order = {
+export type Order = {
   id: string;
   createdAt: string;
   total: number;
@@ -42,8 +43,18 @@ export type Donation = {
   email: string;
 };
 
+export type AccountProfile = {
+  name: string;
+  email: string;
+  phone: string;
+  hasPassword: boolean;
+  hasGoogle: boolean;
+};
+
 type AuthContextValue = {
   user: User | null;
+  profile: AccountProfile | null;
+  accessToken: string;
   ready: boolean;
   inquiries: Inquiry[];
   orders: Order[];
@@ -56,6 +67,8 @@ type AuthContextValue = {
   addInquiry: (kind: string, payload: Record<string, string>) => void;
   addOrder: (order: Omit<Order, "id" | "createdAt" | "status">) => string;
   addDonation: (donation: Omit<Donation, "id" | "createdAt">) => string;
+  saveProfile: (input: { name: string; phone: string }) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -69,11 +82,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [donations, setDonations] = useState<Donation[]>([]);
+  const [profile, setProfile] = useState<AccountProfile | null>(null);
   const ready = status !== "loading";
+  const accessToken = session?.accessToken ?? "";
   const user = session?.user?.email && session.user.role !== "admin"
     ? {
-        name: session.user.name || session.user.email.split("@")[0],
-        email: session.user.email,
+        name: profile?.name || session.user.name || session.user.email.split("@")[0],
+        email: profile?.email || session.user.email,
+        phone: profile?.phone,
         isAdmin: false,
       }
     : null;
@@ -99,9 +115,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(DON_KEY, JSON.stringify(donations));
   }, [inquiries, orders, donations, ready]);
 
+  useEffect(() => {
+    if (!accessToken) {
+      setProfile(null);
+      return;
+    }
+    let cancelled = false;
+    fetch(`${API_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then(async (response) => {
+        if (!response.ok) return;
+        const data = (await response.json()) as {
+          user: { name: string; email: string; phone?: string };
+          hasPassword?: boolean;
+          hasGoogle?: boolean;
+        };
+        if (cancelled) return;
+        setProfile({
+          name: data.user.name,
+          email: data.user.email,
+          phone: data.user.phone ?? "",
+          hasPassword: Boolean(data.hasPassword),
+          hasGoogle: Boolean(data.hasGoogle),
+        });
+      })
+      .catch(() => {
+        /* keep session name */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [accessToken]);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
+      profile,
+      accessToken,
       ready,
       inquiries,
       orders,
@@ -174,8 +225,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ]);
         return id;
       },
+      saveProfile: async ({ name, phone }) => {
+        if (!accessToken) throw new Error("Sign in required");
+        const response = await fetch(`${API_URL}/auth/me`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ name, phone }),
+        });
+        const data = (await response.json()) as {
+          error?: string;
+          user?: { name: string; email: string; phone?: string };
+          hasPassword?: boolean;
+          hasGoogle?: boolean;
+        };
+        if (!response.ok) throw new Error(data.error ?? "Could not save your profile.");
+        if (data.user) {
+          setProfile({
+            name: data.user.name,
+            email: data.user.email,
+            phone: data.user.phone ?? "",
+            hasPassword: Boolean(data.hasPassword),
+            hasGoogle: Boolean(data.hasGoogle),
+          });
+        }
+      },
+      changePassword: async (currentPassword, newPassword) => {
+        if (!accessToken) throw new Error("Sign in required");
+        const response = await fetch(`${API_URL}/auth/password`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+        const data = (await response.json()) as { error?: string };
+        if (!response.ok) throw new Error(data.error ?? "Could not update password.");
+        setProfile((prev) => (prev ? { ...prev, hasPassword: true } : prev));
+      },
     }),
-    [user, ready, inquiries, orders, donations],
+    [user, profile, accessToken, ready, inquiries, orders, donations],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

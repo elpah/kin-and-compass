@@ -37,7 +37,7 @@ export default async function ProductPage({
         <div className="space-y-3">
           {product.gallery.map((src) => (
             <div key={src} className="relative aspect-[4/5] overflow-hidden rounded-lg bg-sand">
-              <Image src={asset(src)} alt={product.name} fill className="object-cover" />
+              <Image src={asset(src)} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
             </div>
           ))}
         </div>

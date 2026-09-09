@@ -25,6 +25,11 @@ function publicFile(name: string) {
 const publicDir = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 
 const app = express();
+app.disable("x-powered-by");
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+});
 app.use(
   cors({
     origin: corsOrigins,
@@ -73,7 +78,7 @@ app.use(async (req, _res, next) => {
   }
 });
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: "64kb" }));
 app.use("/uploads", express.static(uploadDir));
 app.use("/inquiries", inquiryRouter);
 app.use("/auth", authRouter);

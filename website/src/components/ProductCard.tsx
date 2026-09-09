@@ -16,6 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
             src={asset(product.image)}
             alt={product.name}
             fill
+            sizes="(max-width: 640px) 50vw, 25vw"
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         </div>

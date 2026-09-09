@@ -5,6 +5,7 @@ import { requireUser } from "../auth.js";
 import { env } from "../env.js";
 import { PhoneOtp } from "../models/PhoneOtp.js";
 import { User } from "../models/User.js";
+import { googleProfileFromIdToken } from "../google.js";
 import { sendMail, sendSms } from "../notify.js";
 import { normalizePhone } from "../phone.js";
 import { signAuthToken } from "../token.js";
@@ -94,23 +95,27 @@ authRouter.post("/register", async (req, res) => {
 });
 
 authRouter.post("/oauth", async (req, res) => {
-  const email = String(req.body?.email ?? "").trim().toLowerCase();
-  const name = String(req.body?.name ?? "").trim() || email.split("@")[0] || "Guest";
-  const googleId = String(req.body?.providerId ?? "").trim();
-  if (!email.includes("@") || !googleId) {
-    res.status(400).json({ error: "Google sign-in is missing an email." });
+  const idToken = String(req.body?.idToken ?? "").trim();
+  const profile = idToken ? await googleProfileFromIdToken(idToken) : null;
+  if (!profile) {
+    res.status(401).json({ error: "Google sign-in could not be verified." });
     return;
   }
-  let user = await User.findOne({ $or: [{ googleId }, { email }] });
+  let user = await User.findOne({ $or: [{ googleId: profile.googleId }, { email: profile.email }] });
   if (user?.role === "admin") {
     res.status(403).json({ error: "Staff must use the admin desk." });
     return;
   }
   if (!user) {
-    user = await User.create({ name, email, googleId, role: "customer" });
+    user = await User.create({
+      name: profile.name,
+      email: profile.email,
+      googleId: profile.googleId,
+      role: "customer",
+    });
   } else {
-    if (!user.googleId) user.googleId = googleId;
-    if (name && !user.name) user.name = name;
+    if (!user.googleId) user.googleId = profile.googleId;
+    if (profile.name && !user.name) user.name = profile.name;
     await user.save();
   }
   res.json(await sessionFor(user));
@@ -163,6 +168,14 @@ authRouter.post("/phone/start", async (req, res) => {
     res.status(400).json({ error: "Enter a valid phone number with country code." });
     return;
   }
+  const recent = await PhoneOtp.findOne({
+    phone,
+    createdAt: { $gt: new Date(Date.now() - 45 * 1000) },
+  });
+  if (recent) {
+    res.status(429).json({ error: "Wait a moment before requesting another code." });
+    return;
+  }
   const code = String(randomInt(100000, 1000000));
   await PhoneOtp.deleteMany({ phone });
   await PhoneOtp.create({
@@ -201,6 +214,69 @@ authRouter.post("/phone/verify", async (req, res) => {
     });
   }
   res.json(await sessionFor(user));
+});
+
+authRouter.get("/me", requireUser, async (req, res) => {
+  const session = res.locals.user as AuthToken;
+  const user = await User.findById(session.sub);
+  if (!user) {
+    res.status(401).json({ error: "Sign in required" });
+    return;
+  }
+  res.json({
+    user: publicUser({
+      id: String(user._id),
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+    }),
+    hasPassword: Boolean(user.passwordHash),
+    hasGoogle: Boolean(user.googleId),
+  });
+});
+
+authRouter.patch("/me", requireUser, async (req, res) => {
+  const session = res.locals.user as AuthToken;
+  const name = String(req.body?.name ?? "").trim();
+  const phoneRaw = String(req.body?.phone ?? "").trim();
+  if (!name) {
+    res.status(400).json({ error: "Name is required." });
+    return;
+  }
+  const phone = phoneRaw ? normalizePhone(phoneRaw) : "";
+  if (phoneRaw && !phone) {
+    res.status(400).json({ error: "Enter a valid phone number with country code." });
+    return;
+  }
+  const user = await User.findById(session.sub);
+  if (!user) {
+    res.status(401).json({ error: "Sign in required" });
+    return;
+  }
+  if (phone) {
+    const taken = await User.findOne({ phone, _id: { $ne: user._id } });
+    if (taken) {
+      res.status(409).json({ error: "That phone number already has an account." });
+      return;
+    }
+    user.phone = phone;
+  } else {
+    user.phone = undefined;
+  }
+  user.name = name;
+  await user.save();
+  res.json({
+    user: publicUser({
+      id: String(user._id),
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+    }),
+    hasPassword: Boolean(user.passwordHash),
+    hasGoogle: Boolean(user.googleId),
+  });
 });
 
 authRouter.post("/password", requireUser, async (req, res) => {

@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   },
   outputFileTracingRoot: path.join(__dirname, ".."),
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 14,
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },

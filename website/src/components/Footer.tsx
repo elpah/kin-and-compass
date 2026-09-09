@@ -14,6 +14,7 @@ export function Footer() {
                 src="/logo.png"
                 alt=""
                 fill
+                sizes="56px"
                 className="object-cover object-top scale-110"
               />
             </span>

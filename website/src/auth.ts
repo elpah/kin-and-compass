@@ -102,20 +102,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === "credentials") {
         return user.role !== "admin";
       }
       if (account?.provider !== "google") return true;
-      const email = String(profile?.email ?? user.email ?? "").trim().toLowerCase();
-      const name = String(profile?.name ?? user.name ?? "").trim();
-      const providerId = String(account.providerAccountId ?? "").trim();
-      if (!email.includes("@") || !providerId) return "/login?error=GoogleNoEmail";
+      const idToken = String(account.id_token ?? "").trim();
+      if (!idToken) return "/login?error=GoogleFailed";
       try {
         const response = await fetch(`${API_URL}/auth/oauth`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ provider: "google", email, name, providerId }),
+          body: JSON.stringify({ idToken }),
         });
         if (!response.ok) return "/login?error=GoogleFailed";
         const data = (await response.json()) as AuthPayload;
