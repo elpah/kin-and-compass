@@ -1,9 +1,9 @@
 import { InquiryForm } from "@/components/InquiryForm";
+import { MediaImage } from "@/components/CloudinaryImage";
 import { brand } from "@/data/site";
 import { getPackagedTour } from "@/lib/api";
 import { asset } from "@/lib/media";
 import { formatMoney } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -30,7 +30,7 @@ export default async function TourPage({
     <article>
       <div className="relative isolate min-h-[55vh] bg-sand">
         {cover ? (
-          <Image src={cover} alt="" fill priority sizes="100vw" className="object-cover" />
+          <MediaImage src={cover} alt="" fill priority sizes="100vw" quality={70} className="object-cover" />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40" />
         <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-32 sm:px-6">
@@ -55,7 +55,7 @@ export default async function TourPage({
                   return (
                     <div key={item.tourId} className="relative aspect-[4/3] overflow-hidden rounded-lg bg-sand">
                       {src ? (
-                        <Image src={src} alt="" fill sizes="(max-width: 640px) 100vw, 30vw" className="object-cover" />
+                        <MediaImage src={src} alt="" fill sizes="(max-width: 640px) 100vw, 30vw" quality={65} className="object-cover" />
                       ) : null}
                     </div>
                   );

@@ -26,9 +26,10 @@ export default function AdminLoginPage() {
         <div className="flex items-center gap-3">
           <span className="relative h-12 w-12 overflow-hidden rounded-full bg-white ring-1 ring-burgundy/10">
             <Image
-              src="/logo.png"
+              src="/logo-mark.png"
               alt=""
               fill
+              unoptimized
               className="object-cover object-top scale-110"
               sizes="48px"
             />

@@ -55,11 +55,12 @@ export function Header() {
             )}
           >
             <Image
-              src="/logo.png"
+              src="/logo-mark.png"
               alt={brand.name}
               fill
               className="object-cover object-top scale-110"
               sizes="48px"
+              unoptimized
               priority
             />
           </span>
@@ -110,7 +111,7 @@ export function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href={user ? "/account" : "/login"}
+            href={mounted && user ? "/account" : "/login"}
             className={cn(
               "hidden sm:inline text-[13px] font-semibold",
               solid
@@ -120,7 +121,7 @@ export function Header() {
                 : "text-white/85 hover:text-white",
             )}
           >
-            {user ? user.name.split(" ")[0] : "Account"}
+            {mounted && user ? user.name.split(" ")[0] : "Account"}
           </Link>
           <Link
             href="/cart"

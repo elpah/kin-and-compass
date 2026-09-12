@@ -1,10 +1,10 @@
 "use client";
 
 import { useCustomTrip } from "@/context/CustomTripContext";
+import { MediaImage } from "@/components/CloudinaryImage";
 import { asset } from "@/lib/media";
 import { formatMoney } from "@/lib/utils";
 import type { CustomExperience } from "@kincompass/shared";
-import Image from "next/image";
 import Link from "next/link";
 
 export function CustomTripBuilder({ experiences }: { experiences: CustomExperience[] }) {
@@ -29,7 +29,7 @@ export function CustomTripBuilder({ experiences }: { experiences: CustomExperien
                   className="overflow-hidden rounded-lg bg-white ring-1 ring-sand md:grid md:grid-cols-5"
                 >
                   <div className="relative aspect-[16/10] md:col-span-2 md:aspect-auto md:min-h-[200px]">
-                    <Image src={asset(item.tourImage)} alt="" fill className="object-cover" sizes="(min-width: 768px) 40vw, 100vw" />
+                    <MediaImage src={asset(item.tourImage)} alt="" fill className="object-cover" sizes="(min-width: 768px) 40vw, 100vw" quality={65} />
                   </div>
                   <div className="flex flex-col p-5 md:col-span-3 sm:p-6">
                     <div className="flex flex-wrap items-start justify-between gap-2">

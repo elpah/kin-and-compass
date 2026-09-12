@@ -23,34 +23,42 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 const KEY = "kc-cart";
 
+function readCart(): CartItem[] {
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeCart(items: CartItem[]) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(items));
+  } catch {
+    /* ignore */
+  }
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    queueMicrotask(() => {
-      if (cancelled) return;
-      try {
-        const raw = localStorage.getItem(KEY);
-        if (raw) setItems(JSON.parse(raw) as CartItem[]);
-      } catch {
-        /* ignore */
-      }
-      setReady(true);
-    });
-    return () => {
-      cancelled = true;
-    };
+    const stored = readCart();
+    setItems((current) => (current.length > 0 ? current : stored));
   }, []);
 
-  useEffect(() => {
-    if (ready) localStorage.setItem(KEY, JSON.stringify(items));
-  }, [items, ready]);
+  const update = (recipe: (prev: CartItem[]) => CartItem[]) => {
+    setItems((prev) => {
+      const next = recipe(prev);
+      writeCart(next);
+      return next;
+    });
+  };
 
   const value = useMemo<CartContextValue>(() => {
     const add: CartContextValue["add"] = (item, qty = 1) => {
-      setItems((prev) => {
+      update((prev) => {
         const found = prev.find((p) => p.slug === item.slug);
         if (found) {
           return prev.map((p) =>
@@ -63,14 +71,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return {
       items,
       add,
-      remove: (slug) => setItems((prev) => prev.filter((p) => p.slug !== slug)),
+      remove: (slug) => update((prev) => prev.filter((p) => p.slug !== slug)),
       setQty: (slug, qty) =>
-        setItems((prev) =>
+        update((prev) =>
           qty < 1
             ? prev.filter((p) => p.slug !== slug)
             : prev.map((p) => (p.slug === slug ? { ...p, qty } : p)),
         ),
-      clear: () => setItems([]),
+      clear: () => update(() => []),
       count: items.reduce((n, i) => n + i.qty, 0),
       total: items.reduce((n, i) => n + i.price * i.qty, 0),
     };

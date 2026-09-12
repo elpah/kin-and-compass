@@ -1,8 +1,8 @@
+import { CloudinaryImage, MediaImage } from "@/components/CloudinaryImage";
 import { formatMoney } from "@/lib/utils";
 import { asset } from "@/lib/media";
 import type { Opportunity } from "@/lib/types";
 import type { PackagedTour } from "@kincompass/shared";
-import Image from "next/image";
 import Link from "next/link";
 
 export function TourCard({ tour }: { tour: PackagedTour }) {
@@ -11,11 +11,12 @@ export function TourCard({ tour }: { tour: PackagedTour }) {
     <Link href={`/travel/${tour.packagedTourId}`} className="group block overflow-hidden rounded-lg bg-white ring-1 ring-sand">
       <div className="relative aspect-[16/10] overflow-hidden bg-sand">
         {src ? (
-          <Image
+          <MediaImage
             src={src}
             alt={tour.name}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
+            quality={65}
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : null}
@@ -46,11 +47,12 @@ export function OpportunityCard({
       href={`/invest/${item.slug}`}
       className="group relative block min-h-[320px] overflow-hidden rounded-lg"
     >
-      <Image
+      <CloudinaryImage
         src={item.image}
         alt={item.title}
         fill
         sizes="(max-width: 768px) 100vw, 50vw"
+        quality={65}
         className="object-cover transition duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/35 to-transparent" />

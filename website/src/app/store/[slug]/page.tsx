@@ -1,9 +1,9 @@
 import { AddToCart } from "@/components/AddToCart";
+import { MediaImage } from "@/components/CloudinaryImage";
 import { ProductCard } from "@/components/ProductCard";
 import { getProductBySlug } from "@/lib/api";
 import { asset } from "@/lib/media";
 import { formatMoney } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -35,9 +35,18 @@ export default async function ProductPage({
       </p>
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
         <div className="space-y-3">
-          {product.gallery.map((src) => (
+          {product.gallery.map((src, index) => (
             <div key={src} className="relative aspect-[4/5] overflow-hidden rounded-lg bg-sand">
-              <Image src={asset(src)} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+              <MediaImage
+                src={asset(src)}
+                alt={product.name}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                quality={70}
+                priority={index === 0}
+                loading={index === 0 ? "eager" : "lazy"}
+                className="object-cover"
+              />
             </div>
           ))}
         </div>

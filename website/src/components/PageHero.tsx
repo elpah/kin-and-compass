@@ -1,3 +1,5 @@
+import { CoverImage } from "@/components/CoverImage";
+import { isCloudinarySrc } from "@/lib/cloudinary";
 import { cn } from "@/lib/utils";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
@@ -24,7 +26,20 @@ export function PageHero({
 }) {
   return (
     <section className={cn("relative isolate overflow-hidden", compact ? "min-h-[42vh]" : "min-h-[58vh]")}>
-      <Image src={image} alt="" fill priority sizes="100vw" className="object-cover" />
+      {isCloudinarySrc(image) ? (
+        <CoverImage src={image} priority />
+      ) : (
+        <Image
+          src={image}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          quality={70}
+          placeholder="empty"
+          className="object-cover"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/55 to-ink/25" />
       <div className="relative mx-auto flex max-w-7xl flex-col justify-end px-4 pb-12 pt-32 sm:px-6 sm:pb-16">
         {backHref && (

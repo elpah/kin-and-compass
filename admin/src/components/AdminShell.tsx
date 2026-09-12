@@ -55,7 +55,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       >
         <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3 px-5 py-6">
           <span className="relative h-11 w-11 overflow-hidden rounded-full bg-white">
-            <Image src="/logo.png" alt="" fill className="object-cover object-top scale-110" sizes="44px" />
+            <Image src="/logo-mark.png" alt="" fill unoptimized className="object-cover object-top scale-110" sizes="44px" />
           </span>
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-[0.18em]">Kin and Compass</p>

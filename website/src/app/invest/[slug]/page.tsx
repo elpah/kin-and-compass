@@ -1,6 +1,7 @@
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { CoverImage } from "@/components/CoverImage";
 import { InquiryForm } from "@/components/InquiryForm";
 import { getOpportunity, opportunities } from "@/data/opportunities";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -26,7 +27,7 @@ export default async function OpportunityPage({
   return (
     <article>
       <div className="relative isolate min-h-[58vh]">
-        <Image src={item.image} alt="" fill priority sizes="100vw" className="object-cover" />
+        <CoverImage src={item.image} priority />
         <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/45 to-ink/20" />
         <div className="relative mx-auto flex min-h-[58vh] max-w-7xl flex-col justify-end px-4 pb-12 pt-32 sm:px-6 sm:pb-16">
           <p className="text-sm text-white/70">
@@ -93,11 +94,12 @@ export default async function OpportunityPage({
                 href={`/invest/${o.slug}`}
                 className="group relative min-h-[180px] overflow-hidden rounded-lg"
               >
-                <Image
+                <CloudinaryImage
                   src={o.image}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  quality={65}
                   className="object-cover transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/30" />

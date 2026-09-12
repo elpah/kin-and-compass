@@ -1,95 +1,66 @@
-import naming1 from "@/assets/images/tours_pulse_section/naming/naming1.webp";
-import namingCover from "@/assets/images/tours_pulse_section/naming/naming_cover.webp";
-import food1 from "@/assets/images/tours_pulse_section/foods/food1.webp";
-import food2 from "@/assets/images/tours_pulse_section/foods/food2.webp";
-import food3 from "@/assets/images/tours_pulse_section/foods/food3.webp";
-import food4 from "@/assets/images/tours_pulse_section/foods/food4.webp";
-import foodCover from "@/assets/images/tours_pulse_section/foods/food_cover.webp";
-import night1 from "@/assets/images/tours_pulse_section/night/night1.webp";
-import night2 from "@/assets/images/tours_pulse_section/night/night2.webp";
-import night3 from "@/assets/images/tours_pulse_section/night/night3.webp";
-import night4 from "@/assets/images/tours_pulse_section/night/night4.webp";
-import night5 from "@/assets/images/tours_pulse_section/night/night5.webp";
-import night6 from "@/assets/images/tours_pulse_section/night/night6.webp";
-import night7 from "@/assets/images/tours_pulse_section/night/night7.webp";
-import night8 from "@/assets/images/tours_pulse_section/night/night8.webp";
-import nightCover from "@/assets/images/tours_pulse_section/night/night_cover.webp";
-import tourist1 from "@/assets/images/tours_pulse_section/tourist/tourist1.webp";
-import tourist2 from "@/assets/images/tours_pulse_section/tourist/tourist2.webp";
-import tourist3 from "@/assets/images/tours_pulse_section/tourist/tourist3.webp";
-import tourist4 from "@/assets/images/tours_pulse_section/tourist/tourist4.webp";
-import tourist5 from "@/assets/images/tours_pulse_section/tourist/tourist5.webp";
-import tourist6 from "@/assets/images/tours_pulse_section/tourist/tourist6.webp";
-import tourist7 from "@/assets/images/tours_pulse_section/tourist/tourist7.webp";
-import tourist8 from "@/assets/images/tours_pulse_section/tourist/tourist8.webp";
-import tourist11 from "@/assets/images/tours_pulse_section/tourist/tourist11.webp";
-import touristCover from "@/assets/images/tours_pulse_section/tourist/tourist_cover.webp";
-import festival1 from "@/assets/images/tours_pulse_section/festival/festival1.webp";
-import festival2 from "@/assets/images/tours_pulse_section/festival/festival2.webp";
-import festival3 from "@/assets/images/tours_pulse_section/festival/festival3.webp";
-import festival4 from "@/assets/images/tours_pulse_section/festival/festival4.webp";
-import festival5 from "@/assets/images/tours_pulse_section/festival/festival5.webp";
-import festival6 from "@/assets/images/tours_pulse_section/festival/festival6.webp";
-import festivalCover from "@/assets/images/tours_pulse_section/festival/festival_cover.webp";
-import games1 from "@/assets/images/tours_pulse_section/games/games1.webp";
-import games2 from "@/assets/images/tours_pulse_section/games/games2.webp";
-import gamesCover from "@/assets/images/tours_pulse_section/games/games_cover.webp";
-import experienceCeramic1 from "@/assets/images/tours_pulse_section/experience/experience_ceramic1.webp";
-import experienceCooking1 from "@/assets/images/tours_pulse_section/experience/experience_cooking1.webp";
-import experienceCooking2 from "@/assets/images/tours_pulse_section/experience/experience_cooking2.webp";
-import experienceKente from "@/assets/images/tours_pulse_section/experience/experience_kente.webp";
-import experienceKente2 from "@/assets/images/tours_pulse_section/experience/experience_kente2.webp";
-import experienceTieDye1 from "@/assets/images/tours_pulse_section/experience/experience_tie_dye1.webp";
-import experienceTieDye2 from "@/assets/images/tours_pulse_section/experience/experience_tie_dye2.webp";
-import experienceTieDye3 from "@/assets/images/tours_pulse_section/experience/experience_tie_dye3.webp";
-import experienceWeave from "@/assets/images/tours_pulse_section/experience/experience_weave.webp";
-import experienceWeave3 from "@/assets/images/tours_pulse_section/experience/experience_weave3.webp";
-import ancestors1 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors1.webp";
-import ancestors2 from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors2.webp";
-import ancestorsCover from "@/assets/images/tours_pulse_section/connect_to_ancestors/connect_to_ancestors_cover.webp";
-import type { StaticImageData } from "next/image";
-
 export type VisitCategory = {
   id: string;
   label: string;
   line: string;
-  images: (string | StaticImageData)[];
+  images: string[];
 };
+
+const cld = (path: string) =>
+  `https://res.cloudinary.com/dvwpuenzk/image/upload/${path}`;
 
 export const visitCategories: VisitCategory[] = [
   {
     id: "naming",
     label: "Naming ceremony",
     line: "Outdooring, kente, and the names a family speaks into a child.",
-    images: [namingCover, naming1],
+    images: [
+      cld("v1789170150/naming_cover_dlpzi5.webp"),
+      cld("v1789170151/naming1_mtcqxf.webp"),
+    ],
   },
   {
     id: "food",
     label: "Food",
     line: "Jollof, banku, waakye, and the night markets that feed Accra.",
-    images: [foodCover, food1, food2, food3, food4],
+    images: [
+      cld("v1789170068/food_cover_gdfxsc.webp"),
+      cld("v1789170063/food1_ujtvny.webp"),
+      cld("v1789170067/food2_qj3mlb.webp"),
+      cld("v1789170068/food3_wotnmi.webp"),
+      cld("v1789170064/food4_r2vmv1.webp"),
+    ],
   },
   {
     id: "nightlife",
     label: "Nightlife",
     line: "Highlife, hiplife, and rooms that do not empty until the sun is up.",
-    images: [nightCover, night1, night2, night3, night4, night5, night6, night7, night8],
+    images: [
+      cld("v1789170160/night_cover_qbmvdb.webp"),
+      cld("v1789170163/night1_ffzltz.webp"),
+      cld("v1789170154/night2_skqj1f.webp"),
+      cld("v1789170154/night3_cioawj.webp"),
+      cld("v1789170158/night4_q7dxzr.webp"),
+      cld("v1789170159/night5_meyzi3.webp"),
+      cld("v1789170161/night6_e5ozb0.webp"),
+      cld("v1789170163/night7_dtnoop.webp"),
+      cld("v1789170157/night8_zijbsr.webp"),
+    ],
   },
   {
     id: "tour",
     label: "Tour",
     line: "Nature, beach, and bus - canopy, coast, and the road between them.",
     images: [
-      touristCover,
-      tourist1,
-      tourist2,
-      tourist3,
-      tourist4,
-      tourist5,
-      tourist6,
-      tourist7,
-      tourist8,
-      tourist11,
+      cld("v1789170173/tourist_cover_zjfgpc.webp"),
+      cld("v1789170165/tourist1_vvm5mm.webp"),
+      cld("v1789170171/tourist2_rmknft.webp"),
+      cld("v1789170170/tourist3_tgiylz.webp"),
+      cld("v1789170175/tourist4_a7daur.webp"),
+      cld("v1789170172/tourist5_xwkm6s.webp"),
+      cld("v1789170168/tourist6_itlzk3.webp"),
+      cld("v1789170165/tourist7_ycomer.webp"),
+      cld("v1789170175/tourist8_adeiov.webp"),
+      cld("v1789170169/tourist11_fhhtpj.webp"),
     ],
   },
   {
@@ -97,34 +68,50 @@ export const visitCategories: VisitCategory[] = [
     label: "Experience",
     line: "Kente, weaving, tie-dye, clay, and the kitchen - skills you take home in your hands.",
     images: [
-      experienceKente,
-      experienceKente2,
-      experienceWeave,
-      experienceWeave3,
-      experienceTieDye1,
-      experienceTieDye2,
-      experienceTieDye3,
-      experienceCeramic1,
-      experienceCooking1,
-      experienceCooking2,
+      cld("v1789170054/experience_kente_unenj2.webp"),
+      cld("v1789170049/experience_kente2_m4kria.webp"),
+      cld("v1789170055/experience_weave_gwuavx.webp"),
+      cld("v1789170051/experience_weave3_eawuaq.webp"),
+      cld("v1789170053/experience_tie_dye1_wbebn7.webp"),
+      cld("v1789170048/experience_tie_dye2_ugsf40.webp"),
+      cld("v1789170050/experience_tie_dye3_aoo64n.webp"),
+      cld("v1789170046/experience_ceramic1_daf2jn.webp"),
+      cld("v1789170052/experience_cooking1_vih2db.webp"),
+      cld("v1789170046/experience_cooking2_lbrggk.webp"),
     ],
   },
   {
     id: "ancestors",
     label: "Heritage",
     line: "Walk the door of no return with a guide who will not rush you.",
-    images: [ancestorsCover, ancestors1, ancestors2],
+    images: [
+      cld("v1789170044/connect_to_ancestors_cover_xvpmy2.webp"),
+      cld("v1789170043/connect_to_ancestors1_mtihyo.webp"),
+      cld("v1789170044/connect_to_ancestors2_snjiv9.webp"),
+    ],
   },
   {
     id: "games",
     label: "Games",
     line: "Oware in the courtyard, and football that stops a whole street.",
-    images: [gamesCover, games1, games2],
+    images: [
+      cld("v1789170147/games_cover_xkehke.webp"),
+      cld("v1789170139/games1_iowv5x.webp"),
+      cld("v1789170148/games2_fuqwiv.webp"),
+    ],
   },
   {
     id: "festivals",
     label: "Festivals",
     line: "Homowo, Aboakyer, chieftaincy, and the calendar that still runs the year.",
-    images: [festivalCover, festival1, festival2, festival3, festival4, festival5, festival6],
+    images: [
+      cld("v1789170056/festival_cover_e6a7ku.webp"),
+      cld("v1789170062/festival1_frrnfm.webp"),
+      cld("v1789170056/festival2_cf2g4c.webp"),
+      cld("v1789170059/festival3_am3ptl.webp"),
+      cld("v1789170059/festival4_cursac.webp"),
+      cld("v1789170060/festival5_f0yzwl.webp"),
+      cld("v1789170061/festival6_zlo3b0.webp"),
+    ],
   },
 ];

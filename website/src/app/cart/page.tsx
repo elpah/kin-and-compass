@@ -1,9 +1,9 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { MediaImage } from "@/components/CloudinaryImage";
 import { asset } from "@/lib/media";
 import { formatMoney } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -30,7 +30,7 @@ export default function CartPage() {
                 className="flex gap-4 rounded-lg bg-white p-4 ring-1 ring-sand"
               >
                 <div className="relative h-24 w-20 overflow-hidden rounded-lg bg-sand">
-                  <Image src={asset(item.image)} alt="" fill sizes="80px" className="object-cover" />
+                  <MediaImage src={asset(item.image)} alt="" fill sizes="80px" quality={60} className="object-cover" />
                 </div>
                 <div className="flex-1">
                   <Link href={`/store/${item.slug}`} className="font-semibold text-burgundy">

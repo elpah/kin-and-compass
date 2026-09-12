@@ -1,15 +1,16 @@
 "use client";
 
-import img1206 from "@/assets/images/about_slide_images/IMG_1206.webp";
-import img1208 from "@/assets/images/about_slide_images/IMG_1208.webp";
-import img1209 from "@/assets/images/about_slide_images/IMG_1209.webp";
-import img1210 from "@/assets/images/about_slide_images/IMG_1210.webp";
-import img1211 from "@/assets/images/about_slide_images/IMG_1211.webp";
-import travel from "@/assets/images/about_slide_images/travel.webp";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { useEffect, useState } from "react";
 
-const slides = [travel, img1206, img1208, img1209, img1210, img1211];
+const slides = [
+  "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789169812/travel_etjpti.webp",
+  "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789169805/IMG_1206_wtpvfa.webp",
+  "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789169805/IMG_1208_iecdxq.webp",
+  "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789169807/IMG_1209_syymvo.webp",
+  "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789169806/IMG_1210_ehmkyg.webp",
+  "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789169806/IMG_1211_fn85tt.webp",
+];
 const INTERVAL_MS = 3200;
 
 export function AboutLocationSlides() {
@@ -23,14 +24,28 @@ export function AboutLocationSlides() {
     return () => window.clearInterval(id);
   }, []);
 
+  const current = slides[index]!;
+  const next = slides[(index + 1) % slides.length]!;
+
   return (
-    <Image
-      src={slides[index]}
-      alt=""
-      fill
-      sizes="(max-width: 1024px) 100vw, 50vw"
-      priority
-      className="object-cover"
-    />
+    <>
+      <CloudinaryImage
+        src={current}
+        alt=""
+        fill
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        quality={65}
+        priority={index === 0}
+        className="object-cover"
+      />
+      <CloudinaryImage
+        src={next}
+        alt=""
+        fill
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        quality={65}
+        className="pointer-events-none opacity-0"
+      />
+    </>
   );
 }

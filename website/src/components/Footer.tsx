@@ -11,10 +11,11 @@ export function Footer() {
           <div className="flex items-center gap-3">
             <span className="relative h-14 w-14 overflow-hidden rounded-full bg-white">
               <Image
-                src="/logo.png"
+                src="/logo-mark.png"
                 alt=""
                 fill
                 sizes="56px"
+                unoptimized
                 className="object-cover object-top scale-110"
               />
             </span>

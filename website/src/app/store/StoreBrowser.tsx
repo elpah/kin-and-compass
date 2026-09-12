@@ -1,10 +1,11 @@
 "use client";
 
 import { covers } from "@/assets/covers";
-import { ProductCard } from "@/components/ProductCard";
 import { PageHero } from "@/components/PageHero";
-import { productCategories } from "@kincompass/shared";
+import { ProductCard } from "@/components/ProductCard";
+import { cloudinaryUrl } from "@/lib/cloudinary";
 import type { Product } from "@/lib/types";
+import { productCategories } from "@kincompass/shared";
 import { useState } from "react";
 
 export function StoreBrowser({ products }: { products: Product[] }) {
@@ -56,7 +57,7 @@ export function StoreBrowser({ products }: { products: Product[] }) {
           </div>
           <div
             className="min-h-[200px] bg-cover bg-center"
-            style={{ backgroundImage: `url(${covers.shop.src})` }}
+            style={{ backgroundImage: `url(${cloudinaryUrl(covers.shop, 1200)})` }}
           />
         </div>
 

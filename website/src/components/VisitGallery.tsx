@@ -1,7 +1,7 @@
 "use client";
 
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { visitCategories } from "@/data/visitGallery";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,9 @@ export function VisitGallery() {
   const [cycle, setCycle] = useState(0);
   const [paused, setPaused] = useState(false);
   const current = visitCategories[tab];
-  const activeSrc = current.images[img];
+  const shots = current.images;
+  const activeSrc = shots[img] ?? shots[0];
+  const nextSrc = shots[(img + 1) % shots.length] ?? shots[0];
 
   useEffect(() => {
     if (paused) return;
@@ -76,17 +78,32 @@ export function VisitGallery() {
           if (!next || !event.currentTarget.contains(next)) setPaused(false);
         }}
       >
-        <Image
+        <div
           key={`${current.id}-${img}`}
-          src={activeSrc}
-          alt={current.label}
-          fill
-          sizes="(max-width: 768px) 100vw, 1200px"
-          priority={tab === 0 && img === 0}
-          className={`object-cover ${
-            current.id === "experience" ? "object-center" : "object-top"
-          }`}
-        />
+          className="absolute inset-0"
+        >
+          <CloudinaryImage
+            src={activeSrc}
+            alt={current.label}
+            fill
+            sizes="(max-width: 768px) 100vw, 1200px"
+            quality={65}
+            priority={tab === 0 && img === 0}
+            className={`object-cover ${
+              current.id === "experience" ? "object-center" : "object-top"
+            }`}
+          />
+        </div>
+        {nextSrc && nextSrc !== activeSrc ? (
+          <CloudinaryImage
+            src={nextSrc}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 1200px"
+            quality={65}
+            className="pointer-events-none opacity-0"
+          />
+        ) : null}
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent pt-28">
           <div className="p-6 sm:p-10">
             <p className="script text-3xl text-rose sm:text-5xl">{current.label}</p>

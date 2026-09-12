@@ -17,7 +17,7 @@ export const opportunities: Opportunity[] = [
     country: "Ghana",
     industry: "Agriculture",
     image:
-      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1400&q=80",
+      "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789172006/agriculture_ad0zuj.avif",
     hook: "Discover opportunities in farming, agribusiness, land, production, and agricultural development.",
     investmentLevel: "From smallholder partnerships to commercial farms",
     overview:
@@ -47,7 +47,7 @@ export const opportunities: Opportunity[] = [
     country: "Ghana",
     industry: "Factories & Manufacturing",
     image:
-      "https://images.unsplash.com/photo-1504917595217-d4dc5abe6122?auto=format&fit=crop&w=1400&q=80",
+      "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789172006/manufacturing_akqjkz.avif",
     hook: "Explore Ghana's growing industrial and manufacturing landscape, from production to processing and development.",
     investmentLevel: "Typically larger tickets and longer build-out",
     overview:
@@ -76,7 +76,7 @@ export const opportunities: Opportunity[] = [
     country: "Ghana",
     industry: "Mineral Resources",
     image:
-      "https://images.unsplash.com/photo-1610375461246-83df8590ea2f?auto=format&fit=crop&w=1400&q=80",
+      "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789172006/mineral_resources_j9d6jt.avif",
     hook: "Gain insight into Ghana's mineral-resource sector and connect with appropriate professionals and stakeholders.",
     investmentLevel: "From artisanal supply chains to licensed concessions",
     overview:
@@ -105,7 +105,7 @@ export const opportunities: Opportunity[] = [
     country: "Ghana",
     industry: "Tourism & Hospitality",
     image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
+      "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789172469/tourism_scne7a.avif",
     hook: "Discover investment and development opportunities within Ghana's tourism, hospitality, culture, and experiences.",
     investmentLevel: "Lodges, experiences, and supporting services",
     overview:
@@ -133,7 +133,7 @@ export const opportunities: Opportunity[] = [
     country: "Ghana",
     industry: "Real Estate",
     image:
-      "https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=1400&q=80",
+      "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789172006/realestate_ujhpfh.avif",
     hook: "Navigate residential, commercial, land, hospitality, and development opportunities with informed local guidance.",
     investmentLevel: "Homes, rentals, and mixed-use in growing cities",
     overview:
@@ -161,7 +161,7 @@ export const opportunities: Opportunity[] = [
     country: "Ghana",
     industry: "Sport & Football",
     image:
-      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1400&q=80",
+      "https://res.cloudinary.com/dvwpuenzk/image/upload/v1789172009/football_mmd9te.webp",
     hook: "Explore opportunities across football, sports development, talent, facilities, partnerships, and the wider sports economy.",
     investmentLevel: "Academies, clubs, and related businesses",
     overview:
