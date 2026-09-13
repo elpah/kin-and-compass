@@ -1,6 +1,6 @@
 import type { SpecialTourCategory } from "@kincompass/shared";
 import mongoose, { Schema } from "mongoose";
-import { serializeTourImage } from "./CustomExperience.js";
+import { createdAtIso, serializeTourImage } from "./CustomExperience.js";
 import { serializeSpecialTourImages } from "./SpecialTour.js";
 
 const SpecialTourCategorySchema = new Schema(
@@ -45,5 +45,6 @@ export function serializeSpecialTourCategory(doc: Record<string, unknown>): Spec
     tourDuration: String(doc.tourDuration || "1 Day"),
     images,
     cover: images[0],
+    createdAt: createdAtIso(doc.createdAt),
   };
 }

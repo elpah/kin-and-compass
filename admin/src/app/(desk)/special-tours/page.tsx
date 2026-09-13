@@ -47,7 +47,7 @@ export default function SpecialToursAdminPage() {
           onSaved={(saved) => {
             setCategories((prev) => {
               const exists = prev.some((row) => row.slug === saved.slug);
-              return exists ? prev.map((row) => (row.slug === saved.slug ? saved : row)) : [...prev, saved];
+              return exists ? prev.map((row) => (row.slug === saved.slug ? saved : row)) : [saved, ...prev];
             });
             setCategoryForm(null);
           }}

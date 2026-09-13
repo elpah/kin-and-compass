@@ -1,6 +1,6 @@
 import type { CloudinaryImage, SpecialTour } from "@kincompass/shared";
 import mongoose, { Schema } from "mongoose";
-import { serializeTourImage } from "./CustomExperience.js";
+import { createdAtIso, serializeTourImage } from "./CustomExperience.js";
 
 const SpecialTourSchema = new Schema(
   {
@@ -48,5 +48,6 @@ export function serializeSpecialTour(doc: Record<string, unknown>): SpecialTour 
     tourImage: images[0] ?? { linkUrl: "", publicId: "" },
     active: doc.active !== false,
     deleted: Boolean(doc.deletedAt),
+    createdAt: createdAtIso(doc.createdAt),
   };
 }

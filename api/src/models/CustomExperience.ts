@@ -20,6 +20,12 @@ const CustomExperienceSchema = new Schema(
 export const CustomExperienceModel =
   mongoose.models.CustomExperience ?? mongoose.model("CustomExperience", CustomExperienceSchema);
 
+export function createdAtIso(value: unknown) {
+  if (!value) return undefined;
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
 export function serializeTourImage(value: unknown): CloudinaryImage {
   if (typeof value === "string") {
     return { linkUrl: value, publicId: "" };
@@ -41,5 +47,6 @@ export function serializeCustomExperience(doc: Record<string, unknown>): CustomE
     tourImage: serializeTourImage(doc.tourImage ?? doc.TourImage ?? doc.image),
     active: doc.active !== false,
     deleted: Boolean(doc.deletedAt),
+    createdAt: createdAtIso(doc.createdAt),
   };
 }

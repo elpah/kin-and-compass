@@ -54,6 +54,7 @@ export type CustomExperience = {
   tourImage: CloudinaryImage;
   active: boolean;
   deleted?: boolean;
+  createdAt?: string;
 };
 
 export type PackagedTour = {
@@ -66,6 +67,7 @@ export type PackagedTour = {
   tourIds: string[];
   active: boolean;
   deleted?: boolean;
+  createdAt?: string;
 };
 
 export type SpecialTourCategory = {
@@ -77,6 +79,7 @@ export type SpecialTourCategory = {
   tourDuration: string;
   images: CloudinaryImage[];
   cover?: CloudinaryImage;
+  createdAt?: string;
 };
 
 export type SpecialTour = {
@@ -90,4 +93,5 @@ export type SpecialTour = {
   tourImage: CloudinaryImage;
   active: boolean;
   deleted?: boolean;
+  createdAt?: string;
 };

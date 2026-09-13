@@ -1,6 +1,6 @@
 import type { PackagedTour } from "@kincompass/shared";
 import mongoose, { Schema } from "mongoose";
-import { serializeTourImage } from "./CustomExperience.js";
+import { createdAtIso, serializeTourImage } from "./CustomExperience.js";
 
 const PackagedTourSchema = new Schema(
   {
@@ -34,5 +34,6 @@ export function serializePackagedTour(doc: Record<string, unknown>): PackagedTou
     tourIds,
     active: doc.active !== false,
     deleted: Boolean(doc.deletedAt),
+    createdAt: createdAtIso(doc.createdAt),
   };
 }

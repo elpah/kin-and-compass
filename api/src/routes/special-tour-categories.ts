@@ -48,7 +48,7 @@ async function readUploadedImages(req: {
 specialTourCategoryRouter.get("/", async (_req, res) => {
   try {
     await ensureDefaultSpecialTourCategories();
-    const rows = await SpecialTourCategoryModel.find().sort({ sortOrder: 1, createdAt: 1 }).lean();
+    const rows = await SpecialTourCategoryModel.find().sort({ createdAt: -1 }).lean();
     res.json({ categories: rows.map((row) => serializeSpecialTourCategory(row as Record<string, unknown>)) });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Failed to load categories" });
