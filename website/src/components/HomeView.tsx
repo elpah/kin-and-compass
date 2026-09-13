@@ -16,7 +16,7 @@ const VisitGallery = dynamic(
     import("@/components/VisitGallery").then((mod) => ({ default: mod.VisitGallery })),
   {
     ssr: true,
-    loading: () => <div className="mt-10 aspect-[4/5] rounded-lg bg-sand sm:aspect-[16/9]" />,
+    loading: () => <div className="mt-10 aspect-[4/5] rounded-lg bg-sand sm:aspect-[3/2]" />,
   },
 );
 
@@ -61,10 +61,10 @@ export function HomeView({ products, pulse }: { products: Product[]; pulse: Puls
         </div>
       </section>
 
-      <section className="bg-neutral-200 py-20">
+      <section className="bg-neutral-200 py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <FadeIn>
-            <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-wrap items-end justify-between gap-2 sm:gap-4">
               <div>
                 <p className="script text-2xl text-rose">Visit Ghana</p>
                 <h2 className="display text-4xl text-burgundy sm:text-5xl">Tours with a pulse</h2>

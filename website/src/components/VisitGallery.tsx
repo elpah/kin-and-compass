@@ -43,11 +43,11 @@ export function VisitGallery({ categories }: { categories: PulseTab[] }) {
   if (!current || !activeSrc) return null;
 
   return (
-    <div className="mt-10">
+    <div className="mt-6 sm:mt-10">
       <div
         role="tablist"
         aria-label="Visit Ghana experiences"
-        className="flex flex-wrap gap-x-6 gap-y-1 border-b border-black/10"
+        className="flex gap-x-3 overflow-x-auto border-b border-black/10 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-wrap sm:gap-x-6 sm:gap-y-1 sm:overflow-visible [&::-webkit-scrollbar]:hidden"
       >
         {categories.map((category, i) => (
           <button
@@ -58,7 +58,7 @@ export function VisitGallery({ categories }: { categories: PulseTab[] }) {
             id={`visit-tab-${category.slug}`}
             aria-controls="visit-gallery-panel"
             onClick={() => selectTab(i)}
-            className={`-mb-px border-b-2 pb-3 text-sm font-semibold transition-colors ${
+            className={`-mb-px shrink-0 border-b-2 pb-1.5 text-xs font-semibold transition-colors sm:pb-3 sm:text-sm ${
               i === tab
                 ? "border-crimson text-crimson"
                 : "border-transparent text-muted hover:text-burgundy"
@@ -73,7 +73,7 @@ export function VisitGallery({ categories }: { categories: PulseTab[] }) {
         id="visit-gallery-panel"
         role="tabpanel"
         aria-labelledby={`visit-tab-${current.slug}`}
-        className="relative mt-6 aspect-[4/5] overflow-hidden rounded-lg bg-sand sm:aspect-[16/9]"
+        className="relative mt-3 aspect-[4/5] overflow-hidden rounded-lg bg-sand sm:mt-6 sm:aspect-[3/2]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocusCapture={() => setPaused(true)}
@@ -95,9 +95,7 @@ export function VisitGallery({ categories }: { categories: PulseTab[] }) {
                 sizes="(max-width: 768px) 100vw, 1200px"
                 quality={65}
                 priority={tab === 0 && index === 0}
-                className={`object-cover ${
-                  current.slug === "experience" ? "object-center" : "object-top"
-                }`}
+                className="object-cover object-center"
               />
             </div>
           ))}
@@ -122,16 +120,16 @@ export function VisitGallery({ categories }: { categories: PulseTab[] }) {
             className="pointer-events-none opacity-0"
           />
         ) : null}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent pt-28">
-          <div className="p-6 sm:p-10">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent pt-16 sm:pt-28">
+          <div className="p-4 sm:p-10">
             <p className="script text-3xl text-rose sm:text-5xl">{current.label}</p>
-            <p className="mt-3 max-w-3xl text-lg font-medium text-white drop-shadow-md sm:text-2xl">
+            <p className="mt-2 max-w-3xl text-base font-medium text-white drop-shadow-md sm:mt-3 sm:text-2xl">
               {current.line}
             </p>
             <Link
               href={`/travel/custom?category=${encodeURIComponent(current.slug)}`}
               onClick={() => setPaused(true)}
-              className="mt-5 inline-flex h-11 items-center rounded bg-crimson px-5 text-sm font-semibold text-white hover:bg-rose"
+              className="mt-3 inline-flex h-10 items-center rounded bg-crimson px-4 text-sm font-semibold text-white hover:bg-rose sm:mt-5 sm:h-11 sm:px-5"
             >
               Book tour
             </Link>
