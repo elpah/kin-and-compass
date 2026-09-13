@@ -10,7 +10,7 @@ const cld = (path: string) =>
 
 export const visitCategories: VisitCategory[] = [
   {
-    id: "naming",
+    id: "naming-ceremony",
     label: "Naming ceremony",
     line: "Outdooring, kente, and the names a family speaks into a child.",
     images: [
@@ -81,7 +81,7 @@ export const visitCategories: VisitCategory[] = [
     ],
   },
   {
-    id: "ancestors",
+    id: "heritage",
     label: "Heritage",
     line: "Walk the door of no return with a guide who will not rush you.",
     images: [

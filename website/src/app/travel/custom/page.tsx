@@ -2,7 +2,8 @@ import { covers } from "@/assets/covers";
 import { CustomTripBuilder } from "@/components/CustomTripBuilder";
 import { PageHero } from "@/components/PageHero";
 import { brand } from "@/data/site";
-import { listActiveExperiences } from "@/lib/api";
+import { listActiveExperiences, listSpecialTourCategories } from "@/lib/api";
+import { pulseCategoryAsTour } from "@/lib/trip";
 
 export const dynamic = "force-dynamic";
 
@@ -11,8 +12,18 @@ export const metadata = {
   description: "Choose Ghana experiences and build one private itinerary with a running total.",
 };
 
-export default async function CustomTripPage() {
-  const experiences = await listActiveExperiences();
+export default async function CustomTripPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category = "" } = await searchParams;
+  const [experiences, categories] = await Promise.all([
+    listActiveExperiences(),
+    listSpecialTourCategories(),
+  ]);
+  const specialTours = categories.map(pulseCategoryAsTour);
+  const addTourIds = category && specialTours.some((tour) => tour.tourId === category) ? [category] : [];
 
   return (
     <>
@@ -32,7 +43,11 @@ export default async function CustomTripPage() {
             {brand.bookingEmail}
           </a>
         </p>
-        <CustomTripBuilder experiences={experiences} />
+        <CustomTripBuilder
+          experiences={experiences}
+          specialTours={specialTours}
+          addTourIds={addTourIds}
+        />
       </section>
     </>
   );

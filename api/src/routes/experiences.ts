@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { Router } from "express";
-import { requireAdmin } from "../auth.js";
+import { readAdminSession, requireAdmin } from "../auth.js";
 import { parseCustomExperienceFields } from "../parse-experience.js";
 import {
   CustomExperienceModel,
@@ -19,6 +19,14 @@ experienceRouter.get("/", async (req, res) => {
   try {
     const view = String(req.query.view ?? "");
     const activeOnly = req.query.active === "true";
+    const admin = await readAdminSession(req);
+
+    if (view === "deleted" || view === "all") {
+      if (!admin) {
+        res.status(401).json({ error: "Sign in required" });
+        return;
+      }
+    }
 
     if (view === "deleted") {
       const rows = await DeletedCustomExperienceModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
@@ -31,7 +39,7 @@ experienceRouter.get("/", async (req, res) => {
       return;
     }
 
-    const filter = activeOnly ? { active: { $ne: false } } : {};
+    const filter = !admin || activeOnly ? { active: { $ne: false } } : {};
     const live = await CustomExperienceModel.find(filter).sort({ createdAt: -1 }).lean();
     if (view === "all") {
       const archived = await DeletedCustomExperienceModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
@@ -56,6 +64,7 @@ experienceRouter.get("/", async (req, res) => {
 experienceRouter.get("/:tourId", async (req, res) => {
   try {
     const tourId = routeParam(req.params.tourId);
+    const admin = await readAdminSession(req);
     const doc = await CustomExperienceModel.findOne({
       $or: [{ tourId }, { slug: tourId }],
     }).lean();
@@ -63,7 +72,12 @@ experienceRouter.get("/:tourId", async (req, res) => {
       res.status(404).json({ error: "Not found" });
       return;
     }
-    res.json({ experience: serializeCustomExperience(doc as Record<string, unknown>) });
+    const experience = serializeCustomExperience(doc as Record<string, unknown>);
+    if (!admin && !experience.active) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({ experience });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Failed to load experience" });
   }

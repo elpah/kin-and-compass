@@ -45,7 +45,7 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
                   <p className="font-semibold text-burgundy">{item.tourName}</p>
                   <p className="mt-1 text-muted">Duration: {item.tourDuration}</p>
                 </td>
-                <td className="px-4 py-3">{formatMoney(item.tourPrice)}</td>
+                <td className="px-4 py-3">{item.tourPrice > 0 ? formatMoney(item.tourPrice) : ""}</td>
                 <td className="px-4 py-3">
                   <button type="button" className="font-semibold text-crimson" onClick={() => remove(item.tourId)}>
                     Remove
@@ -56,7 +56,9 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
           </tbody>
         </table>
       </div>
-      <p className="mt-6 display text-3xl text-burgundy">Estimated price: {formatMoney(total)}</p>
+      {total > 0 ? (
+        <p className="mt-6 display text-3xl text-burgundy">Estimated price: {formatMoney(total)}</p>
+      ) : null}
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
         After you request, we will send a you a proposed itinerary.
       </p>

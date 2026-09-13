@@ -67,3 +67,27 @@ export type PackagedTour = {
   active: boolean;
   deleted?: boolean;
 };
+
+export type SpecialTourCategory = {
+  slug: string;
+  label: string;
+  line: string;
+  sortOrder: number;
+  tourPrice: number;
+  tourDuration: string;
+  images: CloudinaryImage[];
+  cover?: CloudinaryImage;
+};
+
+export type SpecialTour = {
+  tourId: string;
+  tourName: string;
+  tourDescription: string;
+  tourDuration: string;
+  tourPrice: number;
+  categorySlug: string;
+  images: CloudinaryImage[];
+  tourImage: CloudinaryImage;
+  active: boolean;
+  deleted?: boolean;
+};

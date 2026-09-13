@@ -7,6 +7,7 @@ import { HomeHero } from "@/components/HomeHero";
 import { ProductCard } from "@/components/ProductCard";
 import { pillars } from "@/data/site";
 import type { Product } from "@kincompass/shared";
+import type { PulseTab } from "@/lib/pulse";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
@@ -19,7 +20,7 @@ const VisitGallery = dynamic(
   },
 );
 
-export function HomeView({ products }: { products: Product[] }) {
+export function HomeView({ products, pulse }: { products: Product[]; pulse: PulseTab[] }) {
   return (
     <>
       <HomeHero />
@@ -74,7 +75,7 @@ export function HomeView({ products }: { products: Product[] }) {
             </div>
           </FadeIn>
           <FadeIn delay={0.08}>
-            <VisitGallery />
+            <VisitGallery categories={pulse} />
           </FadeIn>
         </div>
       </section>

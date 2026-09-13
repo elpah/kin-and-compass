@@ -24,11 +24,10 @@ export function CustomTripRequest({
   );
   const total = selected.reduce((sum, item) => sum + item.tourPrice, 0);
   const line = selected
-    .map(
-      (item) =>
-        `${item.tourName} (${item.tourDuration}, ${formatMoney(
-          item.tourPrice,
-        )})`,
+    .map((item) =>
+      item.tourPrice > 0
+        ? `${item.tourName} (${item.tourDuration}, ${formatMoney(item.tourPrice)})`
+        : `${item.tourName} (${item.tourDuration})`,
     )
     .join("\n");
 
@@ -75,14 +74,14 @@ export function CustomTripRequest({
         <ul className="mt-2 space-y-1 text-sm text-muted">
           {selected.map((item) => (
             <li key={item.tourId}>
-              {item.tourName} · Duration: {item.tourDuration} ·{" "}
-              {formatMoney(item.tourPrice)}
+              {item.tourName} · Duration: {item.tourDuration}
+              {item.tourPrice > 0 ? ` · ${formatMoney(item.tourPrice)}` : ""}
             </li>
           ))}
         </ul>
-        <p className="mt-3 font-semibold text-burgundy">
-          Estimated price {formatMoney(total)}
-        </p>
+        {total > 0 ? (
+          <p className="mt-3 font-semibold text-burgundy">Estimated price {formatMoney(total)}</p>
+        ) : null}
         <p className="mt-3 text-sm leading-relaxed text-muted">
           After you request, we will send a proposed itinerary.
         </p>

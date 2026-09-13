@@ -11,6 +11,8 @@ import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
 import { tourRouter } from "./routes/tours.js";
 import { experienceRouter } from "./routes/experiences.js";
+import { specialTourCategoryRouter } from "./routes/special-tour-categories.js";
+import { specialTourRouter } from "./routes/special-tours.js";
 import { productRouter } from "./routes/products.js";
 import { uploadDir } from "./uploads.js";
 
@@ -84,6 +86,8 @@ app.use("/inquiries", inquiryRouter);
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
 app.use("/experiences", experienceRouter);
+app.use("/special-tour-categories", specialTourCategoryRouter);
+app.use("/special-tours", specialTourRouter);
 app.use("/tours", tourRouter);
 app.use("/admin", adminRouter);
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

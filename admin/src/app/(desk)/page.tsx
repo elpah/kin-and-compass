@@ -9,7 +9,7 @@ export default function AdminHomePage() {
       <p className="script text-2xl text-crimson">House tools</p>
       <h1 className="display mt-1 text-4xl text-burgundy sm:text-5xl">The desk</h1>
       <p className="mt-2 max-w-xl text-sm text-muted">
-        Manage the store and Visit Ghana from here. More rooms can join this sidebar later.
+        Manage the store, Visit Ghana, and Special Tours from here. More rooms can join this sidebar later.
       </p>
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {rooms.map((item) => (
@@ -25,7 +25,9 @@ export default function AdminHomePage() {
                 ? "Products, stock, and the public catalogue."
                 : item.href === "/visit-ghana"
                   ? "Tours and custom trip experiences for Ghana."
-                  : "House details and how this desk signs in."}
+                  : item.href === "/special-tours"
+                    ? "Pulse tours for the homepage and custom trip page."
+                    : "House details and how this desk signs in."}
             </p>
           </Link>
         ))}

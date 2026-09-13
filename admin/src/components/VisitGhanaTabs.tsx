@@ -37,12 +37,19 @@ export function VisitGhanaStatusTabs({
     { id: "deleted" as const, label: "Deleted" },
   ];
 
+  function hrefFor(id: "active" | "deleted") {
+    const url = new URL(baseHref, "https://admin.local");
+    if (id === "deleted") url.searchParams.set("status", "deleted");
+    else url.searchParams.delete("status");
+    return `${url.pathname}${url.search}`;
+  }
+
   return (
     <div className="mt-4 flex w-full justify-between">
       {tabs.map((tab) => (
         <Link
           key={tab.id}
-          href={tab.id === "active" ? baseHref : `${baseHref}?status=${tab.id}`}
+          href={hrefFor(tab.id)}
           className={`inline-flex h-12 w-[49%] items-center justify-center rounded-lg text-sm font-semibold ${
             current === tab.id ? "bg-burgundy text-white" : "bg-white text-muted ring-1 ring-sand hover:text-burgundy"
           }`}

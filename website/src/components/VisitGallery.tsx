@@ -1,42 +1,46 @@
 "use client";
 
 import { CloudinaryImage } from "@/components/CloudinaryImage";
-import { visitCategories } from "@/data/visitGallery";
+import type { PulseTab } from "@/lib/pulse";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const INTERVAL_MS = 3200;
 
-export function VisitGallery() {
+export function VisitGallery({ categories }: { categories: PulseTab[] }) {
   const [tab, setTab] = useState(0);
   const [img, setImg] = useState(0);
   const [cycle, setCycle] = useState(0);
   const [paused, setPaused] = useState(false);
-  const current = visitCategories[tab];
-  const shots = current.images;
+  const current = categories[tab] ?? categories[0];
+  const shots = current?.images ?? [];
   const activeSrc = shots[img] ?? shots[0];
-  const nextSrc = shots[(img + 1) % shots.length] ?? shots[0];
+  const nextSrc = shots.length ? shots[(img + 1) % shots.length] : undefined;
+  const upcomingTab = categories[(tab + 1) % categories.length];
+  const upcomingSrc = upcomingTab && upcomingTab.slug !== current?.slug ? upcomingTab.images[0] : undefined;
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || !current || categories.length === 0) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setInterval(() => {
-      const shots = visitCategories[tab].images;
-      if (img < shots.length - 1) {
+      const list = categories[tab]?.images ?? [];
+      if (list.length > 1 && img < list.length - 1) {
         setImg(img + 1);
       } else {
-        setTab((t) => (t + 1) % visitCategories.length);
+        setTab((t) => (t + 1) % categories.length);
         setImg(0);
       }
     }, INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [tab, img, cycle, paused]);
+  }, [tab, img, cycle, paused, categories, current]);
 
   function selectTab(next: number) {
     setTab(next);
     setImg(0);
     setCycle((n) => n + 1);
   }
+
+  if (!current || !activeSrc) return null;
 
   return (
     <div className="mt-10">
@@ -45,13 +49,13 @@ export function VisitGallery() {
         aria-label="Visit Ghana experiences"
         className="flex flex-wrap gap-x-6 gap-y-1 border-b border-black/10"
       >
-        {visitCategories.map((category, i) => (
+        {categories.map((category, i) => (
           <button
-            key={category.id}
+            key={category.slug}
             type="button"
             role="tab"
             aria-selected={i === tab}
-            id={`visit-tab-${category.id}`}
+            id={`visit-tab-${category.slug}`}
             aria-controls="visit-gallery-panel"
             onClick={() => selectTab(i)}
             className={`-mb-px border-b-2 pb-3 text-sm font-semibold transition-colors ${
@@ -68,7 +72,7 @@ export function VisitGallery() {
       <div
         id="visit-gallery-panel"
         role="tabpanel"
-        aria-labelledby={`visit-tab-${current.id}`}
+        aria-labelledby={`visit-tab-${current.slug}`}
         className="relative mt-6 aspect-[4/5] overflow-hidden rounded-lg bg-sand sm:aspect-[16/9]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
@@ -79,24 +83,38 @@ export function VisitGallery() {
         }}
       >
         <div
-          key={`${current.id}-${img}`}
-          className="absolute inset-0"
+          className="absolute inset-0 flex h-full transition-transform duration-700 ease-out motion-reduce:transition-none"
+          style={{ transform: `translateX(-${img * 100}%)` }}
         >
-          <CloudinaryImage
-            src={activeSrc}
-            alt={current.label}
-            fill
-            sizes="(max-width: 768px) 100vw, 1200px"
-            quality={65}
-            priority={tab === 0 && img === 0}
-            className={`object-cover ${
-              current.id === "experience" ? "object-center" : "object-top"
-            }`}
-          />
+          {shots.map((src, index) => (
+            <div key={`${current.slug}-${src}-${index}`} className="relative h-full w-full shrink-0">
+              <CloudinaryImage
+                src={src}
+                alt={index === 0 ? current.label : ""}
+                fill
+                sizes="(max-width: 768px) 100vw, 1200px"
+                quality={65}
+                priority={tab === 0 && index === 0}
+                className={`object-cover ${
+                  current.slug === "experience" ? "object-center" : "object-top"
+                }`}
+              />
+            </div>
+          ))}
         </div>
         {nextSrc && nextSrc !== activeSrc ? (
           <CloudinaryImage
             src={nextSrc}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 1200px"
+            quality={65}
+            className="pointer-events-none opacity-0"
+          />
+        ) : null}
+        {upcomingSrc && upcomingSrc !== activeSrc && upcomingSrc !== nextSrc ? (
+          <CloudinaryImage
+            src={upcomingSrc}
             alt=""
             fill
             sizes="(max-width: 768px) 100vw, 1200px"
@@ -111,10 +129,11 @@ export function VisitGallery() {
               {current.line}
             </p>
             <Link
-              href="/travel/custom"
+              href={`/travel/custom?category=${encodeURIComponent(current.slug)}`}
+              onClick={() => setPaused(true)}
               className="mt-5 inline-flex h-11 items-center rounded bg-crimson px-5 text-sm font-semibold text-white hover:bg-rose"
             >
-              Book this
+              Book tour
             </Link>
           </div>
         </div>

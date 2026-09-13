@@ -22,7 +22,8 @@ productRouter.get("/", async (_req, res) => {
 });
 
 productRouter.get("/featured", async (req, res) => {
-  const limit = Number(req.query.limit ?? 4);
+  const parsed = Number(req.query.limit ?? 4);
+  const limit = Number.isFinite(parsed) ? Math.min(24, Math.max(1, Math.floor(parsed))) : 4;
   try {
     res.json({ products: await listFeaturedProducts(limit) });
   } catch (error) {

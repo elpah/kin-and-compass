@@ -73,3 +73,25 @@ export async function uploadManyToCloudinary(files: Express.Multer.File[] | unde
   }
   return uploaded;
 }
+
+export async function destroyFromCloudinary(publicId: string | undefined) {
+  const id = publicId?.trim();
+  if (!id) return;
+  await cloudinary.uploader.destroy(id, { resource_type: "image", invalidate: true });
+}
+
+export async function destroyRemovedCloudinaryImages(
+  previous: Array<{ publicId?: string }>,
+  next: Array<{ publicId?: string }>,
+) {
+  const keep = new Set(next.map((item) => item.publicId).filter(Boolean) as string[]);
+  for (const image of previous) {
+    if (image.publicId && !keep.has(image.publicId)) {
+      try {
+        await destroyFromCloudinary(image.publicId);
+      } catch {
+        /* keep the database update even if Cloudinary is unreachable */
+      }
+    }
+  }
+}

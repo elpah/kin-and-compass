@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { Router } from "express";
-import { requireAdmin } from "../auth.js";
+import { readAdminSession, requireAdmin } from "../auth.js";
 import { CustomExperienceModel, serializeCustomExperience, serializeTourImage } from "../models/CustomExperience.js";
 import { PackagedTourModel, serializePackagedTour } from "../models/PackagedTour.js";
 import { parsePackagedTourFields } from "../parse-tour.js";
@@ -68,6 +68,14 @@ tourRouter.get("/", async (req, res) => {
   try {
     const view = String(req.query.view ?? "");
     const activeOnly = req.query.active === "true";
+    const admin = await readAdminSession(req);
+
+    if (view === "deleted" || view === "all") {
+      if (!admin) {
+        res.status(401).json({ error: "Sign in required" });
+        return;
+      }
+    }
 
     if (view === "deleted") {
       const rows = await DeletedPackagedTourModel.find().sort({ deletedAt: -1, createdAt: -1 }).lean();
@@ -77,7 +85,7 @@ tourRouter.get("/", async (req, res) => {
       return;
     }
 
-    const filter = activeOnly ? { active: { $ne: false } } : {};
+    const filter = !admin || activeOnly ? { active: { $ne: false } } : {};
     const live = await PackagedTourModel.find(filter).sort({ createdAt: -1 }).lean();
     const tours = await Promise.all(
       live.map((row) => withCover(serializePackagedTour(row as Record<string, unknown>))),
@@ -101,14 +109,22 @@ tourRouter.get("/", async (req, res) => {
 
 tourRouter.get("/:id", async (req, res) => {
   try {
+    const admin = await readAdminSession(req);
     const doc = await findPackagedTour(routeParam(req.params.id)).lean();
     if (!doc) {
       res.status(404).json({ error: "Not found" });
       return;
     }
     const tour = await withCover(serializePackagedTour(doc as Record<string, unknown>));
+    if (!admin && !tour.active) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     const experiences = await experiencesForIds(tour.tourIds);
-    res.json({ tour, experiences });
+    res.json({
+      tour,
+      experiences: admin ? experiences : experiences.filter((item) => item.active),
+    });
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Failed to load tour" });
   }

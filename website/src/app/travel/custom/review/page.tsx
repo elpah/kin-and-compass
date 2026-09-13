@@ -1,7 +1,8 @@
 import { covers } from "@/assets/covers";
 import { CustomTripReview } from "@/components/CustomTripReview";
 import { PageHero } from "@/components/PageHero";
-import { listActiveExperiences } from "@/lib/api";
+import { listActiveExperiences, listSpecialTourCategories } from "@/lib/api";
+import { mergeTripCatalog, pulseCategoryAsTour } from "@/lib/trip";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,11 @@ export const metadata = {
 };
 
 export default async function CustomTripReviewPage() {
-  const experiences = await listActiveExperiences();
+  const [experiences, categories] = await Promise.all([
+    listActiveExperiences(),
+    listSpecialTourCategories(),
+  ]);
+  const catalog = mergeTripCatalog(experiences, categories.map(pulseCategoryAsTour));
 
   return (
     <>
@@ -23,7 +28,7 @@ export default async function CustomTripReviewPage() {
         image={covers.travel}
       />
       <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
-        <CustomTripReview experiences={experiences} />
+        <CustomTripReview experiences={catalog} />
       </section>
     </>
   );

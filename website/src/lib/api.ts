@@ -1,4 +1,4 @@
-import type { CustomExperience, PackagedTour, Product } from "@kincompass/shared";
+import type { CustomExperience, PackagedTour, Product, SpecialTour, SpecialTourCategory } from "@kincompass/shared";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -67,5 +67,23 @@ export async function getPackagedTour(id: string) {
     return await getJson<{ tour: PackagedTour; experiences: CustomExperience[] }>(`/tours/${id}`);
   } catch {
     return null;
+  }
+}
+
+export async function listSpecialTourCategories() {
+  try {
+    const data = await getJson<{ categories: SpecialTourCategory[] }>("/special-tour-categories");
+    return data.categories ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function listActiveSpecialTours() {
+  try {
+    const data = await getJson<{ tours: SpecialTour[] }>("/special-tours?active=true");
+    return (data.tours ?? []).filter((item) => item.active !== false);
+  } catch {
+    return [];
   }
 }

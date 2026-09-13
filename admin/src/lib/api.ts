@@ -1,4 +1,4 @@
-import { imageSrc, mediaUrl, type AdminUser, type CustomExperience, type PackagedTour, type Product } from "@kincompass/shared";
+import { imageSrc, mediaUrl, type AdminUser, type CustomExperience, type PackagedTour, type Product, type SpecialTour, type SpecialTourCategory } from "@kincompass/shared";
 import { getSession } from "next-auth/react";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -109,4 +109,50 @@ export function restoreTour(packagedTourId: string) {
 export function deleteTour(packagedTourId: string, permanent = false) {
   const query = permanent ? "?permanent=true" : "";
   return request<{ ok: boolean }>(`/tours/${packagedTourId}${query}`, { method: "DELETE" });
+}
+
+export function listSpecialTourCategories() {
+  return request<{ categories: SpecialTourCategory[] }>("/special-tour-categories");
+}
+
+export function createSpecialTourCategory(form: FormData) {
+  return request<{ category: SpecialTourCategory }>("/special-tour-categories", { method: "POST", body: form });
+}
+
+export function updateSpecialTourCategory(slug: string, form: FormData) {
+  return request<{ category: SpecialTourCategory }>(`/special-tour-categories/${slug}`, {
+    method: "PUT",
+    body: form,
+  });
+}
+
+export function deleteSpecialTourCategory(slug: string) {
+  return request<{ ok: boolean }>(`/special-tour-categories/${slug}`, { method: "DELETE" });
+}
+
+export function listSpecialTours(view: "active" | "deleted" = "active", category = "") {
+  const params = new URLSearchParams({ view });
+  if (category) params.set("category", category);
+  return request<{ tours: SpecialTour[] }>(`/special-tours?${params.toString()}`);
+}
+
+export function getSpecialTour(tourId: string) {
+  return request<{ tour: SpecialTour }>(`/special-tours/${tourId}`);
+}
+
+export function createSpecialTour(form: FormData) {
+  return request<{ tour: SpecialTour }>("/special-tours", { method: "POST", body: form });
+}
+
+export function updateSpecialTour(tourId: string, form: FormData) {
+  return request<{ tour: SpecialTour }>(`/special-tours/${tourId}`, { method: "PUT", body: form });
+}
+
+export function restoreSpecialTour(tourId: string) {
+  return request<{ tour: SpecialTour }>(`/special-tours/${tourId}/restore`, { method: "POST" });
+}
+
+export function deleteSpecialTour(tourId: string, permanent = false) {
+  const query = permanent ? "?permanent=true" : "";
+  return request<{ ok: boolean }>(`/special-tours/${tourId}${query}`, { method: "DELETE" });
 }
