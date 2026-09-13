@@ -57,7 +57,7 @@ export function SpecialTourForm({
 
   function addFiles(list: FileList | null) {
     if (!list?.length) return;
-    const next: ImageSlot[] = [];
+    const next: Extract<ImageSlot, { kind: "file" }>[] = [];
     for (const file of Array.from(list)) {
       if (!file.type.startsWith("image/")) continue;
       next.push({
