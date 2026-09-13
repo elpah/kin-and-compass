@@ -86,3 +86,5 @@ export const productCategories = [
 ];
 
 export const ADMIN_COOKIE = "kc_admin";
+
+export const MAX_GALLERY_IMAGES = 5;

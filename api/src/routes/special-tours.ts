@@ -5,13 +5,14 @@ import { hardDeleteFromArchive, moveToArchive, restoreFromArchive } from "../arc
 import { DeletedSpecialTourModel } from "../models/DeletedSpecialTour.js";
 import { SpecialTourCategoryModel } from "../models/SpecialTourCategory.js";
 import { SpecialTourModel, serializeSpecialTour } from "../models/SpecialTour.js";
+import { MAX_GALLERY_IMAGES } from "@kincompass/shared";
 import { parseKeepImages, parseSpecialTourFields } from "../parse-special-tour.js";
 import { routeParam } from "../route-param.js";
-import { upload, uploadManyToCloudinary } from "../uploads.js";
+import { assertGalleryLimit, upload, uploadManyToCloudinary } from "../uploads.js";
 import { ensureDefaultSpecialTourCategories } from "./special-tour-categories.js";
 
 export const specialTourRouter = Router();
-const imagesUpload = upload.array("images", 12);
+const imagesUpload = upload.array("images", MAX_GALLERY_IMAGES);
 
 const lookup = (tourId: string) => ({ $or: [{ tourId }, { slug: tourId }] });
 
@@ -78,6 +79,7 @@ specialTourRouter.post("/", requireAdmin, imagesUpload, async (req, res) => {
       return;
     }
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    assertGalleryLimit(files.length);
     const images = await uploadManyToCloudinary(files, "pulse_tours");
     if (!images.length) {
       res.status(400).json({ error: "Add at least one photo" });
@@ -107,6 +109,7 @@ specialTourRouter.put("/:tourId", requireAdmin, imagesUpload, async (req, res) =
     }
     const kept = parseKeepImages(req.body ?? {});
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    assertGalleryLimit(kept.length + files.length);
     const uploaded = await uploadManyToCloudinary(files, "pulse_tours");
     const images = [...kept, ...uploaded];
     if (!images.length) {

@@ -2,7 +2,7 @@
 
 import { FormActions } from "@/components/FormActions";
 import { asset, createProduct, updateProduct } from "@/lib/api";
-import { productCategories, type Product, type ProductCategory } from "@kincompass/shared";
+import { MAX_GALLERY_IMAGES, productCategories, type Product, type ProductCategory } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useUnsavedChanges } from "@/components/UnsavedChanges";
@@ -68,7 +68,12 @@ export function ProductForm({ product }: { product?: Product }) {
         preview: URL.createObjectURL(file),
       });
     }
-    setImages((prev) => [...prev, ...next].slice(0, 12));
+    setImages((prev) => {
+      const room = Math.max(0, MAX_GALLERY_IMAGES - prev.length);
+      const take = next.slice(0, room);
+      next.slice(room).forEach((slot) => URL.revokeObjectURL(slot.preview));
+      return [...prev, ...take];
+    });
     if (fileRef.current) fileRef.current.value = "";
   }
 
@@ -85,6 +90,10 @@ export function ProductForm({ product }: { product?: Product }) {
     setError("");
     if (!images.length) {
       setError("Add at least one photo. The first one is the cover.");
+      return;
+    }
+    if (images.length > MAX_GALLERY_IMAGES) {
+      setError(`You can attach up to ${MAX_GALLERY_IMAGES} photos. Remove extras first.`);
       return;
     }
     setStep("preview");
@@ -301,7 +310,8 @@ export function ProductForm({ product }: { product?: Product }) {
       <div>
         <p className="text-sm font-medium text-burgundy">Photos</p>
         <p className="mt-1 text-xs text-muted">
-          The first photo is the cover. Add more in the empty box. You will see them on the next screen before they go live.
+          Up to {MAX_GALLERY_IMAGES} photos. The first is the cover. You will see them on the next screen before they go
+          live.
         </p>
         <input
           id={fileInputId}
@@ -334,7 +344,7 @@ export function ProductForm({ product }: { product?: Product }) {
               </button>
             </div>
           ))}
-          {images.length < 12 && (
+          {images.length < MAX_GALLERY_IMAGES && (
             <label
               htmlFor={fileInputId}
               className="flex aspect-[4/5] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-sand bg-cream text-center text-sm font-semibold text-burgundy hover:border-crimson hover:bg-white"

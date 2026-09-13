@@ -3,7 +3,7 @@
 import { FormActions } from "@/components/FormActions";
 import { useUnsavedChanges } from "@/components/UnsavedChanges";
 import { asset, createSpecialTour, updateSpecialTour } from "@/lib/api";
-import type { SpecialTour, SpecialTourCategory } from "@kincompass/shared";
+import { MAX_GALLERY_IMAGES, type SpecialTour, type SpecialTourCategory } from "@kincompass/shared";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 
@@ -67,7 +67,12 @@ export function SpecialTourForm({
         preview: URL.createObjectURL(file),
       });
     }
-    setImages((prev) => [...prev, ...next].slice(0, 12));
+    setImages((prev) => {
+      const room = Math.max(0, MAX_GALLERY_IMAGES - prev.length);
+      const take = next.slice(0, room);
+      next.slice(room).forEach((slot) => URL.revokeObjectURL(slot.preview));
+      return [...prev, ...take];
+    });
     if (fileRef.current) fileRef.current.value = "";
   }
 
@@ -88,6 +93,10 @@ export function SpecialTourForm({
     }
     if (!images.length) {
       setError("Add at least one photo. They save to Cloudinary in pulse_tours.");
+      return;
+    }
+    if (images.length > MAX_GALLERY_IMAGES) {
+      setError(`You can attach up to ${MAX_GALLERY_IMAGES} photos. Remove extras first.`);
       return;
     }
     setStep("preview");
@@ -251,7 +260,8 @@ export function SpecialTourForm({
       <div>
         <p className="text-sm font-medium text-burgundy">Photos</p>
         <p className="mt-1 text-xs text-muted">
-          Upload several photos. They save to Cloudinary in the pulse_tours folder. The first photo is the cover.
+          Up to {MAX_GALLERY_IMAGES} photos. They save to Cloudinary in the pulse_tours folder. The first photo is the
+          cover.
         </p>
         <input
           ref={fileRef}
@@ -281,12 +291,14 @@ export function SpecialTourForm({
               </button>
             </div>
           ))}
-          <label
-            htmlFor={fileId}
-            className="flex aspect-[16/10] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-sand bg-cream text-sm font-semibold text-burgundy"
-          >
-            Add photos
-          </label>
+          {images.length < MAX_GALLERY_IMAGES && (
+            <label
+              htmlFor={fileId}
+              className="flex aspect-[16/10] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-sand bg-cream text-sm font-semibold text-burgundy"
+            >
+              Add photos
+            </label>
+          )}
         </div>
       </div>
       {error && <p className="text-sm text-crimson">{error}</p>}

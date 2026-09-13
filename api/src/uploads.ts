@@ -3,6 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import type { UploadApiResponse } from "cloudinary";
 import { mkdirSync } from "fs";
 import { join } from "path";
+import { MAX_GALLERY_IMAGES } from "@kincompass/shared";
 import { env } from "./env.js";
 
 export const CLOUDINARY_FOLDER = "kinandcompass";
@@ -32,6 +33,12 @@ export type CloudinaryUpload = {
   linkUrl: string;
   publicId: string;
 };
+
+export function assertGalleryLimit(count: number) {
+  if (count > MAX_GALLERY_IMAGES) {
+    throw new Error(`You can attach up to ${MAX_GALLERY_IMAGES} photos`);
+  }
+}
 
 export const upload = multer({
   storage: multer.memoryStorage(),

@@ -1,7 +1,7 @@
 "use client";
 
 import { asset, createSpecialTourCategory, updateSpecialTourCategory } from "@/lib/api";
-import type { SpecialTourCategory } from "@kincompass/shared";
+import { MAX_GALLERY_IMAGES, type SpecialTourCategory } from "@kincompass/shared";
 import { useEffect, useId, useRef, useState } from "react";
 
 type ImageSlot =
@@ -72,7 +72,12 @@ export function SpecialTourCategoryForm({
         preview: URL.createObjectURL(file),
       });
     }
-    setImages((prev) => [...prev, ...next].slice(0, 12));
+    setImages((prev) => {
+      const room = Math.max(0, MAX_GALLERY_IMAGES - prev.length);
+      const take = next.slice(0, room);
+      next.slice(room).forEach((slot) => URL.revokeObjectURL(slot.preview));
+      return [...prev, ...take];
+    });
     if (fileRef.current) fileRef.current.value = "";
   }
 
@@ -96,6 +101,10 @@ export function SpecialTourCategoryForm({
     }
     if (!tourDuration.trim()) {
       setError("Tour duration is required");
+      return;
+    }
+    if (images.length > MAX_GALLERY_IMAGES) {
+      setError(`You can attach up to ${MAX_GALLERY_IMAGES} photos. Remove extras first.`);
       return;
     }
     setPending(true);
@@ -194,7 +203,7 @@ export function SpecialTourCategoryForm({
             <div className="sm:col-span-2">
               <p className="text-sm font-medium text-burgundy">Photos</p>
               <p className="mt-1 text-xs text-muted">
-                The first photo is the cover. The rest slide on the homepage. They save to Cloudinary in pulse_tours.
+                Up to {MAX_GALLERY_IMAGES} photos. The first is the cover. The rest slide on the homepage.
               </p>
               <input
                 ref={fileRef}
@@ -224,7 +233,7 @@ export function SpecialTourCategoryForm({
                     </button>
                   </div>
                 ))}
-                {images.length < 12 && (
+                {images.length < MAX_GALLERY_IMAGES && (
                   <label
                     htmlFor={fileId}
                     className="flex aspect-[16/10] cursor-pointer items-center justify-center rounded-lg border border-dashed border-sand text-sm font-semibold text-burgundy"

@@ -1,4 +1,4 @@
-import { defaultSpecialTourCategories, slugify } from "@kincompass/shared";
+import { defaultSpecialTourCategories, MAX_GALLERY_IMAGES, slugify } from "@kincompass/shared";
 import { Router } from "express";
 import { requireAdmin } from "../auth.js";
 import {
@@ -7,11 +7,17 @@ import {
 } from "../models/SpecialTourCategory.js";
 import { parseKeepImages } from "../parse-special-tour.js";
 import { routeParam } from "../route-param.js";
-import { destroyRemovedCloudinaryImages, upload, uploadManyToCloudinary, uploadToCloudinary } from "../uploads.js";
+import {
+  assertGalleryLimit,
+  destroyRemovedCloudinaryImages,
+  upload,
+  uploadManyToCloudinary,
+  uploadToCloudinary,
+} from "../uploads.js";
 
 export const specialTourCategoryRouter = Router();
 const imagesUpload = upload.fields([
-  { name: "images", maxCount: 12 },
+  { name: "images", maxCount: MAX_GALLERY_IMAGES },
   { name: "cover", maxCount: 1 },
 ]);
 
@@ -39,7 +45,9 @@ async function readUploadedImages(req: {
   const listed = Array.isArray(req.files) ? req.files : [];
   const fromImages = grouped?.images ?? listed;
   const fromCover = grouped?.cover ?? (req.file ? [req.file] : []);
-  const uploaded = await uploadManyToCloudinary([...fromImages, ...fromCover], "pulse_tours");
+  const pending = [...fromImages, ...fromCover];
+  assertGalleryLimit(pending.length);
+  const uploaded = await uploadManyToCloudinary(pending, "pulse_tours");
   if (uploaded.length) return uploaded;
   const one = await uploadToCloudinary(req.file, "pulse_tours");
   return one ? [one] : [];
@@ -70,6 +78,7 @@ specialTourCategoryRouter.post("/", requireAdmin, imagesUpload, async (req, res)
       return;
     }
     const images = await readUploadedImages(req);
+    assertGalleryLimit(images.length);
     const last = await SpecialTourCategoryModel.findOne().sort({ sortOrder: -1 }).lean();
     const sortOrder = Number((last as { sortOrder?: number } | null)?.sortOrder ?? -1) + 1;
     const created = await SpecialTourCategoryModel.create({
@@ -99,6 +108,7 @@ specialTourCategoryRouter.put("/:slug", requireAdmin, imagesUpload, async (req, 
     const keepSent = typeof req.body?.keepImages === "string";
     const existing = serializeSpecialTourCategory(current.toObject()).images;
     const images = keepSent || uploaded.length ? [...kept, ...uploaded] : existing;
+    assertGalleryLimit(images.length);
     await destroyRemovedCloudinaryImages(existing, images);
     current.set({
       ...fields,

@@ -3,14 +3,15 @@ import { requireAdmin } from "../auth.js";
 import { parseProductFields } from "../parse-product.js";
 import { getProductBySlug, listFeaturedProducts, listProducts, serializeProduct } from "../products.js";
 import { Product } from "../models/Product.js";
-import { upload, uploadManyToCloudinary, uploadToCloudinary } from "../uploads.js";
+import { MAX_GALLERY_IMAGES } from "@kincompass/shared";
+import { assertGalleryLimit, upload, uploadManyToCloudinary, uploadToCloudinary } from "../uploads.js";
 import { routeParam } from "../route-param.js";
 
 export const productRouter = Router();
 
 const files = upload.fields([
   { name: "image", maxCount: 1 },
-  { name: "gallery", maxCount: 12 },
+  { name: "gallery", maxCount: MAX_GALLERY_IMAGES },
 ]);
 
 productRouter.get("/", async (_req, res) => {
@@ -51,14 +52,17 @@ productRouter.post("/", requireAdmin, files, async (req, res) => {
   try {
     const fields = parseProductFields(req.body ?? {});
     const uploaded = req.files as Record<string, Express.Multer.File[]> | undefined;
+    const extraFiles = uploaded?.gallery ?? [];
+    assertGalleryLimit((uploaded?.image?.[0] ? 1 : 0) + extraFiles.length);
     const cover = await uploadToCloudinary(uploaded?.image?.[0], "store");
     const image = cover?.linkUrl ?? "";
     if (!image) {
       res.status(400).json({ error: "A product image is required" });
       return;
     }
-    const extra = await uploadManyToCloudinary(uploaded?.gallery, "store");
+    const extra = await uploadManyToCloudinary(extraFiles, "store");
     const gallery = [image, ...extra.map((item) => item.linkUrl)];
+    assertGalleryLimit(gallery.length);
     const existing = await Product.findOne({ slug: fields.slug });
     if (existing) {
       res.status(409).json({ error: "A product with this name already exists" });
@@ -91,7 +95,9 @@ productRouter.put("/:slug", requireAdmin, files, async (req, res) => {
       .split(",")
       .map((item: string) => item.trim())
       .filter(Boolean);
-    const extra = await uploadManyToCloudinary(uploaded?.gallery, "store");
+    const extraFiles = uploaded?.gallery ?? [];
+    assertGalleryLimit(keepGallery.length + (uploaded?.image?.[0] ? 1 : 0) + extraFiles.length);
+    const extra = await uploadManyToCloudinary(extraFiles, "store");
     const cover = await uploadToCloudinary(uploaded?.image?.[0], "store");
     const nextImage = cover?.linkUrl ?? "";
     const extraUrls = extra.map((item) => item.linkUrl);
@@ -99,6 +105,7 @@ productRouter.put("/:slug", requireAdmin, files, async (req, res) => {
     const gallery = [...(nextImage ? [nextImage, ...keepGallery] : keepGallery), ...extraUrls].filter(
       (item, index, list) => item && list.indexOf(item) === index,
     );
+    assertGalleryLimit(gallery.length);
     if (!image || !gallery.length) {
       res.status(400).json({ error: "A product image is required" });
       return;

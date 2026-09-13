@@ -1,4 +1,4 @@
-export { ADMIN_COOKIE, defaultSpecialTourCategories, productCategories } from "./constants.js";
+export { ADMIN_COOKIE, MAX_GALLERY_IMAGES, defaultSpecialTourCategories, productCategories } from "./constants.js";
 export type {
   AdminUser,
   CloudinaryImage,
