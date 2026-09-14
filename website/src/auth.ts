@@ -62,30 +62,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       : []),
     Credentials({
       credentials: {
-        email: { label: "Email or phone", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
-        phone: { label: "Phone", type: "text" },
-        code: { label: "Code", type: "text" },
-        name: { label: "Name", type: "text" },
       },
       async authorize(credentials) {
-        const phone = String(credentials?.phone ?? "").trim();
-        const code = String(credentials?.code ?? "").trim();
-        if (phone && code) {
-          const response = await fetch(`${API_URL}/auth/phone/verify`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              phone,
-              code,
-              name: String(credentials?.name ?? ""),
-            }),
-          });
-          if (!response.ok) return null;
-          const payload = (await response.json()) as AuthPayload;
-          if (payload.user.role === "admin") return null;
-          return sessionUser(payload);
-        }
         const identifier = String(credentials?.email ?? "").trim();
         const password = String(credentials?.password ?? "");
         if (!identifier || !password) return null;

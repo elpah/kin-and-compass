@@ -27,7 +27,7 @@ export default function AccountSettingsPage() {
           {profile?.hasGoogle && <li>Google is connected to this account.</li>}
           {profile?.hasPassword && <li>Email and password are enabled.</li>}
           {!profile?.hasPassword && !profile?.hasGoogle && (
-            <li>Phone or email sign-in is enabled for this account.</li>
+            <li>Email sign-in is enabled for this account.</li>
           )}
         </ul>
       </section>
@@ -114,7 +114,7 @@ export default function AccountSettingsPage() {
         </form>
       ) : (
         <div className="rounded-lg bg-white p-6 text-sm text-muted ring-1 ring-sand">
-          This account signs in with Google or phone, so there is no password to change here.
+          This account signs in with Google, so there is no password to change here.
         </div>
       )}
 

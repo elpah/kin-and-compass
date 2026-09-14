@@ -1,12 +1,11 @@
 import bcrypt from "bcryptjs";
-import { createHash, randomBytes, randomInt } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { Router } from "express";
 import { requireUser } from "../auth.js";
 import { env } from "../env.js";
-import { PhoneOtp } from "../models/PhoneOtp.js";
 import { User } from "../models/User.js";
 import { googleProfileFromIdToken } from "../google.js";
-import { sendMail, sendSms } from "../notify.js";
+import { sendMail } from "../notify.js";
 import { normalizePhone } from "../phone.js";
 import { signAuthToken } from "../token.js";
 import type { AuthToken } from "../token.js";
@@ -42,16 +41,11 @@ async function sessionFor(user: { _id: unknown; name: string; email?: string; ph
 authRouter.post("/login", async (req, res) => {
   const identifier = String(req.body?.identifier ?? req.body?.email ?? "").trim();
   const password = String(req.body?.password ?? "");
-  if (!identifier || !password) {
-    res.status(400).json({ error: "Email or phone, and password, are required." });
+  if (!identifier.includes("@") || !password) {
+    res.status(400).json({ error: "Email and password are required." });
     return;
   }
-  const phone = normalizePhone(identifier);
-  const user = identifier.includes("@")
-    ? await User.findOne({ email: identifier.toLowerCase() })
-    : phone
-      ? await User.findOne({ phone })
-      : null;
+  const user = await User.findOne({ email: identifier.toLowerCase() });
   if (!user?.passwordHash) {
     res.status(401).json({ error: "Email or password is incorrect." });
     return;
@@ -66,28 +60,22 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/register", async (req, res) => {
   const name = String(req.body?.name ?? "").trim();
   const email = String(req.body?.email ?? "").trim().toLowerCase();
-  const phone = normalizePhone(String(req.body?.phone ?? ""));
   const password = String(req.body?.password ?? "");
   if (!name || password.length < 6) {
     res.status(400).json({ error: "Name and a password of at least 6 characters are required." });
     return;
   }
-  if (!email.includes("@") && !phone) {
-    res.status(400).json({ error: "Provide an email or a phone number." });
+  if (!email.includes("@")) {
+    res.status(400).json({ error: "A valid email is required." });
     return;
   }
-  if (email.includes("@") && (await User.findOne({ email }))) {
+  if (await User.findOne({ email })) {
     res.status(409).json({ error: "That email already has an account." });
-    return;
-  }
-  if (phone && (await User.findOne({ phone }))) {
-    res.status(409).json({ error: "That phone number already has an account." });
     return;
   }
   const user = await User.create({
     name,
-    email: email.includes("@") ? email : undefined,
-    phone: phone || undefined,
+    email,
     passwordHash: await bcrypt.hash(password, 10),
     role: "customer",
   });
@@ -160,60 +148,6 @@ authRouter.post("/reset", async (req, res) => {
   user.resetTokenExpires = undefined;
   await user.save();
   res.json({ ok: true });
-});
-
-authRouter.post("/phone/start", async (req, res) => {
-  const phone = normalizePhone(String(req.body?.phone ?? ""));
-  if (!phone) {
-    res.status(400).json({ error: "Enter a valid phone number with country code." });
-    return;
-  }
-  const recent = await PhoneOtp.findOne({
-    phone,
-    createdAt: { $gt: new Date(Date.now() - 45 * 1000) },
-  });
-  if (recent) {
-    res.status(429).json({ error: "Wait a moment before requesting another code." });
-    return;
-  }
-  const code = String(randomInt(100000, 1000000));
-  await PhoneOtp.deleteMany({ phone });
-  await PhoneOtp.create({
-    phone,
-    codeHash: await bcrypt.hash(code, 10),
-    expiresAt: new Date(Date.now() + 1000 * 60 * 10),
-  });
-  const sent = await sendSms(phone, `Your Kin and Compass code is ${code}`);
-  if (!sent) {
-    res.status(503).json({ error: "Phone sign-in is not configured yet. Use email, or add Twilio keys." });
-    return;
-  }
-  res.json({ ok: true });
-});
-
-authRouter.post("/phone/verify", async (req, res) => {
-  const phone = normalizePhone(String(req.body?.phone ?? ""));
-  const code = String(req.body?.code ?? "").trim();
-  const name = String(req.body?.name ?? "").trim();
-  if (!phone || code.length !== 6) {
-    res.status(400).json({ error: "Enter the 6-digit code we sent." });
-    return;
-  }
-  const otp = await PhoneOtp.findOne({ phone, expiresAt: { $gt: new Date() } }).sort({ createdAt: -1 });
-  if (!otp || !(await bcrypt.compare(code, otp.codeHash))) {
-    res.status(401).json({ error: "That code is incorrect or has expired." });
-    return;
-  }
-  await PhoneOtp.deleteMany({ phone });
-  let user = await User.findOne({ phone });
-  if (!user) {
-    user = await User.create({
-      name: name || phone,
-      phone,
-      role: "customer",
-    });
-  }
-  res.json(await sessionFor(user));
 });
 
 authRouter.get("/me", requireUser, async (req, res) => {

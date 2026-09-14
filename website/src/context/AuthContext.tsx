@@ -60,9 +60,8 @@ type AuthContextValue = {
   orders: Order[];
   donations: Donation[];
   login: (identifier: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, phone?: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
-  loginWithPhone: (phone: string, code: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
   addInquiry: (kind: string, payload: Record<string, string>) => void;
   addOrder: (order: Omit<Order, "id" | "createdAt" | "status">) => string;
@@ -159,18 +158,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       donations,
       login: async (identifier, password) => {
         const result = await signIn("credentials", { email: identifier, password, redirect: false });
-        if (result?.error) throw new Error("Email, phone, or password is incorrect.");
+        if (result?.error) throw new Error("Email or password is incorrect.");
       },
-      register: async (email, password, name, phone) => {
+      register: async (email, password, name) => {
         const response = await fetch(`${API_URL}/auth/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, name, phone }),
+          body: JSON.stringify({ email, password, name }),
         });
         const data = (await response.json()) as { error?: string };
         if (!response.ok) throw new Error(data.error ?? "Could not create account.");
-        const identifier = email || phone || "";
-        const result = await signIn("credentials", { email: identifier, password, redirect: false });
+        const result = await signIn("credentials", { email, password, redirect: false });
         if (result?.error) throw new Error("Account created, but sign-in failed. Try signing in.");
       },
       loginWithGoogle: async () => {
@@ -182,10 +180,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           );
         }
         await signIn("google", { callbackUrl: "/account" });
-      },
-      loginWithPhone: async (phone, code, name) => {
-        const result = await signIn("credentials", { phone, code, name, redirect: false });
-        if (result?.error) throw new Error("That code is incorrect or has expired.");
       },
       logout: async () => {
         await signOut({ redirect: false });
