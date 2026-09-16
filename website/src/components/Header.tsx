@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const emptySubscribe = () => () => {};
 
@@ -16,6 +16,8 @@ export function Header() {
   const { count } = useCart();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [menuPresent, setMenuPresent] = useState(false);
+  const [menuShown, setMenuShown] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const mounted = useSyncExternalStore(
     emptySubscribe,
@@ -23,6 +25,7 @@ export function Header() {
     () => false,
   );
   const overHero = pathname === "/";
+  const firstPath = useRef(true);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -31,9 +34,47 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (firstPath.current) {
+      firstPath.current = false;
+      return;
+    }
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (open) {
+      setMenuPresent(true);
+      const previous = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      let inner = 0;
+      const outer = requestAnimationFrame(() => {
+        inner = requestAnimationFrame(() => setMenuShown(true));
+      });
+      return () => {
+        cancelAnimationFrame(outer);
+        cancelAnimationFrame(inner);
+        document.body.style.overflow = previous;
+      };
+    }
+    setMenuShown(false);
+    const hide = window.setTimeout(() => setMenuPresent(false), 320);
+    return () => window.clearTimeout(hide);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const solid = !overHero || scrolled || open;
 
   return (
+    <>
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
@@ -155,9 +196,25 @@ export function Header() {
         </div>
       </div>
 
-      {open && (
-        <div className="border-t border-sand bg-cream px-4 py-4 lg:hidden">
-          <nav className="flex flex-col gap-1">
+    </header>
+      {menuPresent && (
+        <div className="lg:hidden">
+          <button
+            type="button"
+            aria-label="Close menu"
+            className={cn(
+              "fixed inset-0 top-[72px] z-40 bg-ink/40 transition-opacity duration-300 ease-out motion-reduce:transition-none",
+              menuShown ? "opacity-100" : "opacity-0",
+            )}
+            onClick={() => setOpen(false)}
+          />
+          <nav
+            aria-label="Mobile"
+            className={cn(
+              "fixed bottom-0 right-0 top-[72px] z-50 flex w-[min(20rem,88vw)] flex-col gap-1 overflow-y-auto border-l border-sand bg-cream px-4 py-4 shadow-[-12px_0_32px_rgba(54,0,0,0.12)] transition-transform duration-300 ease-out motion-reduce:transition-none",
+              menuShown ? "translate-x-0" : "translate-x-full",
+            )}
+          >
             {nav.map((item) => (
               <Link
                 key={item.href}
@@ -185,7 +242,7 @@ export function Header() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
 
