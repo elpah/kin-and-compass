@@ -40,10 +40,10 @@ export function Footer() {
               <TikTokIcon />
             </SocialLink>
             <SocialLink
-              href={`https://wa.me/${brand.whatsapp}`}
-              label="WhatsApp"
+              href="https://www.facebook.com/profile.php?id=61594155773437"
+              label="Facebook"
             >
-              <WhatsAppIcon />
+              <FacebookIcon />
             </SocialLink>
           </div>
         </div>
@@ -209,7 +209,7 @@ function TikTokIcon() {
   );
 }
 
-function WhatsAppIcon() {
+function FacebookIcon() {
   return (
     <svg
       width="18"
@@ -218,7 +218,7 @@ function WhatsAppIcon() {
       fill="currentColor"
       aria-hidden
     >
-      <path d="M20.5 3.5A11 11 0 0 0 3.1 17.2L2 22l4.9-1.1A11 11 0 1 0 20.5 3.5zm-8.5 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.9.7.8-2.8-.2-.3A9 9 0 1 1 12 20.5zm5-6.7c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.1 8.1 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5.1-.3a.5.5 0 0 0 0-.5c0-.1-.6-1.5-.8-2s-.4-.5-.6-.5h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 15 15 0 0 0 1.5.5 3.6 3.6 0 0 0 1.6.1 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3z" />
+      <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8.1V12h2.3V9.8c0-2.3 1.4-3.6 3.5-3.6 1 0 2 .2 2 .2v2.2h-1.1c-1.1 0-1.5.7-1.5 1.4V12h2.5l-.4 2.9h-2.1v7A10 10 0 0 0 22 12z" />
     </svg>
   );
 }

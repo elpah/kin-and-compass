@@ -3,6 +3,7 @@
 import { brand, nav } from "@/data/site";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import { STORE_LIVE } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -151,36 +152,40 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href={mounted && user ? "/account" : "/login"}
-            className={cn(
-              "hidden sm:inline text-[13px] font-semibold",
-              solid
-                ? pathname.startsWith("/account") || pathname.startsWith("/login")
-                  ? "text-crimson"
-                  : "text-ink/80 hover:text-burgundy"
-                : "text-white/85 hover:text-white",
-            )}
-          >
-            {mounted && user ? user.name.split(" ")[0] : "Account"}
-          </Link>
-          <Link
-            href="/cart"
-            className={cn(
-              "relative inline-flex h-10 w-10 items-center justify-center rounded",
-              solid
-                ? "bg-burgundy text-white"
-                : "bg-white/15 text-white ring-1 ring-white/30",
-            )}
-            aria-label="Shopping cart"
-          >
-            <CartIcon />
-            {mounted && count > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-crimson px-1 text-[10px] font-bold text-white">
-                {count}
-              </span>
-            )}
-          </Link>
+          {STORE_LIVE ? (
+            <>
+              <Link
+                href={mounted && user ? "/account" : "/login"}
+                className={cn(
+                  "hidden sm:inline text-[13px] font-semibold",
+                  solid
+                    ? pathname.startsWith("/account") || pathname.startsWith("/login")
+                      ? "text-crimson"
+                      : "text-ink/80 hover:text-burgundy"
+                    : "text-white/85 hover:text-white",
+                )}
+              >
+                {mounted && user ? user.name.split(" ")[0] : "Account"}
+              </Link>
+              <Link
+                href="/cart"
+                className={cn(
+                  "relative inline-flex h-10 w-10 items-center justify-center rounded",
+                  solid
+                    ? "bg-burgundy text-white"
+                    : "bg-white/15 text-white ring-1 ring-white/30",
+                )}
+                aria-label="Shopping cart"
+              >
+                <CartIcon />
+                {mounted && count > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-crimson px-1 text-[10px] font-bold text-white">
+                    {count}
+                  </span>
+                )}
+              </Link>
+            </>
+          ) : null}
           <button
             type="button"
             className={cn(
@@ -225,13 +230,15 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href={user ? "/account" : "/login"}
-              onClick={() => setOpen(false)}
-              className="rounded px-3 py-3 text-sm font-semibold text-burgundy hover:bg-sand"
-            >
-              {user ? "Account" : "Sign in"}
-            </Link>
+            {STORE_LIVE ? (
+              <Link
+                href={user ? "/account" : "/login"}
+                onClick={() => setOpen(false)}
+                className="rounded px-3 py-3 text-sm font-semibold text-burgundy hover:bg-sand"
+              >
+                {user ? "Account" : "Sign in"}
+              </Link>
+            ) : null}
             <Link
               href="/travel/custom"
               onClick={() => setOpen(false)}

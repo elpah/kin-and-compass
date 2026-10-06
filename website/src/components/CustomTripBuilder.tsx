@@ -40,6 +40,13 @@ export function CustomTripBuilder({
   const selected = catalog.filter((item) => selectedIds.has(item.tourId));
   const total = selected.reduce((sum, item) => sum + item.tourPrice, 0);
 
+  function scrollToTrip() {
+    document.getElementById("your-trip")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
+  }
+
   return (
     <>
       {catalog.length === 0 ? (
@@ -47,7 +54,30 @@ export function CustomTripBuilder({
           No custom tours are published yet. Check back soon, or write us at bookings.
         </p>
       ) : (
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+        <>
+          <div className="sticky top-[72px] z-40 -mx-4 mb-8 border-y border-sand bg-cream/95 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-burgundy">
+                  {selected.length === 0
+                    ? "No tours in your trip yet"
+                    : `${selected.length} tour${selected.length === 1 ? "" : "s"} in your trip`}
+                </p>
+                {total > 0 ? (
+                  <p className="text-xs text-muted">{formatMoney(total)}</p>
+                ) : null}
+              </div>
+              <button
+                type="button"
+                disabled={selected.length === 0}
+                onClick={scrollToTrip}
+                className="shrink-0 rounded-lg bg-crimson px-4 py-2.5 text-sm font-semibold text-white disabled:bg-sand disabled:text-muted"
+              >
+                Proceed
+              </button>
+            </div>
+          </div>
+          <div className="grid gap-6 lg:mt-10 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             {catalog.map((item) => {
               const inTrip = selectedIds.has(item.tourId);
@@ -113,7 +143,10 @@ export function CustomTripBuilder({
             })}
           </div>
 
-          <aside className="h-fit rounded-lg bg-white p-6 ring-1 ring-sand lg:sticky lg:top-28">
+          <aside
+            id="your-trip"
+            className="h-fit scroll-mt-28 rounded-lg bg-white p-6 ring-1 ring-sand lg:sticky lg:top-28"
+          >
             <p className="script text-2xl text-rose">Your custom trip</p>
             <p className="mt-1 text-sm text-muted">
               {selected.length === 0
@@ -151,6 +184,7 @@ export function CustomTripBuilder({
             </Link>
           </aside>
         </div>
+        </>
       )}
     </>
   );

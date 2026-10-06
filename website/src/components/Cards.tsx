@@ -20,9 +20,11 @@ export function TourCard({ tour }: { tour: PackagedTour }) {
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : null}
-        <span className="absolute bottom-3 left-3 rounded bg-burgundy/90 px-3 py-1 text-[11px] font-semibold text-white">
-          from {formatMoney(tour.price)}
-        </span>
+        {tour.price > 0 ? (
+          <span className="absolute bottom-3 left-3 rounded bg-burgundy/90 px-3 py-1 text-[11px] font-semibold text-white">
+            from {formatMoney(tour.price)}
+          </span>
+        ) : null}
       </div>
       <div className="p-5">
         <p className="text-[11px] font-bold uppercase tracking-wider text-crimson">

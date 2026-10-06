@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { pillars } from "@/data/site";
 import type { Product } from "@kincompass/shared";
 import type { PulseTab } from "@/lib/pulse";
+import { STORE_LIVE } from "@/lib/store";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
@@ -80,28 +81,57 @@ export function HomeView({ products, pulse }: { products: Product[]; pulse: Puls
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <FadeIn>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
-                Store
-              </p>
-              <h2 className="display mt-2 text-4xl text-burgundy">From ateliers, not warehouses</h2>
+      {STORE_LIVE ? (
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+          <FadeIn>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
+                  Store
+                </p>
+                <h2 className="display mt-2 text-4xl text-burgundy">From ateliers, not warehouses</h2>
+              </div>
+              <Link href="/store" className="text-sm font-semibold text-burgundy hover:text-crimson">
+                Shop all →
+              </Link>
             </div>
-            <Link href="/store" className="text-sm font-semibold text-burgundy hover:text-crimson">
-              Shop all →
-            </Link>
+          </FadeIn>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((p, index) => (
+              <FadeIn key={p.slug} delay={index * 0.07}>
+                <ProductCard product={p} />
+              </FadeIn>
+            ))}
           </div>
-        </FadeIn>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((p, index) => (
-            <FadeIn key={p.slug} delay={index * 0.07}>
-              <ProductCard product={p} />
-            </FadeIn>
-          ))}
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+          <FadeIn>
+            <Link
+              href="/store"
+              className="group relative block min-h-[420px] overflow-hidden rounded-lg sm:min-h-[480px]"
+            >
+              <CloudinaryImage
+                src={covers.shop}
+                alt=""
+                fill
+                sizes="100vw"
+                quality={65}
+                className="object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep via-ink/40 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-rose">Opening soon</p>
+                <p className="script mt-3 text-2xl text-rose sm:text-3xl">Marketplace</p>
+                <h2 className="display mt-1 text-4xl text-white sm:text-5xl">From ateliers, not warehouses</h2>
+                <p className="mt-3 max-w-lg text-sm text-white/75 sm:text-base">
+                  Cloth, shea, spice, and objects made by Ghanaian ateliers - shipped with their stories.
+                </p>
+              </div>
+            </Link>
+          </FadeIn>
+        </section>
+      )}
 
       <section className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
         <FadeIn>

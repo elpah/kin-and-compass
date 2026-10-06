@@ -2,6 +2,7 @@
 
 import { covers } from "@/assets/covers";
 import { CoverImage } from "@/components/CoverImage";
+import { STORE_LIVE } from "@/lib/store";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
@@ -54,12 +55,14 @@ export function HomeHero() {
           >
             Book now
           </Link>
-          <Link
-            href="/store"
-            className="inline-flex h-12 items-center rounded bg-white/10 px-6 text-sm font-semibold text-white ring-1 ring-white/30 hover:bg-white/20"
-          >
-            Shop the store
-          </Link>
+          {STORE_LIVE ? (
+            <Link
+              href="/store"
+              className="inline-flex h-12 items-center rounded bg-white/10 px-6 text-sm font-semibold text-white ring-1 ring-white/30 hover:bg-white/20"
+            >
+              Shop the store
+            </Link>
+          ) : null}
         </motion.div>
       </div>
     </section>

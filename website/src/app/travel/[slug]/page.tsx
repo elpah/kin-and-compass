@@ -25,6 +25,13 @@ export default async function TourPage({
   if (!data?.tour || data.tour.active === false) notFound();
   const { tour, experiences } = data;
   const cover = asset(tour.image) || asset(experiences[0]?.tourImage);
+  const pricedStops = experiences.filter((item) => item.tourPrice > 0);
+  const hasUnpricedStops = experiences.some((item) => !(item.tourPrice > 0));
+  const amount = pricedStops.length
+    ? pricedStops.reduce((sum, item) => sum + item.tourPrice, 0)
+    : tour.price;
+  const showPrice = amount > 0;
+  const startingPrice = showPrice && hasUnpricedStops && pricedStops.length > 0;
 
   return (
     <article>
@@ -49,7 +56,7 @@ export default async function TourPage({
         <div className="space-y-10 lg:col-span-2">
           {experiences.length > 0 ? (
             <>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="hidden gap-3 sm:grid sm:grid-cols-3">
                 {experiences.map((item) => {
                   const src = asset(item.tourImage);
                   return (
@@ -61,7 +68,28 @@ export default async function TourPage({
                   );
                 })}
               </div>
-              <section>
+              <div className="space-y-6 sm:hidden">
+                {experiences.map((item) => {
+                  const src = asset(item.tourImage);
+                  return (
+                    <article key={item.tourId} className="overflow-hidden rounded-lg bg-white ring-1 ring-sand">
+                      <div className="relative aspect-[16/10] bg-sand">
+                        {src ? (
+                          <MediaImage src={src} alt="" fill sizes="100vw" quality={65} className="object-cover" />
+                        ) : null}
+                      </div>
+                      <div className="p-5">
+                        <h2 className="display text-2xl text-burgundy">{item.tourName}</h2>
+                        <p className="mt-1 text-sm text-muted">Duration: {item.tourDuration}</p>
+                        {item.tourDescription ? (
+                          <p className="mt-2 text-sm leading-relaxed text-muted">{item.tourDescription}</p>
+                        ) : null}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <section className="hidden sm:block">
                 <h2 className="display text-3xl text-burgundy">What you will do</h2>
                 <ol className="mt-5 space-y-4">
                   {experiences.map((item) => (
@@ -79,9 +107,15 @@ export default async function TourPage({
           )}
         </div>
         <aside className="h-fit rounded-lg bg-white p-6 ring-1 ring-sand lg:sticky lg:top-24">
-          <p className="display text-4xl text-burgundy">{formatMoney(tour.price)}</p>
-          <p className="mt-1 text-xs text-muted">Per person · deposits coming soon</p>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
+          {showPrice ? (
+            <>
+              <p className="display text-4xl text-burgundy">
+                {startingPrice ? `Starting price: ${formatMoney(amount)}` : formatMoney(amount)}
+              </p>
+              <p className="mt-1 text-xs text-muted">Per person · deposits coming soon</p>
+            </>
+          ) : null}
+          <p className={`text-sm leading-relaxed text-muted ${showPrice ? "mt-3" : ""}`}>
             After you request, we will send you a proposed itinerary.
           </p>
           <p className="mt-3 text-sm">

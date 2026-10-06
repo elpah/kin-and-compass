@@ -3,13 +3,15 @@ import { MediaImage } from "@/components/CloudinaryImage";
 import { ProductCard } from "@/components/ProductCard";
 import { getProductBySlug } from "@/lib/api";
 import { asset } from "@/lib/media";
+import { STORE_LIVE } from "@/lib/store";
 import { formatMoney } from "@/lib/utils";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  if (!STORE_LIVE) return { title: "Store · Coming soon" };
   const { slug } = await params;
   const data = await getProductBySlug(slug);
   return { title: data?.product.name ?? "Product" };
@@ -20,6 +22,7 @@ export default async function ProductPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  if (!STORE_LIVE) redirect("/store");
   const { slug } = await params;
   const data = await getProductBySlug(slug);
   if (!data) notFound();

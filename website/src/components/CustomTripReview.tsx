@@ -62,16 +62,16 @@ export function CustomTripReview({ experiences }: { experiences: CustomExperienc
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
         After you request, we will send a you a proposed itinerary.
       </p>
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="mt-8 flex gap-2 sm:gap-3">
         <Link
           href="/travel/custom"
-          className="inline-flex h-12 items-center rounded-lg px-6 text-sm font-semibold text-burgundy ring-1 ring-sand"
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-lg px-3 text-center text-xs font-semibold text-burgundy ring-1 ring-sand sm:h-12 sm:flex-none sm:px-6 sm:text-sm"
         >
           Add more experiences
         </Link>
         <Link
           href="/travel/custom/request"
-          className="inline-flex h-12 items-center rounded-lg bg-crimson px-6 text-sm font-semibold text-white"
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-crimson px-3 text-center text-xs font-semibold text-white sm:h-12 sm:flex-none sm:px-6 sm:text-sm"
         >
           Continue to request
         </Link>
